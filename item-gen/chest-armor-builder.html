@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script>document.documentElement.setAttribute("data-theme", localStorage.getItem("utopia-theme") || "dark");</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chest Armor Builder</title>
+<style>
+    :root {
+        --bg: #1a1a1a;
+        --panel: #2d2d2d;
+        --panel-2: #242424;
+        --border: #444;
+        --text: #e0e0e0;
+        --muted: #9a9a9a;
+        --gold: #ffd700;
+        --green: #52b788;
+        --red: #e63946;
+        --blue-hi: #bde0fe;
+        --accent: #007bff;
+    }
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 20px;
+        line-height: 1.5;
+    }
+    header {
+        max-width: 1100px;
+        margin: 0 auto 24px;
+        text-align: center;
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 14px;
+    }
+    header h1 {
+        color: var(--gold);
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 1.8em;
+    }
+    header p { color: var(--muted); margin: 6px 0 0; font-size: 0.9em; }
+    nav.top {
+        max-width: 1100px;
+        margin: 0 auto 16px;
+    }
+    .back-link {
+        display: inline-block;
+        text-decoration: none;
+        color: var(--accent);
+        font-weight: bold;
+        font-size: 14px;
+    }
+    .back-link:hover {
+        text-decoration: underline;
+    }
+    .layout {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 24px;
+        max-width: 1100px;
+        margin: 0 auto;
+        align-items: start;
+    }
+    @media (max-width: 900px) {
+        .layout { grid-template-columns: 1fr; }
+        .summary { position: static !important; }
+    }
+
+    .panel {
+        background-color: var(--panel);
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .effects h2 {
+        color: var(--green);
+        font-size: 1.2em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 6px;
+        margin: 0 0 14px;
+    }
+    .effects h2.neg { color: var(--red); }
+    .effects .section { margin-bottom: 26px; }
+
+    .effect-row {
+        background-color: var(--panel-2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 10px 12px;
+        margin-bottom: 10px;
+    }
+    .effect-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+    }
+    .effect-name {
+        font-weight: bold;
+        color: var(--blue-hi);
+        margin-right: auto;
+    }
+    .effect-desc {
+        font-style: italic;
+        color: var(--muted);
+        margin: 8px 0 10px;
+        font-size: 0.88em;
+    }
+    .tag {
+        display: inline-block;
+        background: #444;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75em;
+        color: #d0d0d0;
+    }
+    .tag.cost { color: #ffb703; }
+    .tag.req { color: #ff8fa3; }
+    .tag.min { color: #a5d8ff; }
+
+    .stepper {
+        display: inline-flex;
+        align-items: center;
+        gap: 0;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        overflow: hidden;
+        background: #1e1e1e;
+    }
+    .stepper button {
+        background: #333;
+        border: none;
+        color: var(--gold);
+        font-size: 1.1em;
+        width: 32px;
+        height: 30px;
+        cursor: pointer;
+    }
+    .stepper button:hover { background: #444; }
+    .stepper input {
+        width: 52px;
+        height: 30px;
+        text-align: center;
+        background: #1e1e1e;
+        color: var(--text);
+        border: none;
+        border-left: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+        -moz-appearance: textfield;
+    }
+    .stepper input::-webkit-outer-spin-button,
+    .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    .check {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        user-select: none;
+    }
+    .check input { width: 17px; height: 17px; accent-color: var(--accent); }
+    .check input:disabled { opacity: 0.35; cursor: not-allowed; }
+    .row-hint {
+        font-size: 0.75em;
+        color: var(--muted);
+        margin-top: 6px;
+    }
+    .effect-row.dim { opacity: 0.55; }
+
+    /* ---------- Summary ---------- */
+    .summary {
+        position: sticky;
+        top: 20px;
+    }
+    .summary h2 {
+        color: var(--blue);
+        font-size: 1.2em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 6px;
+        margin: 0 0 14px;
+    }
+    .rarity-box {
+        text-align: center;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        padding: 14px;
+        margin-bottom: 14px;
+        background: var(--panel-2);
+    }
+    .rarity-box .label { font-size: 0.75em; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .rarity-box .value {
+        font-size: 1.6em;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .summary-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+    .sum-cell {
+        background: var(--panel-2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 8px 10px;
+    }
+    .sum-cell .label { font-size: 0.72em; color: var(--muted); text-transform: uppercase; }
+    .sum-cell .val { font-size: 1.15em; font-weight: bold; color: var(--gold); }
+    .sum-cell.wide { grid-column: 1 / -1; }
+    .sum-cell .val.mono { font-family: Consolas, monospace; }
+
+    .summary h3 {
+        color: #a8dadc;
+        font-size: 0.95em;
+        margin: 14px 0 6px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .stat-list { list-style: none; margin: 0; padding: 0; }
+    .stat-list li {
+        display: flex;
+        justify-content: space-between;
+        padding: 3px 0;
+        border-bottom: 1px dashed #3a3a3a;
+        font-size: 0.9em;
+    }
+    .stat-list li span:first-child { color: var(--blue-hi); }
+    .stat-list li span:last-child { font-weight: bold; }
+
+    .error-banner {
+        display: none;
+        background: var(--red);
+        color: #fff;
+        border-radius: 6px;
+        padding: 10px 12px;
+        margin-bottom: 14px;
+        font-size: 0.88em;
+    }
+    .error-banner.show { display: block; }
+    .error-banner ul { margin: 0; padding-left: 18px; }
+    .error-banner ul li { margin-bottom: 3px; }
+
+    .btn-reset {
+        margin-top: 16px;
+        width: 100%;
+        padding: 10px;
+        background: #333;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        cursor: pointer;
+        font-size: 0.95em;
+    }
+    .btn-reset:hover { background: #444; }
+
+    .foot {
+        max-width: 1100px;
+        margin: 28px auto 0;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.8em;
+    }
+</style>
+<link rel="stylesheet" href="../theme.css"></head>
+<body>
+
+<nav class="top">
+    <a href="../index.html" class="back-link">&larr; Main Menu</a>
+</nav>
+
+<header>
+    <h1>Chest Armor Builder</h1>
+    <p>Select effects to craft your armor &mdash; totals, rarity, and resulting stats update in real time.</p>
+</header>
+
+<div class="layout">
+    <div class="panel effects" id="effects-panel">
+        <div class="section">
+            <h2>Positive Effects</h2>
+            <div id="positive-list"></div>
+        </div>
+        <div class="section">
+            <h2 class="neg">Negative Effects</h2>
+            <div id="negative-list"></div>
+        </div>
+    </div>
+
+    <div class="summary">
+        <div class="panel">
+            <div class="error-banner" id="error-banner"><ul id="error-list"></ul></div>
+            <h2>Summary</h2>
+            <div class="rarity-box">
+                <div class="label">Rarity</div>
+                <div class="value" id="rarity-value">Crude</div>
+            </div>
+            <div class="summary-grid">
+                <div class="sum-cell"><div class="label">Total RP</div><div class="val mono" id="sum-rp">0</div></div>
+                <div class="sum-cell"><div class="label">Value</div><div class="val mono" id="sum-value">0</div></div>
+                <div class="sum-cell"><div class="label">Total Stacks</div><div class="val mono" id="sum-stacks">0</div></div>
+                <div class="sum-cell"><div class="label">Max Stacks</div><div class="val mono" id="sum-max-stacks">10</div></div>
+            </div>
+            <h3>Components</h3>
+            <ul class="stat-list">
+                <li><span>Material</span><span id="comp-material">5</span></li>
+                <li><span>Refinement</span><span id="comp-refinement">0</span></li>
+                <li><span>Power</span><span id="comp-power">0</span></li>
+                <li><span>Slots</span><span id="comp-slots">3</span></li>
+            </ul>
+            <h3>Resulting Stats</h3>
+            <ul class="stat-list" id="stats-list"></ul>
+            <button class="btn-reset" id="btn-reset">Reset All</button>
+        </div>
+    </div>
+</div>
+
+<div class="foot">Component base: 5 Material &middot; 0 Refinement &middot; 0 Power &nbsp;|&nbsp; Minimum required: 3 Material</div>
+
+<script>
+"use strict";
+
+const ITEM_DATA = {
+    baseComponents: { material: 5, refinement: 0, power: 0 },
+    minComponents: { material: 3, refinement: 0, power: 0 },
+    innateStats: {
+        slots: 3,
+        location: "chest",
+        defense: { Physical: 0, Energy: 0, Heat: 0, Chill: 0, Psyche: 0 },
+        block: 0,
+        dodge: 0,
+        spellDiscount: 0,
+        airTravelIncrease: 0
+    },
+    effects: [
+        {
+            name: "Augmentable", rpCost: 20, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 2, powerCost: 0,
+            types: [], minRarity: "Common", requirement: null, group: null,
+            description: `This armor may be augmented into a creature's chest slot.`
+        },
+        {
+            name: "Defensive", rpCost: 4, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 1, refinementCost: 0, powerCost: 0,
+            types: ["Physical", "Energy", "Heat", "Chill"], minRarity: null, requirement: null, group: null,
+            description: `While equipped, grants +1 defense of any type other than Psyche, chosen upon crafting.`
+        },
+        {
+            name: "Screen", rpCost: 5, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 1, refinementCost: 0, powerCost: 0,
+            types: ["Psyche"], minRarity: null, requirement: null, group: null,
+            description: `While equipped, grants +1 Psyche defense.`
+        },
+        {
+            name: "Guarded", rpCost: 40, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 1, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: null,
+            description: `While equipped, grants +1d4 Block Rating.`
+        },
+        {
+            name: "Spry", rpCost: 40, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 1, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: null,
+            description: `While equipped, grants +1d12 Dodge Rating.`
+        },
+        {
+            name: "Compact", rpCost: 10, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 1, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: "Slots",
+            description: `This armor takes up 1 slot.`
+        },
+        {
+            name: "Magus", rpCost: 15, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 1,
+            types: [], minRarity: null, requirement: null, group: null,
+            description: `Spells equipped creature casts cost 1 less stamina, minimum cost of 1.`
+        },
+        {
+            name: "Aerial", rpCost: 15, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 1,
+            types: [], minRarity: null, requirement: null, group: null,
+            description: `Equipped creatures are granted an additional 1 meter of Air travel. This feature has no effect if the creature has an Air travel of 0 meters.`
+        },
+        {
+            name: "Sentient", rpCost: 25, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 1, powerCost: 1,
+            types: [], minRarity: null, requirement: null, group: null,
+            description: `This equipment has a conscious mind and can sense objects within 10 meters of it. It can communicate simple emotions and ideas directly with only its user and has a personality of its own. Emotions and decisions are under GM discretion.`
+        },
+        {
+            name: "Shrouded", rpCost: 20, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 1, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: null,
+            description: `Creatures and objects cannot gain information on equipped creatures through divination. Attempts to do so will come back "null".`
+        },
+        {
+            name: "Awkward", rpCost: -10, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: "Slots",
+            description: `This armor takes up 9 slots.`
+        },
+        {
+            name: "Inordinate", rpCost: -30, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: "Slots",
+            description: `This armor takes up 27 slots.`
+        },
+        {
+            name: "Tethered", rpCost: -20, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: null,
+            description: `Once this armor is equipped or augmented, it cannot be removed, only destroyed. Its user may spend 6 turn actions to destroy this item. If this item is augmented when destroyed, the user still suffers all effects as if it was being de-augmented.`
+        },
+        {
+            name: "Constricting", rpCost: -20, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: null,
+            description: `While equipped, creature has 1 additional point of Fatigue.`
+        },
+        {
+            name: "Corroded", rpCost: -40, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: "Defensive", group: null,
+            description: `If the user takes an amount of damage that is both a type of damage that this armor grants 1 or more defense for and the amount of damage is equal to or higher than double the respective defense granted, this armor becomes destroyed. If this item is augmented when destroyed, the user still suffers all effects as if it was being de-augmented.`
+        }
+    ]
+};
+
+const RARITIES = [
+    { name: "Crude", min: 0, max: 20, multiplier: 1, minValue: 2, maxStacks: 10, color: "#9e9e9e" },
+    { name: "Common", min: 21, max: 40, multiplier: 2, minValue: 10, maxStacks: 20, color: "#81c784" },
+    { name: "Extraordinary", min: 41, max: 70, multiplier: 4, minValue: 40, maxStacks: 30, color: "#64b5f6" },
+    { name: "Rare", min: 71, max: 110, multiplier: 8, minValue: 160, maxStacks: 40, color: "#ffb74d" },
+    { name: "Legendary", min: 111, max: 160, multiplier: 16, minValue: 560, maxStacks: 50, color: "#ffd54f" },
+    { name: "Mythical", min: 161, max: 220, multiplier: 32, minValue: 1760, maxStacks: 60, color: "#f06292" }
+];
+
+const DEFENSE_TYPES = ["Physical", "Energy", "Heat", "Chill", "Psyche"];
+const MAX_STACKS = 60;
+
+const variants = [];
+const state = [];
+
+ITEM_DATA.effects.forEach(eff => {
+    const types = eff.types && eff.types.length ? eff.types : [null];
+    types.forEach(type => {
+        variants.push({
+            index: variants.length,
+            eff: eff,
+            type: type,
+            label: eff.name + (type ? " (" + type + ")" : "")
+        });
+        state.push(0);
+    });
+});
+
+function compText(eff) {
+    const parts = [];
+    if (eff.materialCost) parts.push("+" + eff.materialCost + " Material");
+    if (eff.refinementCost) parts.push("+" + eff.refinementCost + " Refinement");
+    if (eff.powerCost) parts.push("+" + eff.powerCost + " Power");
+    if (!parts.length) return "";
+    return parts.join(", ");
+}
+
+function buildLists() {
+    const pos = document.getElementById("positive-list");
+    const neg = document.getElementById("negative-list");
+    variants.forEach(v => {
+        const eff = v.eff;
+        const row = document.createElement("div");
+        row.className = "effect-row";
+        row.dataset.var = String(v.index);
+
+        const head = document.createElement("div");
+        head.className = "effect-head";
+        const name = document.createElement("span");
+        name.className = "effect-name";
+        name.textContent = v.label;
+        head.appendChild(name);
+
+        const rpTag = document.createElement("span");
+        rpTag.className = "tag cost";
+        rpTag.textContent = eff.stackable
+            ? (eff.rpCost >= 0 ? "+" : "") + eff.rpCost + " RP / stack"
+            : (eff.rpCost >= 0 ? "+" : "") + eff.rpCost + " RP";
+        head.appendChild(rpTag);
+
+        const cText = compText(eff);
+        if (cText) {
+            const cTag = document.createElement("span");
+            cTag.className = "tag cost";
+            cTag.textContent = cText;
+            head.appendChild(cTag);
+        }
+        if (eff.minRarity) {
+            const t = document.createElement("span");
+            t.className = "tag min";
+            t.textContent = "Min Rarity: " + eff.minRarity;
+            head.appendChild(t);
+        }
+        if (eff.requirement) {
+            const t = document.createElement("span");
+            t.className = "tag req";
+            t.textContent = "Requires: " + eff.requirement;
+            head.appendChild(t);
+        }
+        if (eff.group) {
+            const t = document.createElement("span");
+            t.className = "tag";
+            t.textContent = "Exclusive group: " + eff.group;
+            head.appendChild(t);
+        }
+        row.appendChild(head);
+
+        const desc = document.createElement("p");
+        desc.className = "effect-desc";
+        desc.textContent = eff.description;
+        row.appendChild(desc);
+
+        if (eff.stackable) {
+            const stepper = document.createElement("div");
+            stepper.className = "stepper";
+            const dec = document.createElement("button");
+            dec.type = "button";
+            dec.textContent = "\u2212";
+            dec.dataset.step = "-1";
+            const input = document.createElement("input");
+            input.type = "number";
+            input.min = 0;
+            input.max = MAX_STACKS;
+            input.dataset.stepper = String(v.index);
+            input.value = 0;
+            const inc = document.createElement("button");
+            inc.type = "button";
+            inc.textContent = "+";
+            inc.dataset.step = "1";
+            stepper.append(dec, input, inc);
+            row.appendChild(stepper);
+            const hint = document.createElement("div");
+            hint.className = "row-hint";
+            hint.textContent = "Stack count (0 = off)";
+            row.appendChild(hint);
+        } else {
+            const label = document.createElement("label");
+            label.className = "check";
+            const cb = document.createElement("input");
+            cb.type = "checkbox";
+            cb.dataset.check = String(v.index);
+            label.appendChild(cb);
+            label.appendChild(document.createTextNode(" Add this effect"));
+            row.appendChild(label);
+        }
+
+        (eff.rpCost >= 0 ? pos : neg).appendChild(row);
+    });
+}
+
+const effectsPanel = document.getElementById("effects-panel");
+
+function clamp(n, lo, hi) {
+    return Math.max(lo, Math.min(hi, n));
+}
+
+function setState(idx, value) {
+    const v = variants[idx];
+    value = clamp(Math.floor(value) || 0, 0, MAX_STACKS);
+    if (value > 0 && v.eff.group) {
+        variants.forEach((other, oi) => {
+            if (oi !== idx && other.eff.group === v.eff.group && state[oi] > 0) {
+                state[oi] = 0;
+            }
+        });
+    }
+    state[idx] = value;
+    refresh();
+}
+
+effectsPanel.addEventListener("click", e => {
+    const btn = e.target.closest("[data-step]");
+    if (!btn) return;
+    const row = btn.closest("[data-var]");
+    if (!row) return;
+    const idx = parseInt(row.dataset.var, 10);
+    setState(idx, state[idx] + parseInt(btn.dataset.step, 10));
+});
+
+effectsPanel.addEventListener("change", e => {
+    if (e.target.dataset.stepper) {
+        const idx = parseInt(e.target.dataset.stepper, 10);
+        setState(idx, parseInt(e.target.value, 10));
+    } else if (e.target.dataset.check) {
+        const idx = parseInt(e.target.dataset.check, 10);
+        setState(idx, e.target.checked ? 1 : 0);
+    }
+});
+
+document.getElementById("btn-reset").addEventListener("click", () => {
+    state.forEach((_, i) => { state[i] = 0; });
+    refresh();
+});
+
+function rarityFromRP(rp) {
+    if (rp <= 0) return 0;
+    for (let i = 0; i < RARITIES.length; i++) {
+        if (rp <= RARITIES[i].max) return i;
+    }
+    return -1;
+}
+
+function rarityFromStacks(n) {
+    for (let i = 0; i < RARITIES.length; i++) {
+        if (n <= RARITIES[i].maxStacks) return i;
+    }
+    return -1;
+}
+
+function compute() {
+    const warnings = [];
+    if (state[variants.findIndex(v => v.eff.name === "Corroded")] > 0
+            && !state.some((n, i) => n > 0 && variants[i].eff.name === "Defensive")) {
+        state[variants.findIndex(v => v.eff.name === "Corroded")] = 0;
+        warnings.push("Corroded requires a Defensive effect, so it was removed.");
+    }
+
+    const t = {
+        rp: 0,
+        material: ITEM_DATA.baseComponents.material,
+        refinement: ITEM_DATA.baseComponents.refinement,
+        power: ITEM_DATA.baseComponents.power,
+        stacks: 0
+    };
+    const defense = {};
+    DEFENSE_TYPES.forEach(d => { defense[d] = 0; });
+    let block = 0, dodge = 0, spellDiscount = 0, airTravelIncrease = 0;
+    const active = {};
+    let slotVariant = null;
+
+    variants.forEach((v, i) => {
+        const n = state[i];
+        if (n <= 0) return;
+        active[v.eff.name] = true;
+        t.rp += v.eff.rpCost * n;
+        t.stacks += n;
+        if (v.type) defense[v.type] = (defense[v.type] || 0) + n;
+        if (v.eff.name === "Guarded") block += n;
+        if (v.eff.name === "Spry") dodge += n;
+        if (v.eff.name === "Magus") spellDiscount += n;
+        if (v.eff.name === "Aerial") airTravelIncrease += n;
+        if (v.eff.group === "Slots") slotVariant = v;
+    });
+
+    const applied = {};
+    variants.forEach((v, i) => {
+        if (state[i] <= 0 || applied[v.eff.name]) return;
+        applied[v.eff.name] = true;
+        t.material += v.eff.materialCost;
+        t.refinement += v.eff.refinementCost;
+        t.power += v.eff.powerCost;
+    });
+
+    let slots = ITEM_DATA.innateStats.slots;
+    if (slotVariant) {
+        if (slotVariant.eff.name === "Inordinate") slots = 27;
+        else if (slotVariant.eff.name === "Awkward") slots = 9;
+        else if (slotVariant.eff.name === "Compact") slots = 1;
+    }
+
+    const errors = [];
+    if (t.material < ITEM_DATA.minComponents.material) {
+        errors.push("Material (" + t.material + ") is below the minimum required (" + ITEM_DATA.minComponents.material + ").");
+    }
+    if (t.refinement < ITEM_DATA.minComponents.refinement) {
+        errors.push("Refinement (" + t.refinement + ") is below the minimum required (" + ITEM_DATA.minComponents.refinement + ").");
+    }
+    if (t.power < ITEM_DATA.minComponents.power) {
+        errors.push("Power (" + t.power + ") is below the minimum required (" + ITEM_DATA.minComponents.power + ").");
+    }
+
+    const rpIdx = rarityFromRP(t.rp);
+    const stackIdx = rarityFromStacks(t.stacks);
+    if (rpIdx === -1) errors.push("Total RP (" + t.rp + ") exceeds the maximum supported (220 RP).");
+    if (stackIdx === -1) errors.push("Total stacks (" + t.stacks + ") exceed the maximum supported (60).");
+
+    let effIdx = 0;
+    if (rpIdx === -1) effIdx = RARITIES.length - 1;
+    else effIdx = Math.max(rpIdx, stackIdx === -1 ? 0 : stackIdx);
+
+    if (active["Augmentable"]) {
+        const commonIdx = RARITIES.findIndex(r => r.name === "Common");
+        if (effIdx < commonIdx) effIdx = commonIdx;
+    }
+
+    const tier = RARITIES[effIdx];
+    const value = Math.max(t.rp * tier.multiplier, tier.minValue);
+
+    return {
+        totals: t,
+        defense: defense,
+        block: block,
+        dodge: dodge,
+        spellDiscount: spellDiscount,
+        airTravelIncrease: airTravelIncrease,
+        slots: slots,
+        active: active,
+        tier: tier,
+        effIdx: effIdx,
+        value: value,
+        overRPCap: rpIdx === -1,
+        overStackCap: stackIdx === -1,
+        errors: errors,
+        warnings: warnings
+    };
+}
+
+function refresh() {
+    const c = compute();
+
+    variants.forEach((v, i) => {
+        const row = effectsPanel.querySelector('.effect-row[data-var="' + v.index + '"]');
+        if (!row) return;
+        const input = row.querySelector("[data-stepper]");
+        if (input) input.value = state[i];
+        const cb = row.querySelector("[data-check]");
+        if (cb) {
+            cb.checked = state[i] > 0;
+            const unmet = v.eff.requirement ? !c.active[v.eff.requirement] : false;
+            cb.disabled = unmet;
+            row.classList.toggle("dim", unmet && state[i] === 0);
+        }
+    });
+
+    const rarityEl = document.getElementById("rarity-value");
+    rarityEl.textContent = c.tier.name;
+    rarityEl.style.color = c.tier.color;
+
+    document.getElementById("sum-rp").textContent = c.totals.rp;
+    document.getElementById("sum-value").textContent = (c.overRPCap || c.overStackCap) ? "\u2014" : c.value;
+    document.getElementById("sum-stacks").textContent = c.totals.stacks;
+    document.getElementById("sum-max-stacks").textContent = c.overStackCap ? "\u2014" : c.tier.maxStacks;
+
+    document.getElementById("comp-material").textContent = c.totals.material;
+    document.getElementById("comp-refinement").textContent = c.totals.refinement;
+    document.getElementById("comp-power").textContent = c.totals.power;
+    document.getElementById("comp-slots").textContent = c.slots;
+
+    const stats = document.getElementById("stats-list");
+    stats.innerHTML = "";
+    function addStat(label, val) {
+        const li = document.createElement("li");
+        const l = document.createElement("span");
+        l.textContent = label;
+        const v = document.createElement("span");
+        v.textContent = val;
+        li.append(l, v);
+        stats.appendChild(li);
+    }
+    DEFENSE_TYPES.forEach(d => {
+        addStat("Defense (" + d + ")", c.defense[d]);
+    });
+    addStat("Block", c.block);
+    addStat("Dodge", c.dodge);
+    addStat("Spell Discount", c.spellDiscount);
+    addStat("Air Travel Increase", c.airTravelIncrease);
+
+    const banner = document.getElementById("error-banner");
+    const list = document.getElementById("error-list");
+    const msgs = c.errors.concat(c.warnings);
+    list.innerHTML = "";
+    msgs.forEach(m => {
+        const li = document.createElement("li");
+        li.textContent = m;
+        list.appendChild(li);
+    });
+    banner.classList.toggle("show", msgs.length > 0);
+}
+
+buildLists();
+refresh();
+</script>
+
+<script src="../theme.js"></script></body>
+</html>

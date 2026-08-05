@@ -1,0 +1,74 @@
+/* Shared theme for the item builder site.
+   :root holds the dark palette (default). [data-theme="light"] overrides.
+   Load AFTER each builder's inline <style> so overrides take precedence. */
+
+:root {
+    --bg: #1a1a1a;
+    --panel: #2d2d2d;
+    --panel-2: #242424;
+    --border: #444;
+    --text: #e0e0e0;
+    --muted: #9a9a9a;
+    --gold: #ffd700;
+    --green: #52b788;
+    --red: #e63946;
+    --blue-hi: #bde0fe;
+    --blue: #64b5f6;
+    --accent: #007bff;
+}
+
+html[data-theme="light"] {
+    --bg: #f4f4f4;
+    --panel: #ffffff;
+    --panel-2: #ececec;
+    --border: #c9c9c9;
+    --text: #1b1b1b;
+    --muted: #5c5c5c;
+    --gold: #b8860b;
+    --green: #2e8b63;
+    --red: #c5303d;
+    --blue-hi: #1f4e8c;
+    --blue: #2563a8;
+    --accent: #0d5cbd;
+}
+
+/* ---- flip hardcoded colors from the builder pages ---- */
+html[data-theme="light"] .tag { background: #e2e2e2; color: #2a2a2a; }
+html[data-theme="light"] .tag.cost { color: #9c6a00; }
+html[data-theme="light"] .tag.req { color: #c0392b; }
+html[data-theme="light"] .tag.min { color: #2e6fa3; }
+html[data-theme="light"] .stepper { background: #ffffff; }
+html[data-theme="light"] .stepper button { background: #e4e4e4; }
+html[data-theme="light"] .stepper button:hover { background: #d6d6d6; }
+html[data-theme="light"] .stepper input { background: #ffffff; }
+html[data-theme="light"] .intensify-select { background: #ffffff; }
+html[data-theme="light"] .btn-add { background: #e4e4e4; }
+html[data-theme="light"] .btn-add:hover { background: #d6d6d6; }
+html[data-theme="light"] .btn-reset { background: #e4e4e4; }
+html[data-theme="light"] .btn-reset:hover { background: #d6d6d6; }
+html[data-theme="light"] .btn-remove:hover { color: #c0392b; }
+html[data-theme="light"] .panel { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+html[data-theme="light"] .stat-list li { border-bottom-color: #d8d8d8; }
+html[data-theme="light"] .summary h2 { color: #2a6f97; }
+html[data-theme="light"] .summary h3 { color: #457b9d; }
+
+/* ---- theme toggle button (shared across all pages) ---- */
+#theme-toggle {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 1000;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 0.82em;
+    font-family: inherit;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+#theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}

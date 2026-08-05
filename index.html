@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item Builders</title>
+<script>document.documentElement.setAttribute("data-theme", localStorage.getItem("utopia-theme") || "dark");</script>
+<style>
+    :root {
+        --bg: #1a1a1a;
+        --panel: #2d2d2d;
+        --panel-2: #242424;
+        --border: #444;
+        --text: #e0e0e0;
+        --muted: #9a9a9a;
+        --gold: #ffd700;
+        --green: #52b788;
+        --red: #e63946;
+        --blue-hi: #bde0fe;
+        --blue: #64b5f6;
+        --accent: #007bff;
+    }
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 20px;
+        line-height: 1.5;
+    }
+    header {
+        max-width: 1100px;
+        margin: 0 auto 24px;
+        text-align: center;
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 14px;
+    }
+    header h1 {
+        color: var(--gold);
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 1.8em;
+    }
+    header p { color: var(--muted); margin: 6px 0 0; font-size: 0.9em; }
+    .menu {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+    }
+    .menu a {
+        display: block;
+        background-color: var(--panel);
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        padding: 18px 20px;
+        text-decoration: none;
+        color: var(--text);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        transition: border-color 0.2s, background-color 0.2s;
+    }
+    .menu a:hover {
+        border-color: var(--accent);
+        background-color: var(--panel-2);
+    }
+    .menu .name {
+        display: block;
+        color: var(--blue-hi);
+        font-weight: bold;
+        font-size: 1.05em;
+        margin-bottom: 4px;
+    }
+    .menu .hint {
+        display: block;
+        color: var(--muted);
+        font-size: 0.85em;
+    }
+    .foot {
+        max-width: 1100px;
+        margin: 28px auto 0;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.8em;
+    }
+</style>
+<link rel="stylesheet" href="theme.css">
+</head>
+<body>
+
+<header>
+    <h1>Item Builders</h1>
+    <p>Build and price armor for your creatures &mdash; select effects and see totals update in real time.</p>
+</header>
+
+<div class="menu">
+    <a href="item-gen/shield-builder.html">
+        <span class="name">Shield Builder</span>
+        <span class="hint">Off-hand protection &middot; Block, Slots</span>
+    </a>
+    <a href="item-gen/chest-armor-builder.html">
+        <span class="name">Chest Armor Builder</span>
+        <span class="hint">Torso protection &middot; Defense, Block, Dodge</span>
+    </a>
+    <a href="item-gen/head-armor-builder.html">
+        <span class="name">Head Armor Builder</span>
+        <span class="hint">Helmets &middot; Defense, Intensify, Slots</span>
+    </a>
+    <a href="item-gen/hand-armor-builder.html">
+        <span class="name">Hand Armor Builder</span>
+        <span class="hint">Gloves &middot; Weaponless attack bonus</span>
+    </a>
+    <a href="item-gen/foot-armor-builder.html">
+        <span class="name">Foot Armor Builder</span>
+        <span class="hint">Boots &middot; Land, Water, Air travel</span>
+    </a>
+</div>
+
+<div class="foot">Rarity tiers, RP costs, and component requirements follow the Utopia item generation rules.</div>
+
+<script src="theme.js"></script>
+</body>
+</html>
