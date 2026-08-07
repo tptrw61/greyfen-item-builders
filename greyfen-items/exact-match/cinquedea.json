@@ -1,0 +1,63 @@
+{
+  "version": 2,
+  "weaponBuilder": true,
+  "currentType": "fast",
+  "currentMode": "melee",
+  "state": [
+    6,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "choiceState": {
+    "Elegant": {
+      "type": null,
+      "stacks": 0,
+      "sub": null
+    },
+    "Extravagant": {
+      "type": null,
+      "stacks": 0,
+      "sub": "Speed"
+    }
+  },
+  "penetrativeData": {
+    "nextId": 0,
+    "entries": [],
+    "state": {}
+  },
+  "savedSlowOnly": {
+    "Elaborate": 0,
+    "Articulate": 0,
+    "Convoluted": 0
+  },
+  "diceChoices": {
+    "Attack (Physical)": "3d8"
+  }
+}
