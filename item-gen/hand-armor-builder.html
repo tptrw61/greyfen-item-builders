@@ -1104,7 +1104,7 @@ function buildSummaryHTML(name, c, compRows, statRows, featuresRows) {
     const overCap = c.overRPCap || c.overStackCap;
     const cells = [
         { label: "Total RP", val: c.totals.rp },
-        { label: "Value", val: overCap ? "\u2014" : c.value },
+        { label: "Value", val: overCap ? "\u2014" : c.value + " SP" },
         { label: "Total Stacks", val: c.totals.stacks },
         { label: "Max Stacks", val: overCap ? "\u2014" : c.tier.maxStacks }
     ].map(x => '<div class="sum-cell"><div class="label">' + escHtml(x.label) + '</div><div class="val">' + escHtml(x.val) + '</div></div>').join("");
@@ -1367,7 +1367,7 @@ function refresh() {
     rarityEl.style.color = c.tier.color;
 
     document.getElementById("sum-rp").textContent = c.totals.rp;
-    document.getElementById("sum-value").textContent = (c.overRPCap || c.overStackCap) ? "\u2014" : c.value;
+    document.getElementById("sum-value").textContent = (c.overRPCap || c.overStackCap) ? "\u2014" : c.value + " SP";
     document.getElementById("sum-stacks").textContent = c.totals.stacks;
     document.getElementById("sum-max-stacks").textContent = c.overStackCap ? "\u2014" : c.tier.maxStacks;
 
