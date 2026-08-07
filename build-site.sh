@@ -20,10 +20,10 @@ for b in "${BUILDERS[@]}"; do
         echo "ERROR: source not found: $src" >&2
         exit 1
     fi
-    sed -e 's#href="/"#href="../index.html"#' \
-        -e "s#<head>#<head>$FOUC#" \
-        -e "s#</head>#$THEME_CSS</head>#" \
-        -e "s#</body>#$THEME_JS</body>#" \
+    sed -z -e 's#href="/"#href="../index.html"#' \
+        -e 's#<head>\n<meta charset#<head>'"$FOUC"'\n<meta charset#' \
+        -e 's#</head>\n<body>#'"$THEME_CSS"'\n<body>#' \
+        -e 's#</body>\n</html>#'"$THEME_JS"'\n</html>#' \
         "$src" > "$dest"
     echo "built $dest"
 done

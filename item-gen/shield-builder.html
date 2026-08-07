@@ -202,6 +202,19 @@
         text-transform: uppercase;
         letter-spacing: 1px;
     }
+    .name-box { margin-bottom: 14px; }
+    .name-box .label { font-size: 0.75em; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .name-box input {
+        width: 100%;
+        margin-top: 4px;
+        padding: 8px 10px;
+        background: var(--panel-2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 1em;
+    }
+    .name-box input::placeholder { color: var(--muted); opacity: 0.7; }
     .summary-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -285,7 +298,7 @@
         font-size: 0.8em;
     }
 </style>
-<link rel="stylesheet" href="../theme.css"></head>
+<link rel="stylesheet" href="../theme.css">
 <body>
 
 <nav class="top">
@@ -313,6 +326,10 @@
         <div class="panel">
             <div class="error-banner" id="error-banner"><ul id="error-list"></ul></div>
             <h2>Summary</h2>
+            <div class="name-box">
+                <label class="label" for="item-name">Item Name</label>
+                <input type="text" id="item-name" class="name-input" placeholder="Name this item">
+            </div>
             <div class="rarity-box">
                 <div class="label">Rarity</div>
                 <div class="value" id="rarity-value">Crude</div>
@@ -324,7 +341,7 @@
                 <div class="sum-cell"><div class="label">Max Stacks</div><div class="val mono" id="sum-max-stacks">10</div></div>
             </div>
             <h3>Components</h3>
-            <ul class="stat-list">
+            <ul class="stat-list" id="comp-list">
                 <li><span>Material</span><span id="comp-material">3 (Min 3)</span></li>
                 <li><span>Refinement</span><span id="comp-refinement">0 (Min 0)</span></li>
                 <li><span>Power</span><span id="comp-power">0 (Min 0)</span></li>
@@ -339,6 +356,7 @@
                 <button class="btn-reset" id="btn-load-build">Import</button>
                 <input type="file" id="file-load-build" accept=".json,application/json" style="display:none">
             </div>
+            <button class="btn-reset" id="btn-download-summary">Download Summary (HTML)</button>
         </div>
     </div>
 </div>
@@ -657,6 +675,166 @@ document.getElementById("file-load-build").addEventListener("change", e => {
     reader.readAsText(file);
 });
 
+/* ---- Download Summary (standalone HTML) ---- */
+const SUMMARY_CSS = `
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #1a1a1a;
+        color: #e0e0e0;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.5;
+    }
+    .card {
+        max-width: 640px;
+        margin: 0 auto;
+        background-color: #2d2d2d;
+        border: 2px solid #444;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .item-name {
+        color: #ffd700;
+        font-size: 1.5em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-align: center;
+        margin: 0 0 14px;
+        border-bottom: 2px solid #444;
+        padding-bottom: 10px;
+    }
+    .rarity-box {
+        text-align: center;
+        border: 2px solid #444;
+        border-radius: 8px;
+        padding: 14px;
+        margin-bottom: 14px;
+        background-color: #242424;
+    }
+    .rarity-box .label {
+        font-size: 0.75em;
+        color: #9a9a9a;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .rarity-box .value {
+        font-size: 1.6em;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .summary-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+    .sum-cell {
+        background-color: #242424;
+        border: 1px solid #444;
+        border-radius: 6px;
+        padding: 8px 10px;
+    }
+    .sum-cell .label {
+        font-size: 0.72em;
+        color: #9a9a9a;
+        text-transform: uppercase;
+    }
+    .sum-cell .val {
+        font-size: 1.15em;
+        font-weight: bold;
+        color: #ffd700;
+        font-family: Consolas, monospace;
+    }
+    h3 {
+        color: #a8dadc;
+        font-size: 0.95em;
+        margin: 14px 0 6px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .stat-list { list-style: none; margin: 0; padding: 0; }
+    .stat-list li {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 3px 0;
+        border-bottom: 1px dashed #3a3a3a;
+        font-size: 0.9em;
+    }
+    .stat-list li span:first-child { color: #bde0fe; }
+    .stat-list li span:last-child { font-weight: bold; margin-left: auto; text-align: right; }
+`;
+
+function escHtml(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function buildSummaryHTML(name, c, compRows, statRows) {
+    const overCap = c.overRPCap || c.overStackCap;
+    const cells = [
+        { label: "Total RP", val: c.totals.rp },
+        { label: "Value", val: overCap ? "\u2014" : c.value },
+        { label: "Total Stacks", val: c.totals.stacks },
+        { label: "Max Stacks", val: overCap ? "\u2014" : c.tier.maxStacks }
+    ].map(x => '<div class="sum-cell"><div class="label">' + escHtml(x.label) + '</div><div class="val">' + escHtml(x.val) + '</div></div>').join("");
+    function rowsHtml(rows) {
+        return rows.map(r => '<li><span>' + escHtml(r.label) + '</span><span>' + escHtml(r.value) + '</span></li>').join("");
+    }
+    return '<!DOCTYPE html>\n' +
+        '<html lang="en">\n' +
+        '<head>\n' +
+        '<meta charset="UTF-8">\n' +
+        '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+        '<title>' + escHtml(name) + '</title>\n' +
+        '<style>' + SUMMARY_CSS + '</style>\n' +
+        '</head>\n' +
+        '<body>\n' +
+        '<div class="card">\n' +
+        '<h1 class="item-name">' + escHtml(name) + '</h1>\n' +
+        '<div class="rarity-box"><div class="label">Rarity</div><div class="value" style="color:' + c.tier.color + '">' + escHtml(c.tier.name) + '</div></div>\n' +
+        '<div class="summary-grid">' + cells + '</div>\n' +
+        (compRows.length ? '<h3>Components</h3>\n<ul class="stat-list">' + rowsHtml(compRows) + '</ul>\n' : '') +
+        '<h3>Resulting Stats</h3>\n<ul class="stat-list">' + rowsHtml(statRows) + '</ul>\n' +
+        '</div>\n' +
+        '</body>\n' +
+        '</html>\n';
+}
+
+function collectRows(list) {
+    const rows = [];
+    (list ? list.querySelectorAll("li") : []).forEach(li => {
+        if (li.children && li.children.length === 2) {
+            rows.push({ label: li.children[0].textContent, value: li.children[1].textContent });
+        }
+    });
+    return rows;
+}
+
+document.getElementById("btn-download-summary").addEventListener("click", () => {
+    const c = compute();
+    refresh();
+    if (c.errors && c.errors.length) {
+        alert("Cannot download summary: the build is not valid.\n\n- " + c.errors.join("\n- "));
+        return;
+    }
+    const name = (document.getElementById("item-name").value || "").trim() || "Unnamed Item";
+    let fname = name.replace(/[\\/:*?"<>|]/g, "_").trim() || "item-summary";
+    if (!/\.html?$/i.test(fname)) fname += ".html";
+    const html = buildSummaryHTML(name, c, collectRows(document.getElementById("comp-list")), collectRows(document.getElementById("stats-list")));
+    const blob = new Blob([html], { type: "text/html" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = fname;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(a.href), 0);
+});
+
+
 function rarityFromRP(rp) {
     if (rp <= 0) return 0;
     for (let i = 0; i < RARITIES.length; i++) {
@@ -845,5 +1023,5 @@ buildLists();
 refresh();
 </script>
 
-<script src="../theme.js"></script></body>
+<script src="../theme.js"></script>
 </html>
