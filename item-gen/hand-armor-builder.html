@@ -221,6 +221,8 @@
         font-size: 0.88em;
     }
     .btn-add:hover { background: #444; }
+    .btn-add:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-add:disabled:hover { background: #333; }
 
     /* ---------- Summary ---------- */
     .summary {
@@ -278,13 +280,15 @@
     .stat-list { list-style: none; margin: 0; padding: 0; }
     .stat-list li {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         padding: 3px 0;
         border-bottom: 1px dashed #3a3a3a;
         font-size: 0.9em;
     }
-    .stat-list li span:first-child { color: var(--blue-hi); }
-    .stat-list li span:last-child { font-weight: bold; }
+    .stat-list li span:first-child { color: var(--blue-hi); flex: 0 0 auto; }
+    .stat-list li span:last-child { font-weight: bold; flex: 0 0 auto; max-width: 100%; }
+    .stat-list li.wrapped span:last-child { margin-left: auto; text-align: right; }
 
     .error-banner {
         display: none;
@@ -311,6 +315,18 @@
         font-size: 0.95em;
     }
     .btn-reset:hover { background: #444; }
+
+    .build-actions {
+        margin-top: 8px;
+        display: flex;
+        gap: 8px;
+    }
+    .build-actions .btn-reset {
+        margin-top: 0;
+        flex: 1;
+        padding: 8px;
+        font-size: 0.9em;
+    }
 
     .foot {
         max-width: 1100px;
@@ -365,14 +381,19 @@
             </div>
             <h3>Components</h3>
             <ul class="stat-list">
-                <li><span>Material</span><span id="comp-material">3</span></li>
-                <li><span>Refinement</span><span id="comp-refinement">1</span></li>
-                <li><span>Power</span><span id="comp-power">0</span></li>
+                <li><span>Material</span><span id="comp-material">1 (Min 1)</span></li>
+                <li><span>Refinement</span><span id="comp-refinement">2 (Min 1)</span></li>
+                <li><span>Power</span><span id="comp-power">0 (Min 0)</span></li>
                 <li><span>Slots</span><span id="comp-slots">3</span></li>
             </ul>
             <h3>Resulting Stats</h3>
             <ul class="stat-list" id="stats-list"></ul>
             <button class="btn-reset" id="btn-reset">Reset All</button>
+            <div class="build-actions">
+                <button class="btn-reset" id="btn-save-build">Export</button>
+                <button class="btn-reset" id="btn-load-build">Import</button>
+                <input type="file" id="file-load-build" accept=".json,application/json" style="display:none">
+            </div>
         </div>
     </div>
 </div>
@@ -507,6 +528,11 @@ const RARITIES = [
 
 const STAT_TYPES = ["Physical", "Energy", "Heat", "Chill", "Psyche"];
 const MAX_STACKS = 60;
+const DICE_SIDES = [4, 6, 8, 10, 12, 20, 100];
+
+function diceOptions(max) {
+    return DICE_SIDES.filter(s => max % s === 0).map(s => (max / s) + "d" + s);
+}
 
 /* ---- Standard variants (everything except Intensify) ---- */
 const variants = [];
@@ -677,13 +703,6 @@ function buildIntensifyRow(iid) {
     const select = document.createElement("select");
     select.className = "intensify-select";
     select.dataset.iidSelect = String(iid);
-    intensifyEffect.subtraits.forEach(st => {
-        const opt = document.createElement("option");
-        opt.value = st;
-        opt.textContent = st;
-        select.appendChild(opt);
-    });
-    select.value = entry.subtrait;
     controls.appendChild(select);
 
     const stepper = document.createElement("div");
@@ -695,7 +714,7 @@ function buildIntensifyRow(iid) {
     dec.dataset.iid = String(iid);
     const input = document.createElement("input");
     input.type = "number";
-    input.min = 0;
+    input.min = 1;
     input.max = MAX_STACKS;
     input.dataset.iidStepper = String(iid);
     input.value = entry.stacks;
@@ -711,44 +730,71 @@ function buildIntensifyRow(iid) {
 
     const hint = document.createElement("div");
     hint.className = "row-hint";
-    hint.textContent = "Stack count (0 = off)";
+    hint.textContent = "Stack count (min 1)";
     row.appendChild(hint);
 
     intensifyList.appendChild(row);
+    refreshIntensifyOptions(iid);
+}
+
+function refreshIntensifyOptions(iid) {
+    const entry = intensifyState[iid];
+    if (!entry) return;
+    const select = intensifyList.querySelector('[data-iid-select="' + iid + '"]');
+    if (!select) return;
+    const taken = {};
+    intensifyEntries.forEach(other => {
+        if (other !== iid && intensifyState[other].subtrait) taken[intensifyState[other].subtrait] = true;
+    });
+    const options = intensifyEffect.subtraits.filter(st => !taken[st]);
+    select.innerHTML = "";
+    options.forEach(st => {
+        const opt = document.createElement("option");
+        opt.value = st;
+        opt.textContent = st;
+        select.appendChild(opt);
+    });
+    select.value = options.indexOf(entry.subtrait) !== -1 ? entry.subtrait : options[0] || "";
+    if (select.value !== entry.subtrait) entry.subtrait = select.value;
+    select.disabled = options.length === 0;
+}
+
+function updateIntensifyAddButton() {
+    const addBtn = document.getElementById("btn-add-intensify");
+    if (addBtn) addBtn.disabled = intensifyEntries.length >= intensifyEffect.subtraits.length;
 }
 
 function addIntensifyRow() {
+    if (intensifyEntries.length >= intensifyEffect.subtraits.length) return;
     const iid = nextIntensifyId++;
-    intensifyState[iid] = { subtrait: intensifyEffect.subtraits[0], stacks: 0 };
+    const taken = {};
+    intensifyEntries.forEach(other => {
+        if (intensifyState[other].subtrait) taken[intensifyState[other].subtrait] = true;
+    });
+    const subtrait = intensifyEffect.subtraits.find(st => !taken[st]) || intensifyEffect.subtraits[0];
+    intensifyState[iid] = { subtrait: subtrait, stacks: 1 };
     intensifyEntries.push(iid);
     buildIntensifyRow(iid);
+    updateIntensifyAddButton();
 }
 
 function setIntensifyStacks(iid, value) {
     const entry = intensifyState[iid];
-    const prev = entry.stacks;
-    entry.stacks = clamp(Math.floor(value) || 0, 0, MAX_STACKS);
-    if (prev === 0 && entry.stacks > 0) {
-        const hasZero = intensifyEntries.some(id => id !== iid && intensifyState[id].stacks === 0);
-        if (!hasZero && intensifyEntries.length < 12) addIntensifyRow();
-    }
+    if (!entry) return;
+    entry.stacks = clamp(Math.floor(value) || 1, 1, MAX_STACKS);
     refresh();
 }
 
 function removeIntensifyRow(iid) {
-    if (intensifyEntries.length <= 1) {
-        setIntensifyStacks(iid, 0);
-        return;
-    }
     const idx = intensifyEntries.indexOf(iid);
-    if (idx !== -1) intensifyEntries.splice(idx, 1);
+    if (idx === -1) return;
+    intensifyEntries.splice(idx, 1);
     delete intensifyState[iid];
     const row = intensifyList.querySelector('.intensify-row[data-iid="' + iid + '"]');
     if (row) row.remove();
+    updateIntensifyAddButton();
     refresh();
 }
-
-addIntensifyRow();
 
 const effectsPanel = document.getElementById("effects-panel");
 
@@ -806,6 +852,7 @@ intensifyList.addEventListener("click", e => {
 intensifyList.addEventListener("change", e => {
     if (e.target.dataset.iidSelect) {
         intensifyState[parseInt(e.target.dataset.iidSelect, 10)].subtrait = e.target.value;
+        intensifyEntries.forEach(id => refreshIntensifyOptions(id));
         refresh();
     }
     if (e.target.dataset.iidStepper) {
@@ -815,8 +862,87 @@ intensifyList.addEventListener("change", e => {
 
 document.getElementById("btn-reset").addEventListener("click", () => {
     state.forEach((_, i) => { state[i] = 0; });
-    intensifyEntries.forEach(iid => { intensifyState[iid].stacks = 0; });
+    intensifyList.innerHTML = "";
+    intensifyEntries.length = 0;
+    Object.keys(intensifyState).forEach(k => { delete intensifyState[k]; });
+    nextIntensifyId = 0;
+    updateIntensifyAddButton();
     refresh();
+});
+
+/* ---- Export / Import ---- */
+function collectSaveData() {
+    return {
+        version: 1,
+        builder: "hand-armor",
+        state: state.slice(),
+        intensify: intensifyEntries
+            .filter(iid => intensifyState[iid].stacks > 0)
+            .map(iid => ({ subtrait: intensifyState[iid].subtrait, stacks: intensifyState[iid].stacks }))
+    };
+}
+
+function applySaveData(data) {
+    state.forEach((_, i) => {
+        const n = data && Array.isArray(data.state) ? data.state[i] : 0;
+        state[i] = clamp(Math.floor(n) || 0, 0, variants[i].maxStacks || MAX_STACKS);
+    });
+    intensifyList.innerHTML = "";
+    intensifyEntries.length = 0;
+    Object.keys(intensifyState).forEach(k => { delete intensifyState[k]; });
+    nextIntensifyId = 0;
+    if (data && Array.isArray(data.intensify)) {
+        const used = {};
+        data.intensify.forEach(en => {
+            if (!en || en.stacks <= 0) return;
+            if (intensifyEffect.subtraits.indexOf(en.subtrait) === -1 || used[en.subtrait]) return;
+            used[en.subtrait] = true;
+            addIntensifyRow();
+            const iid = intensifyEntries[intensifyEntries.length - 1];
+            intensifyState[iid].stacks = clamp(Math.floor(en.stacks) || 1, 1, MAX_STACKS);
+            intensifyState[iid].subtrait = en.subtrait;
+        });
+    }
+    refresh();
+}
+
+document.getElementById("btn-save-build").addEventListener("click", () => {
+    let name = prompt("Name your hand armor build:", "hand-armor-build");
+    if (name === null) return;
+    name = (name.trim() || "hand-armor-build").replace(/[\\/:*?"<>|]/g, "_");
+    if (!/\.json$/i.test(name)) name += ".json";
+    const blob = new Blob([JSON.stringify(collectSaveData(), null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(a.href), 0);
+});
+
+document.getElementById("btn-load-build").addEventListener("click", () => {
+    document.getElementById("file-load-build").click();
+});
+
+document.getElementById("file-load-build").addEventListener("change", e => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+        try {
+            const data = JSON.parse(reader.result);
+            if (data.builder && data.builder !== "hand-armor") {
+                alert("This file is not a hand armor build.");
+                return;
+            }
+            applySaveData(data);
+        } catch (err) {
+            alert("Could not load build: " + err.message);
+        }
+    };
+    reader.readAsText(file);
 });
 
 function rarityFromRP(rp) {
@@ -991,14 +1117,15 @@ function refresh() {
     document.getElementById("sum-stacks").textContent = c.totals.stacks;
     document.getElementById("sum-max-stacks").textContent = c.overStackCap ? "\u2014" : c.tier.maxStacks;
 
-    document.getElementById("comp-material").textContent = c.totals.material;
-    document.getElementById("comp-refinement").textContent = c.totals.refinement;
-    document.getElementById("comp-power").textContent = c.totals.power;
+    document.getElementById("comp-material").textContent = c.totals.material + " (Min " + ITEM_DATA.minComponents.material + ")";
+    document.getElementById("comp-refinement").textContent = c.totals.refinement + " (Min " + ITEM_DATA.minComponents.refinement + ")";
+    document.getElementById("comp-power").textContent = c.totals.power + " (Min " + ITEM_DATA.minComponents.power + ")";
     document.getElementById("comp-slots").textContent = c.slots;
 
     const stats = document.getElementById("stats-list");
     stats.innerHTML = "";
     function addStat(label, val) {
+        if (!val) return;
         const li = document.createElement("li");
         const l = document.createElement("span");
         l.textContent = label;
@@ -1010,15 +1137,19 @@ function refresh() {
     STAT_TYPES.forEach(d => {
         addStat("Defense (" + d + ")", c.defense[d]);
     });
-    addStat("Block", c.block);
-    addStat("Dodge", c.dodge);
+    if (c.block > 0) addStat("Block", c.block + "d4");
+    if (c.dodge > 0) addStat("Dodge", c.dodge + "d12");
     addStat("Spell Discount", c.spellDiscount);
     STAT_TYPES.forEach(d => {
-        addStat("Weaponless Atk Bonus (" + d + ")", c.attackBonus[d]);
+        if (c.attackBonus[d] > 0) addStat("Weaponless Atk Bonus (" + d + ")", diceOptions(c.attackBonus[d] * 4).join(" / "));
     });
     const subtraitKeys = Object.keys(c.subtraitBonuses).sort();
     subtraitKeys.forEach(st => {
         addStat("Intensify: " + st, c.subtraitBonuses[st]);
+    });
+
+    stats.querySelectorAll("li").forEach(li => {
+        if (li.lastElementChild.offsetTop > li.firstElementChild.offsetTop) li.classList.add("wrapped");
     });
 
     const banner = document.getElementById("error-banner");

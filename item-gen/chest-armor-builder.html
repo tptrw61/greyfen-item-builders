@@ -229,13 +229,15 @@
     .stat-list { list-style: none; margin: 0; padding: 0; }
     .stat-list li {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         padding: 3px 0;
         border-bottom: 1px dashed #3a3a3a;
         font-size: 0.9em;
     }
-    .stat-list li span:first-child { color: var(--blue-hi); }
-    .stat-list li span:last-child { font-weight: bold; }
+    .stat-list li span:first-child { color: var(--blue-hi); flex: 0 0 auto; }
+    .stat-list li span:last-child { font-weight: bold; flex: 0 0 auto; max-width: 100%; }
+    .stat-list li.wrapped span:last-child { margin-left: auto; text-align: right; }
 
     .error-banner {
         display: none;
@@ -262,6 +264,18 @@
         font-size: 0.95em;
     }
     .btn-reset:hover { background: #444; }
+
+    .build-actions {
+        margin-top: 8px;
+        display: flex;
+        gap: 8px;
+    }
+    .build-actions .btn-reset {
+        margin-top: 0;
+        flex: 1;
+        padding: 8px;
+        font-size: 0.9em;
+    }
 
     .foot {
         max-width: 1100px;
@@ -311,14 +325,19 @@
             </div>
             <h3>Components</h3>
             <ul class="stat-list">
-                <li><span>Material</span><span id="comp-material">5</span></li>
-                <li><span>Refinement</span><span id="comp-refinement">0</span></li>
-                <li><span>Power</span><span id="comp-power">0</span></li>
+                <li><span>Material</span><span id="comp-material">5 (Min 3)</span></li>
+                <li><span>Refinement</span><span id="comp-refinement">0 (Min 0)</span></li>
+                <li><span>Power</span><span id="comp-power">0 (Min 0)</span></li>
                 <li><span>Slots</span><span id="comp-slots">3</span></li>
             </ul>
             <h3>Resulting Stats</h3>
             <ul class="stat-list" id="stats-list"></ul>
             <button class="btn-reset" id="btn-reset">Reset All</button>
+            <div class="build-actions">
+                <button class="btn-reset" id="btn-save-build">Export</button>
+                <button class="btn-reset" id="btn-load-build">Import</button>
+                <input type="file" id="file-load-build" accept=".json,application/json" style="display:none">
+            </div>
         </div>
     </div>
 </div>
@@ -608,6 +627,62 @@ document.getElementById("btn-reset").addEventListener("click", () => {
     refresh();
 });
 
+/* ---- Export / Import ---- */
+function collectSaveData() {
+    return {
+        version: 1,
+        builder: "chest-armor",
+        state: state.slice()
+    };
+}
+
+function applySaveData(data) {
+    state.forEach((_, i) => {
+        const n = data && Array.isArray(data.state) ? data.state[i] : 0;
+        state[i] = clamp(Math.floor(n) || 0, 0, variants[i].maxStacks || MAX_STACKS);
+    });
+    refresh();
+}
+
+document.getElementById("btn-save-build").addEventListener("click", () => {
+    let name = prompt("Name your chest armor build:", "chest-armor-build");
+    if (name === null) return;
+    name = (name.trim() || "chest-armor-build").replace(/[\\/:*?"<>|]/g, "_");
+    if (!/\.json$/i.test(name)) name += ".json";
+    const blob = new Blob([JSON.stringify(collectSaveData(), null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(a.href), 0);
+});
+
+document.getElementById("btn-load-build").addEventListener("click", () => {
+    document.getElementById("file-load-build").click();
+});
+
+document.getElementById("file-load-build").addEventListener("change", e => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+        try {
+            const data = JSON.parse(reader.result);
+            if (data.builder && data.builder !== "chest-armor") {
+                alert("This file is not a chest armor build.");
+                return;
+            }
+            applySaveData(data);
+        } catch (err) {
+            alert("Could not load build: " + err.message);
+        }
+    };
+    reader.readAsText(file);
+});
+
 function rarityFromRP(rp) {
     if (rp <= 0) return 0;
     for (let i = 0; i < RARITIES.length; i++) {
@@ -747,14 +822,15 @@ function refresh() {
     document.getElementById("sum-stacks").textContent = c.totals.stacks;
     document.getElementById("sum-max-stacks").textContent = c.overStackCap ? "\u2014" : c.tier.maxStacks;
 
-    document.getElementById("comp-material").textContent = c.totals.material;
-    document.getElementById("comp-refinement").textContent = c.totals.refinement;
-    document.getElementById("comp-power").textContent = c.totals.power;
+    document.getElementById("comp-material").textContent = c.totals.material + " (Min " + ITEM_DATA.minComponents.material + ")";
+    document.getElementById("comp-refinement").textContent = c.totals.refinement + " (Min " + ITEM_DATA.minComponents.refinement + ")";
+    document.getElementById("comp-power").textContent = c.totals.power + " (Min " + ITEM_DATA.minComponents.power + ")";
     document.getElementById("comp-slots").textContent = c.slots;
 
     const stats = document.getElementById("stats-list");
     stats.innerHTML = "";
     function addStat(label, val) {
+        if (!val) return;
         const li = document.createElement("li");
         const l = document.createElement("span");
         l.textContent = label;
@@ -766,10 +842,14 @@ function refresh() {
     DEFENSE_TYPES.forEach(d => {
         addStat("Defense (" + d + ")", c.defense[d]);
     });
-    addStat("Block", c.block);
-    addStat("Dodge", c.dodge);
+    if (c.block > 0) addStat("Block", c.block + "d4");
+    if (c.dodge > 0) addStat("Dodge", c.dodge + "d12");
     addStat("Spell Discount", c.spellDiscount);
     addStat("Air Travel Increase", c.airTravelIncrease);
+
+    stats.querySelectorAll("li").forEach(li => {
+        if (li.lastElementChild.offsetTop > li.firstElementChild.offsetTop) li.classList.add("wrapped");
+    });
 
     const banner = document.getElementById("error-banner");
     const list = document.getElementById("error-list");

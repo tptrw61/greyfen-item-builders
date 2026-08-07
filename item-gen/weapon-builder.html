@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script>document.documentElement.setAttribute("data-theme", localStorage.getItem("utopia-theme") || "dark");</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weapon Builder</title>
+<style>
+    :root {
+        --bg: #1a1a1a;
+        --panel: #2d2d2d;
+        --panel-2: #242424;
+        --border: #444;
+        --text: #e0e0e0;
+        --muted: #9a9a9a;
+        --gold: #ffd700;
+        --green: #52b788;
+        --red: #e63946;
+        --blue-hi: #bde0fe;
+        --accent: #007bff;
+    }
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 20px;
+        line-height: 1.5;
+    }
+    header {
+        max-width: 1100px;
+        margin: 0 auto 24px;
+        text-align: center;
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 14px;
+    }
+    header h1 {
+        color: var(--gold);
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 1.8em;
+    }
+    header p { color: var(--muted); margin: 6px 0 0; font-size: 0.9em; }
+    nav.top {
+        max-width: 1100px;
+        margin: 0 auto 16px;
+    }
+    .back-link {
+        display: inline-block;
+        text-decoration: none;
+        color: var(--accent);
+        font-weight: bold;
+        font-size: 14px;
+    }
+    .back-link:hover { text-decoration: underline; }
+    .weapon-toggle {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 0 auto 18px;
+        max-width: 1100px;
+    }
+    .wt-option {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: var(--panel);
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        cursor: pointer;
+        user-select: none;
+        font-weight: bold;
+        color: var(--text);
+        transition: border-color 0.15s, background 0.15s;
+    }
+    .wt-option:hover { border-color: var(--accent); }
+    .wt-option input { accent-color: var(--accent); }
+    .wt-option input:checked + span { color: var(--gold); }
+    .wt-option input:checked ~ .wt-slow-note { color: var(--muted); }
+    .wt-option:has(input:checked) { border-color: var(--gold); }
+    .wt-slow-note {
+        font-size: 0.7em;
+        color: var(--muted);
+        font-weight: normal;
+    }
+    .layout {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 24px;
+        max-width: 1100px;
+        margin: 0 auto;
+        align-items: start;
+    }
+    @media (max-width: 900px) {
+        .layout { grid-template-columns: 1fr; }
+        .summary { position: static !important; }
+    }
+
+    .panel {
+        background-color: var(--panel);
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .effects h2 {
+        color: var(--green);
+        font-size: 1.2em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 6px;
+        margin: 0 0 14px;
+    }
+    .effects h2.neg { color: var(--red); }
+    .effects .section { margin-bottom: 26px; }
+
+    .effect-row {
+        background-color: var(--panel-2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 10px 12px;
+        margin-bottom: 10px;
+    }
+    .effect-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+    }
+    .effect-name {
+        font-weight: bold;
+        color: var(--blue-hi);
+        margin-right: auto;
+    }
+    .effect-desc {
+        font-style: italic;
+        color: var(--muted);
+        margin: 8px 0 10px;
+        font-size: 0.88em;
+    }
+    .tag {
+        display: inline-block;
+        background: #444;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75em;
+        color: #d0d0d0;
+    }
+    .tag.cost { color: #ffb703; }
+    .tag.req { color: #ff8fa3; }
+    .tag.min { color: #a5d8ff; }
+
+    .stepper {
+        display: inline-flex;
+        align-items: center;
+        gap: 0;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        overflow: hidden;
+        background: #1e1e1e;
+    }
+    .stepper button {
+        background: #333;
+        border: none;
+        color: var(--gold);
+        font-size: 1.1em;
+        width: 32px;
+        height: 30px;
+        cursor: pointer;
+    }
+    .stepper button:hover { background: #444; }
+    .stepper input {
+        width: 52px;
+        height: 30px;
+        text-align: center;
+        background: #1e1e1e;
+        color: var(--text);
+        border: none;
+        border-left: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+        -moz-appearance: textfield;
+    }
+    .stepper input::-webkit-outer-spin-button,
+    .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    .check {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        user-select: none;
+    }
+    .check input { width: 17px; height: 17px; accent-color: var(--accent); }
+    .check input:disabled { opacity: 0.35; cursor: not-allowed; }
+    .row-hint {
+        font-size: 0.75em;
+        color: var(--muted);
+        margin-top: 6px;
+    }
+    .effect-row.dim { opacity: 0.55; }
+
+    .choice-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 6px;
+        flex-wrap: wrap;
+    }
+    .choice-select {
+        background: #1e1e1e;
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 5px 8px;
+        font-size: 0.88em;
+    }
+    .choice-select:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* ---------- Penetrative ---------- */
+    .penetrative-section {
+        margin-top: 16px;
+        border-top: 1px solid var(--border);
+        padding-top: 14px;
+    }
+    .penetrative-section h3 {
+        color: #8ecae6;
+        font-size: 1em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 0 0 10px;
+    }
+    .penetrative-row-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 6px;
+        flex-wrap: wrap;
+    }
+    .penetrative-select {
+        background: #1e1e1e;
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 5px 8px;
+        font-size: 0.88em;
+    }
+    .penetrative-select:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-remove {
+        background: none;
+        border: none;
+        color: var(--red);
+        font-size: 1.3em;
+        cursor: pointer;
+        padding: 0 4px;
+        margin-left: auto;
+        line-height: 1;
+    }
+    .btn-remove:hover { color: #ff6b6b; }
+    .btn-add {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 6px 14px;
+        background: #333;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--accent);
+        cursor: pointer;
+        font-size: 0.88em;
+    }
+    .btn-add:hover { background: #444; }
+    .btn-add:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-add:disabled:hover { background: #333; }
+
+    /* ---------- Summary ---------- */
+    .summary {
+        position: sticky;
+        top: 20px;
+    }
+    .summary h2 {
+        color: #8ecae6;
+        font-size: 1.2em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 6px;
+        margin: 0 0 14px;
+    }
+    .rarity-box {
+        text-align: center;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        padding: 14px;
+        margin-bottom: 14px;
+        background: var(--panel-2);
+    }
+    .rarity-box .label { font-size: 0.75em; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .rarity-box .value {
+        font-size: 1.6em;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .summary-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+    .sum-cell {
+        background: var(--panel-2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 8px 10px;
+    }
+    .sum-cell .label { font-size: 0.72em; color: var(--muted); text-transform: uppercase; }
+    .sum-cell .val { font-size: 1.15em; font-weight: bold; color: var(--gold); }
+    .sum-cell.wide { grid-column: 1 / -1; }
+    .sum-cell .val.mono { font-family: Consolas, monospace; }
+
+    .summary h3 {
+        color: #a8dadc;
+        font-size: 0.95em;
+        margin: 14px 0 6px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .stat-list { list-style: none; margin: 0; padding: 0; }
+    .stat-list li {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 3px 0;
+        border-bottom: 1px dashed #3a3a3a;
+        font-size: 0.9em;
+    }
+    .stat-list li span:first-child { color: var(--blue-hi); flex: 0 0 auto; }
+    .stat-list li span:last-child { font-weight: bold; flex: 0 0 auto; max-width: 100%; }
+    .stat-list li.wrapped span:last-child { margin-left: auto; text-align: right; }
+
+    .error-banner {
+        display: none;
+        position: relative;
+        background: var(--red);
+        color: #fff;
+        border-radius: 6px;
+        padding: 10px 34px 10px 12px;
+        margin-bottom: 14px;
+        font-size: 0.88em;
+    }
+    .error-banner.show { display: block; }
+    .error-banner ul { margin: 0; padding-left: 18px; }
+    .error-banner ul li { margin-bottom: 3px; }
+    .btn-dismiss {
+        position: absolute;
+        top: 4px;
+        right: 8px;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.25em;
+        line-height: 1;
+        cursor: pointer;
+        padding: 2px 6px;
+    }
+    .btn-dismiss:hover { color: #ffd7d7; }
+
+    .btn-reset {
+        margin-top: 16px;
+        width: 100%;
+        padding: 10px;
+        background: #333;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        cursor: pointer;
+        font-size: 0.95em;
+    }
+    .btn-reset:hover { background: #444; }
+
+    .build-actions {
+        margin-top: 8px;
+        display: flex;
+        gap: 8px;
+    }
+    .build-actions .btn-reset {
+        margin-top: 0;
+        flex: 1;
+        padding: 8px;
+        font-size: 0.9em;
+    }
+
+    .foot {
+        max-width: 1100px;
+        margin: 28px auto 0;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.8em;
+    }
+</style>
+<link rel="stylesheet" href="../theme.css"></head>
+<body>
+
+<nav class="top">
+    <a href="../index.html" class="back-link">&larr; Main Menu</a>
+</nav>
+
+<header>
+    <h1>Weapon Builder</h1>
+    <p>Pick a weapon type, then select effects to craft your weapon &mdash; totals, rarity, and resulting stats update in real time.</p>
+</header>
+
+<div class="weapon-toggle" id="weapon-toggle">
+    <label class="wt-option"><input type="radio" name="weapon-type" value="fast" checked><span>Fast Weapon</span></label>
+    <label class="wt-option"><input type="radio" name="weapon-type" value="moderate"><span>Moderate Weapon</span></label>
+    <label class="wt-option"><input type="radio" name="weapon-type" value="slow"><span>Slow Weapon</span><span class="wt-slow-note">(extra negatives)</span></label>
+</div>
+
+<div class="weapon-toggle" id="weapon-mode-toggle">
+    <label class="wt-option"><input type="radio" name="weapon-mode" value="melee" checked><span>Melee</span></label>
+    <label class="wt-option"><input type="radio" name="weapon-mode" value="ranged"><span>Ranged</span></label>
+</div>
+
+<div class="layout">
+    <div class="panel effects" id="effects-panel">
+        <div class="section">
+            <h2>Positive Effects</h2>
+            <div id="positive-list"></div>
+            <div class="penetrative-section">
+                <h3>Penetrative</h3>
+                <div id="penetrative-list"></div>
+                <button id="btn-add-penetrative" class="btn-add">+ Add Damage Type</button>
+                <div class="row-hint">One stack per damage type the weapon deals. Each row affects a different type.</div>
+            </div>
+        </div>
+        <div class="section">
+            <h2 class="neg">Negative Effects</h2>
+            <div id="negative-list"></div>
+        </div>
+    </div>
+
+    <div class="summary">
+        <div class="panel">
+            <div class="error-banner" id="error-banner"><button class="btn-dismiss" id="btn-dismiss" type="button" aria-label="Dismiss messages">&times;</button><ul id="error-list"></ul></div>
+            <h2>Summary</h2>
+            <div class="rarity-box">
+                <div class="label">Rarity</div>
+                <div class="value" id="rarity-value">Crude</div>
+            </div>
+            <div class="summary-grid">
+                <div class="sum-cell"><div class="label">Total RP</div><div class="val mono" id="sum-rp">0</div></div>
+                <div class="sum-cell"><div class="label">Value</div><div class="val mono" id="sum-value">0</div></div>
+                <div class="sum-cell"><div class="label">Total Stacks</div><div class="val mono" id="sum-stacks">0</div></div>
+                <div class="sum-cell"><div class="label">Max Stacks</div><div class="val mono" id="sum-max-stacks">10</div></div>
+            </div>
+            <h3>Components</h3>
+            <ul class="stat-list">
+                <li><span>Material</span><span id="comp-material">1 (Min 1)</span></li>
+                <li><span>Refinement</span><span id="comp-refinement">2 (Min 2)</span></li>
+                <li><span>Power</span><span id="comp-power">0 (Min 0)</span></li>
+                <li><span>Slots</span><span id="comp-slots">3</span></li>
+            </ul>
+            <h3>Resulting Stats</h3>
+            <ul class="stat-list" id="stats-list"></ul>
+            <button class="btn-reset" id="btn-reset">Reset All</button>
+            <div class="build-actions">
+                <button class="btn-reset" id="btn-save-build">Export</button>
+                <button class="btn-reset" id="btn-load-build">Import</button>
+                <input type="file" id="file-load-build" accept=".json,application/json" style="display:none">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="foot" id="foot-note"></div>
+
+<script>
+"use strict";
+
+const ITEM_DATA = {
+    weapons: {
+        fast: {
+            label: "Fast Weapon",
+            baseComponents: { material: 1, refinement: 2, power: 0 },
+            minComponents: { material: 1, refinement: 2, power: 0 },
+            turnActions: 1
+        },
+        moderate: {
+            label: "Moderate Weapon",
+            baseComponents: { material: 2, refinement: 1, power: 0 },
+            minComponents: { material: 2, refinement: 1, power: 0 },
+            turnActions: 2
+        },
+        slow: {
+            label: "Slow Weapon",
+            baseComponents: { material: 3, refinement: 0, power: 0 },
+            minComponents: { material: 3, refinement: 0, power: 0 },
+            turnActions: 3
+        }
+    },
+    innateStats: {
+        slots: 3,
+        hands: 1,
+        reach: 1,
+        rangeClose: 0,
+        rangeFar: 0,
+        attackType: "Melee",
+        attack: { Physical: 0, Energy: 0, Heat: 0, Chill: 0, Psyche: 0 },
+        staminaRequired: 0,
+        selfDamage: 0
+    },
+    effects: [
+        {
+            name: "Slam", rpCosts: { fast: 10, moderate: 5, slow: 3 }, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 1, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
+            description: `The weapon deals an additional 1d4 Physical damage. Damage dice may be redistributed in any fashion as long as the maximum damage per damage type is the same.`
+        },
+        {
+            name: "Harsh", rpCosts: { fast: 15, moderate: 8, slow: 4 }, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 1,
+            types: ["Energy", "Heat", "Chill", "Psyche"], minRarity: null, requirement: null, group: null, maxStacks: null,
+            description: `The weapon deals an additional 1d4 damage of any type. Damage dice may be redistributed in any fashion as long as the maximum damage per damage type is the same.`
+        },
+        {
+            name: "Compact", rpCost: 10, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 1, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: "Slots", maxStacks: null,
+            description: `This armor takes up 1 slot.`
+        },
+        {
+            name: "Elegant", rpCosts: { fast: 60, moderate: 30, slow: 10 }, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 1, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: "Common", requirement: null, group: "Modifier", maxStacks: null,
+            typeChoice: true,
+            description: `The weapon deals an additional amount of damage for a damage type it would normally deal, chosen upon crafting, equal to the user's subtrait modifier. The user's Power modifier is used if the weapon is melee, the user's Dexterity modifier is used otherwise.`
+        },
+        {
+            name: "Extravagant", rpCosts: { fast: 80, moderate: 45, slow: 20 }, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 1, powerCost: 0,
+            types: [], minRarity: "Extraordinary", requirement: null, group: "Modifier", maxStacks: null,
+            typeChoice: true,
+            description: `The weapon deals an additional amount of damage for a damage type it would normally deal, chosen upon crafting, equal to the user's subtrait modifier. The subtrait modifier used is chosen upon crafting.`
+        },
+        {
+            name: "Reach", rpCost: 2, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 1, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: "Range", maxStacks: 3,
+            description: `The weapon gains X meters of range, maximum of 3. It's still melee.`
+        },
+        {
+            name: "Range", rpCosts: { fast: 5, moderate: 4, slow: 3 }, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 1, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: "Range", maxStacks: null,
+            description: `The weapon gains an additional 5 times X meters of close range and 10 times X meters of far range.`
+        },
+        {
+            name: "Assisted", rpCost: 5, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 1, powerCost: 0,
+            types: [], minRarity: null, requirement: "Range", group: null, maxStacks: null,
+            description: `The TC tests made for accuracy with this weapon are halved, rounded up.`
+        },
+        {
+            name: "Poisonous", rpCost: 55, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 2, powerCost: 0,
+            types: [], minRarity: "Common", requirement: null, group: "DHP Damage", maxStacks: null,
+            description: `Damage dealt by this weapon to creatures other than constructs ignores SHP.`
+        },
+        {
+            name: "Wounding", rpCost: 70, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 2, powerCost: 0,
+            types: [], minRarity: "Extraordinary", requirement: null, group: "DHP Damage", maxStacks: null,
+            description: `Damage dealt by this weapon ignores SHP.`
+        },
+        {
+            name: "Penetrative", rpCosts: { fast: 80, moderate: 60, slow: 40 }, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 2, powerCost: 0,
+            types: [], minRarity: "Extraordinary", requirement: null, group: null, maxStacks: null,
+            description: `Choose a damage type. This weapon ignores defenses of the chosen type.`
+        },
+        {
+            name: "Sentient", rpCost: 25, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 1, powerCost: 1,
+            types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
+            description: `This equipment has a conscious mind and can sense objects within 10 meters of it. It can communicate simple emotions and ideas directly with only its user and has a personality of its own. Emotions and decisions are under GM discretion.`
+        },
+        {
+            name: "Blinding", rpCost: 15, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 1,
+            types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
+            description: `This weapon's user may spend double the number of necessary turn actions to attack with this weapon. If they do, creatures that are dealt damage with it must make a Fortitude test against the amount of damage dealt. Upon failing, the creature becomes Blinded for an additional turn.`
+        },
+        {
+            name: "Confusing", rpCost: 30, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 1, powerCost: 1,
+            types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
+            description: `This weapon's user may spend double the number of necessary turn actions to attack with this weapon. If they do, creatures that are dealt damage with it must make a Fortitude test against the amount of damage dealt. Upon failing, the creature becomes Dazed for an additional turn.`
+        },
+        {
+            name: "Ship Wrecker", rpCosts: { fast: 10, moderate: 8, slow: 5 }, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 1, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
+            description: `This weapon does double damage to targets other than creatures.`
+        },
+        {
+            name: "Exhausting", rpCost: 50, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 2, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
+            description: `When this weapon deals damage to a creature, that creature's stamina is reduced an equal amount.`
+        },
+        {
+            name: "Blasting", rpCost: 40, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 1,
+            types: [], minRarity: null, requirement: "Range", group: "Ranged AOE", maxStacks: null,
+            rpText: "+40 + 2 RP / m far",
+            rpFn: function (n, ctx) { return 40 + 2 * ctx.rangeFar; },
+            description: `Attacks made with this weapon affect all creatures in a line, extending to its far range. Tests of accuracy do not need to be made.`
+        },
+        {
+            name: "Booming", rpCost: 40, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 2,
+            types: [], minRarity: null, requirement: "Range", group: "Ranged AOE", maxStacks: null,
+            rpText: "+40 + 5 RP / m far",
+            rpFn: function (n, ctx) { return 40 + 5 * ctx.rangeFar; },
+            description: `Attacks made with this weapon affect all creatures in a 90 degree cone, extending to its far range. Tests of accuracy do not need to be made.`
+        },
+        {
+            name: "Awkward", rpCost: -10, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: "Slots", maxStacks: null,
+            description: `This armor takes up 9 slots.`
+        },
+        {
+            name: "Inordinate", rpCost: -30, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: "Slots", maxStacks: null,
+            description: `This armor takes up 27 slots.`
+        },
+        {
+            name: "Unwieldy", rpCost: -10, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: null, maxStacks: 5,
+            description: `This armor requires an additional hand to equip.`
+        },
+        {
+            name: "Armed", rpCosts: { fast: -20, moderate: -15, slow: -10 }, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
+            description: `This weapon requires and consumes a single piece of a specific type of ammunition. Ammunition must be equipped in the user's Back or Waist slot in order to be used this way.`
+        },
+        {
+            name: "Sapping", rpCosts: { fast: -10, moderate: -5, slow: -2 }, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
+            description: `This weapon requires 1 additional stamina to attack with.`
+        },
+        {
+            name: "Thorned", rpCosts: { fast: -10, moderate: -5, slow: -2 }, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
+            description: `This weapon deals 1 additional damage to its user each attack. This damage has no type and ignores defenses.`
+        },
+        {
+            name: "Loaded", rpCost: 0, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: "Loading", group: null, maxStacks: 6,
+            negative: true,
+            rpText: "-10 / X RP (rounded down)",
+            rpFn: function (n) { return -Math.floor(10 / n); },
+            description: `This weapon must be loaded or charged after X attacks, maximum of 6.`
+        },
+        {
+            name: "Loading", rpCost: -5, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: "Loaded", group: null, maxStacks: null,
+            description: `This weapon requires 1 additional turn action to load or charge.`
+        },
+        {
+            name: "Non-Lethal", rpCosts: { fast: -40, moderate: -30, slow: -20 }, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: "DHP Damage", maxStacks: null,
+            description: `If damage from this weapon would reduce a creature's DHP, it deals half damage, rounded up, instead.`
+        },
+        {
+            name: "Elaborate", rpCost: -20, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: "Turn Actions", maxStacks: null,
+            slowOnly: true, turnActions: 4,
+            description: `This weapon requires 4 turn actions to attack with.`
+        },
+        {
+            name: "Articulate", rpCost: -30, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: "Turn Actions", maxStacks: null,
+            slowOnly: true, turnActions: 5,
+            description: `This weapon requires 5 turn actions to attack with.`
+        },
+        {
+            name: "Convoluted", rpCost: -40, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, group: "Turn Actions", maxStacks: null,
+            slowOnly: true, turnActions: 6,
+            description: `This weapon requires 6 turn actions to attack with.`
+        }
+    ]
+};
+
+const RARITIES = [
+    { name: "Crude", min: 0, max: 20, multiplier: 1, minValue: 2, maxStacks: 10, color: "#9e9e9e" },
+    { name: "Common", min: 21, max: 40, multiplier: 2, minValue: 10, maxStacks: 20, color: "#81c784" },
+    { name: "Extraordinary", min: 41, max: 70, multiplier: 4, minValue: 40, maxStacks: 30, color: "#64b5f6" },
+    { name: "Rare", min: 71, max: 110, multiplier: 8, minValue: 160, maxStacks: 40, color: "#ffb74d" },
+    { name: "Legendary", min: 111, max: 160, multiplier: 16, minValue: 560, maxStacks: 50, color: "#ffd54f" },
+    { name: "Mythical", min: 161, max: 220, multiplier: 32, minValue: 1760, maxStacks: 60, color: "#f06292" }
+];
+
+const STAT_TYPES = ["Physical", "Energy", "Heat", "Chill", "Psyche"];
+const MAX_STACKS = 60;
+const DICE_SIDES = [4, 6, 8, 10, 12, 20, 100];
+
+function diceOptions(max) {
+    return DICE_SIDES.filter(s => max % s === 0).map(s => (max / s) + "d" + s);
+}
+const WEAPON_TYPES = Object.keys(ITEM_DATA.weapons);
+const SLOW_ONLY_NAMES = ["Elaborate", "Articulate", "Convoluted"];
+
+/* ---- Variants: one per (effect, damage type). typeChoice effects excluded. ---- */
+const variants = [];
+const choiceEffects = [];
+
+ITEM_DATA.effects.forEach(eff => {
+    if (eff.name === "Penetrative") return;
+    if (eff.typeChoice) { choiceEffects.push(eff); return; }
+    const types = eff.types && eff.types.length ? eff.types : [null];
+    types.forEach(type => {
+        variants.push({
+            index: variants.length,
+            eff: eff,
+            type: type,
+            label: eff.name + (type ? " (" + type + ")" : ""),
+            maxStacks: eff.maxStacks ? Math.min(eff.maxStacks, MAX_STACKS) : MAX_STACKS,
+            slowOnly: !!eff.slowOnly
+        });
+    });
+});
+
+/* ---- Single shared build across weapon types. Stacks, choices, and
+       Penetrative rows carry over when the weapon type toggle changes.
+       Slow-only features are saved when leaving Slow and restored on return. ---- */
+let currentType = (document.querySelector('input[name="weapon-type"]:checked') || { value: "fast" }).value;
+let currentMode = (document.querySelector('input[name="weapon-mode"]:checked') || { value: "melee" }).value;
+const state = variants.map(() => 0);
+const choiceState = {};
+choiceEffects.forEach(eff => { choiceState[eff.name] = { type: null, stacks: 0 }; });
+const savedSlowOnly = {};
+SLOW_ONLY_NAMES.forEach(name => { savedSlowOnly[name] = 0; });
+let dismissedMsgs = new Set();
+let currentPinned = new Set();
+
+/* ---- Penetrative: dynamic per-damage-type rows (one stack per row) ---- */
+const penetrativeEffect = ITEM_DATA.effects.find(e => e.name === "Penetrative");
+const penetrativeData = { nextId: 0, entries: [], state: {} };
+
+function effRPCost(eff) {
+    if (eff.rpCosts && eff.rpCosts[currentType] !== undefined) return eff.rpCosts[currentType];
+    return eff.rpCost;
+}
+function currentWeapon() {
+    return ITEM_DATA.weapons[currentType];
+}
+
+function effIndex(name) {
+    return variants.findIndex(v => v.eff.name === name);
+}
+function effStackTotal(name) {
+    let total = 0;
+    variants.forEach((v, i) => { if (v.eff.name === name) total += state[i]; });
+    return total;
+}
+
+function compText(eff) {
+    const parts = [];
+    if (eff.materialCost) parts.push("+" + eff.materialCost + " Material");
+    if (eff.refinementCost) parts.push("+" + eff.refinementCost + " Refinement");
+    if (eff.powerCost) parts.push("+" + eff.powerCost + " Power");
+    if (!parts.length) return "";
+    return parts.join(", ");
+}
+
+function rpTagText(eff) {
+    if (eff.rpText) return eff.rpText;
+    const sign = effRPCost(eff) >= 0 ? "+" : "";
+    return eff.stackable
+        ? sign + effRPCost(eff) + " RP / stack"
+        : sign + effRPCost(eff) + " RP";
+}
+
+function activeTypes() {
+    const types = [];
+    if (effStackTotal("Slam") > 0) types.push("Physical");
+    variants.forEach((v, i) => {
+        if (v.eff.name === "Harsh" && state[i] > 0) types.push(v.type);
+    });
+    return types;
+}
+
+/* ---- Build rows ---- */
+function buildVariantRow(v) {
+    const eff = v.eff;
+    const row = document.createElement("div");
+    row.className = "effect-row";
+    row.dataset.var = String(v.index);
+
+    const head = document.createElement("div");
+    head.className = "effect-head";
+    const name = document.createElement("span");
+    name.className = "effect-name";
+    name.textContent = v.label;
+    head.appendChild(name);
+
+    const rpTag = document.createElement("span");
+    rpTag.className = "tag cost";
+    rpTag.textContent = rpTagText(eff);
+    head.appendChild(rpTag);
+
+    const cText = compText(eff);
+    if (cText) {
+        const cTag = document.createElement("span");
+        cTag.className = "tag cost";
+        cTag.textContent = cText;
+        head.appendChild(cTag);
+    }
+    if (eff.minRarity) {
+        const t = document.createElement("span");
+        t.className = "tag min";
+        t.textContent = "Min Rarity: " + eff.minRarity;
+        head.appendChild(t);
+    }
+    if (eff.requirement) {
+        const t = document.createElement("span");
+        t.className = "tag req";
+        t.textContent = "Requires: " + eff.requirement;
+        head.appendChild(t);
+    }
+    if (eff.group) {
+        const t = document.createElement("span");
+        t.className = "tag";
+        t.textContent = "Exclusive group: " + eff.group;
+        head.appendChild(t);
+    }
+    row.appendChild(head);
+
+    const desc = document.createElement("p");
+    desc.className = "effect-desc";
+    desc.textContent = eff.description;
+    row.appendChild(desc);
+
+    if (eff.stackable) {
+        const stepper = document.createElement("div");
+        stepper.className = "stepper";
+        const dec = document.createElement("button");
+        dec.type = "button";
+        dec.textContent = "\u2212";
+        dec.dataset.step = "-1";
+        const input = document.createElement("input");
+        input.type = "number";
+        input.min = (eff.name === "Range" && currentMode === "ranged") ? 1 : 0;
+        input.max = v.maxStacks;
+        input.dataset.stepper = String(v.index);
+        input.value = 0;
+        const inc = document.createElement("button");
+        inc.type = "button";
+        inc.textContent = "+";
+        inc.dataset.step = "1";
+        stepper.append(dec, input, inc);
+        row.appendChild(stepper);
+        const hint = document.createElement("div");
+        hint.className = "row-hint";
+        if (eff.name === "Range" && currentMode === "ranged") {
+            hint.textContent = eff.maxStacks
+                ? "Stack count (min 1, max " + eff.maxStacks + ")"
+                : "Stack count (min 1)";
+        } else if (eff.name === "Loaded" || eff.name === "Loading") {
+            hint.textContent = eff.maxStacks
+                ? "Stack count (1+ while enabled, max " + eff.maxStacks + "); uncheck the pair toggle above to remove"
+                : "Stack count (1+ while enabled); uncheck the pair toggle above to remove";
+        } else {
+            hint.textContent = eff.maxStacks
+                ? "Stack count (0 = off, max " + eff.maxStacks + ")"
+                : "Stack count (0 = off)";
+        }
+        row.appendChild(hint);
+    } else {
+        const label = document.createElement("label");
+        label.className = "check";
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.dataset.check = String(v.index);
+        label.appendChild(cb);
+        label.appendChild(document.createTextNode(" Add this effect"));
+        row.appendChild(label);
+    }
+
+    return row;
+}
+
+function buildChoiceRow(eff) {
+    const row = document.createElement("div");
+    row.className = "effect-row";
+    row.dataset.choice = eff.name;
+
+    const head = document.createElement("div");
+    head.className = "effect-head";
+    const name = document.createElement("span");
+    name.className = "effect-name";
+    name.textContent = eff.name;
+    head.appendChild(name);
+
+    const rpTag = document.createElement("span");
+    rpTag.className = "tag cost";
+    rpTag.textContent = rpTagText(eff);
+    head.appendChild(rpTag);
+
+    const cText = compText(eff);
+    if (cText) {
+        const cTag = document.createElement("span");
+        cTag.className = "tag cost";
+        cTag.textContent = cText;
+        head.appendChild(cTag);
+    }
+    if (eff.minRarity) {
+        const t = document.createElement("span");
+        t.className = "tag min";
+        t.textContent = "Min Rarity: " + eff.minRarity;
+        head.appendChild(t);
+    }
+    if (eff.group) {
+        const t = document.createElement("span");
+        t.className = "tag";
+        t.textContent = "Exclusive group: " + eff.group;
+        head.appendChild(t);
+    }
+    row.appendChild(head);
+
+    const desc = document.createElement("p");
+    desc.className = "effect-desc";
+    desc.textContent = eff.description;
+    row.appendChild(desc);
+
+    const controls = document.createElement("div");
+    controls.className = "choice-controls";
+
+    if (eff.stackable) {
+        const stepper = document.createElement("div");
+        stepper.className = "stepper";
+        const dec = document.createElement("button");
+        dec.type = "button";
+        dec.textContent = "\u2212";
+        dec.dataset.choiceStep = "-1";
+        dec.dataset.choice = eff.name;
+        const input = document.createElement("input");
+        input.type = "number";
+        input.min = 0;
+        input.max = MAX_STACKS;
+        input.dataset.choiceStepper = eff.name;
+        input.value = 0;
+        const inc = document.createElement("button");
+        inc.type = "button";
+        inc.textContent = "+";
+        inc.dataset.choiceStep = "1";
+        inc.dataset.choice = eff.name;
+        stepper.append(dec, input, inc);
+        controls.appendChild(stepper);
+    } else {
+        const label = document.createElement("label");
+        label.className = "check";
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.dataset.choiceCheck = eff.name;
+        label.appendChild(cb);
+        label.appendChild(document.createTextNode(" Add this effect"));
+        controls.appendChild(label);
+    }
+
+    const select = document.createElement("select");
+    select.className = "choice-select";
+    select.dataset.choiceSelect = eff.name;
+    controls.appendChild(select);
+
+    row.appendChild(controls);
+
+    const hint = document.createElement("div");
+    hint.className = "row-hint";
+    hint.dataset.choiceHint = eff.name;
+    hint.textContent = "Damage type must be dealt by the weapon (add Slam or Harsh).";
+    row.appendChild(hint);
+
+    return row;
+}
+
+function buildLoadedToggleRow() {
+    const row = document.createElement("div");
+    row.className = "effect-row";
+    row.dataset.loadedToggle = "master";
+
+    const head = document.createElement("div");
+    head.className = "effect-head";
+    const name = document.createElement("span");
+    name.className = "effect-name";
+    name.textContent = "Loaded / Loading";
+    head.appendChild(name);
+    const rpTag = document.createElement("span");
+    rpTag.className = "tag cost";
+    rpTag.textContent = "-10 / X RP \u00b7 -5 RP / stack";
+    head.appendChild(rpTag);
+    row.appendChild(head);
+
+    const desc = document.createElement("p");
+    desc.className = "effect-desc";
+    desc.textContent = "Master toggle for the Loaded / Loading pair.";
+    row.appendChild(desc);
+
+    const label = document.createElement("label");
+    label.className = "check";
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.dataset.loadedToggle = "on";
+    label.appendChild(cb);
+    label.appendChild(document.createTextNode(" Enable Loaded / Loading pair"));
+    row.appendChild(label);
+
+    const hint = document.createElement("div");
+    hint.className = "row-hint";
+    hint.textContent = "On = both effects stay at least 1 stack. Off = both reset to 0.";
+    row.appendChild(hint);
+
+    return row;
+}
+
+/* ---- Penetrative: one dynamic row per stack, each row a distinct damage type ---- */
+const penetrativeList = document.getElementById("penetrative-list");
+
+function buildPenetrativeRow(id) {
+    const entry = penetrativeData.state[id];
+    const row = document.createElement("div");
+    row.className = "effect-row";
+    row.dataset.penetrative = String(id);
+
+    const head = document.createElement("div");
+    head.className = "effect-head";
+    const name = document.createElement("span");
+    name.className = "effect-name";
+    name.textContent = "Penetrative";
+    head.appendChild(name);
+    const rpTag = document.createElement("span");
+    rpTag.className = "tag cost";
+    rpTag.textContent = "+" + effRPCost(penetrativeEffect) + " RP";
+    head.appendChild(rpTag);
+    const cTag = document.createElement("span");
+    cTag.className = "tag cost";
+    cTag.textContent = "+2 Refinement";
+    head.appendChild(cTag);
+    const minTag = document.createElement("span");
+    minTag.className = "tag min";
+    minTag.textContent = "Min Rarity: Extraordinary";
+    head.appendChild(minTag);
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "btn-remove";
+    removeBtn.type = "button";
+    removeBtn.dataset.removePenetrative = String(id);
+    removeBtn.textContent = "\u00d7";
+    head.appendChild(removeBtn);
+    row.appendChild(head);
+
+    const controls = document.createElement("div");
+    controls.className = "penetrative-row-controls";
+    const select = document.createElement("select");
+    select.className = "penetrative-select";
+    select.dataset.penetrativeSelect = String(id);
+    controls.appendChild(select);
+    row.appendChild(controls);
+
+    const hint = document.createElement("div");
+    hint.className = "row-hint";
+    hint.textContent = "This weapon ignores defenses of the chosen damage type.";
+    row.appendChild(hint);
+
+    penetrativeList.appendChild(row);
+}
+
+function refreshPenetrativeOptions(id) {
+    const entry = penetrativeData.state[id];
+    if (!entry) return;
+    const select = penetrativeList.querySelector('[data-penetrative-select="' + id + '"]');
+    if (!select) return;
+    const active = activeTypes();
+    const taken = {};
+    penetrativeData.entries.forEach(other => {
+        if (other !== id && penetrativeData.state[other].type) taken[penetrativeData.state[other].type] = true;
+    });
+    const options = active.filter(t => !taken[t]);
+    select.innerHTML = "";
+    if (!entry.type) {
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = "\u2014 choose damage type \u2014";
+        select.appendChild(placeholder);
+    }
+    options.forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t;
+        opt.textContent = t;
+        select.appendChild(opt);
+    });
+    select.value = entry.type && options.indexOf(entry.type) !== -1 ? entry.type : "";
+    select.disabled = options.length === 0;
+}
+
+function addPenetrativeRow() {
+    const active = activeTypes();
+    if (active.length === 0 || penetrativeData.entries.length >= active.length) return;
+    const id = penetrativeData.nextId++;
+    const taken = {};
+    penetrativeData.entries.forEach(other => {
+        if (penetrativeData.state[other].type) taken[penetrativeData.state[other].type] = true;
+    });
+    const type = active.find(t => !taken[t]) || null;
+    penetrativeData.state[id] = { type: type };
+    penetrativeData.entries.push(id);
+    refresh();
+}
+
+function removePenetrativeEntry(id) {
+    const idx = penetrativeData.entries.indexOf(id);
+    if (idx !== -1) penetrativeData.entries.splice(idx, 1);
+    delete penetrativeData.state[id];
+}
+
+function removePenetrativeRow(id) {
+    removePenetrativeEntry(id);
+    refresh();
+}
+
+function rebuildPenetrativeList() {
+    const active = activeTypes();
+    penetrativeList.innerHTML = "";
+    penetrativeData.entries.forEach(id => {
+        buildPenetrativeRow(id);
+    });
+    penetrativeData.entries.forEach(id => refreshPenetrativeOptions(id));
+    const addBtn = document.getElementById("btn-add-penetrative");
+    if (addBtn) {
+        addBtn.disabled = active.length === 0 || penetrativeData.entries.length >= active.length;
+    }
+}
+
+function buildLists() {
+    const pos = document.getElementById("positive-list");
+    const neg = document.getElementById("negative-list");
+    pos.innerHTML = "";
+    neg.innerHTML = "";
+    ITEM_DATA.effects.forEach(eff => {
+        if (eff.slowOnly && currentType !== "slow") return;
+        if (effectHiddenInMode(eff)) return;
+        const isNeg = eff.negative || effRPCost(eff) < 0;
+        if (eff.typeChoice) {
+            (isNeg ? neg : pos).appendChild(buildChoiceRow(eff));
+            return;
+        }
+        variants.filter(v => v.eff === eff).forEach(v => {
+            if (eff.name === "Loaded") (isNeg ? neg : pos).appendChild(buildLoadedToggleRow());
+            (isNeg ? neg : pos).appendChild(buildVariantRow(v));
+        });
+    });
+}
+
+/* ---- Refresh a choice-effect's <select> options from active damage types ---- */
+function refreshChoiceOptions(eff) {
+    const cs = choiceState[eff.name];
+    const select = document.querySelector('[data-choice-select="' + eff.name + '"]');
+    if (!select) return;
+    const active = activeTypes();
+    const prev = select.value;
+    select.innerHTML = "";
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = "\u2014 select type \u2014";
+    select.appendChild(placeholder);
+    active.forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t;
+        opt.textContent = t;
+        select.appendChild(opt);
+    });
+    select.value = active.indexOf(cs.type) !== -1 ? cs.type : "";
+    const hasTypes = active.length > 0;
+    const activeNow = cs.type && active.indexOf(cs.type) !== -1;
+    select.disabled = !hasTypes;
+    if (!hasTypes) select.value = "";
+}
+
+/* ---- setState with mutual-exclusion and auto-pair ---- */
+function setState(idx, value) {
+    const v = variants[idx];
+    value = clamp(Math.floor(value) || 0, variantMin(v), v.maxStacks);
+    if (v.eff.name === "Loaded" || v.eff.name === "Loading") {
+        const pairActive = effStackTotal("Loaded") > 0 || effStackTotal("Loading") > 0;
+        if (pairActive && value === 0) value = 1;
+    }
+    if (value > 0 && v.eff.group && !effectHiddenInMode(v.eff)) {
+        variants.forEach((other, oi) => {
+            if (oi === idx) return;
+            if (other.eff.group !== v.eff.group || state[oi] <= 0) return;
+            if (effectHiddenInMode(other.eff)) return;
+            state[oi] = 0;
+        });
+    }
+    state[idx] = value;
+    if (v.eff.name === "Loaded" && value > 0) {
+        const li = effIndex("Loading");
+        if (li !== -1 && state[li] === 0) state[li] = 1;
+    }
+    if (v.eff.name === "Loading" && value > 0) {
+        const lo = effIndex("Loaded");
+        if (lo !== -1 && state[lo] === 0) state[lo] = 1;
+    }
+    refresh();
+}
+
+function setLoadedPair(enabled) {
+    const lo = effIndex("Loaded");
+    const li = effIndex("Loading");
+    if (enabled) {
+        if (lo !== -1 && state[lo] === 0) state[lo] = 1;
+        if (li !== -1 && state[li] === 0) state[li] = 1;
+    } else {
+        if (lo !== -1) state[lo] = 0;
+        if (li !== -1) state[li] = 0;
+    }
+    refresh();
+}
+
+function setChoice(name, field, value) {
+    const cs = choiceState[name];
+    const eff = choiceEffects.find(e => e.name === name);
+    function clearGroup() {
+        if (eff && eff.group) {
+            choiceEffects.forEach(other => {
+                if (other !== eff && other.group === eff.group && choiceState[other.name].type) {
+                    choiceState[other.name].type = null;
+                    choiceState[other.name].stacks = 0;
+                }
+            });
+        }
+    }
+    if (field === "type") {
+        if (value) clearGroup();
+        cs.type = value || null;
+        if (!cs.type) cs.stacks = 0;
+    } else if (field === "stacks") {
+        cs.stacks = clamp(Math.floor(value) || 0, 0, MAX_STACKS);
+        if (cs.stacks > 0 && !cs.type) {
+            const active = activeTypes();
+            cs.type = active.length ? active[0] : null;
+            if (cs.type) clearGroup();
+            else cs.stacks = 0;
+        }
+    } else if (field === "check") {
+        cs.type = value ? (activeTypes()[0] || null) : null;
+        if (cs.type) clearGroup();
+        else cs.stacks = 0;
+    }
+    refresh();
+}
+
+function clamp(n, lo, hi) {
+    return Math.max(lo, Math.min(hi, n));
+}
+
+function variantMin(v) {
+    return (v.eff.name === "Range" && currentMode === "ranged") ? 1 : 0;
+}
+
+function effectHiddenInMode(eff) {
+    if (eff.name === "Range" && currentMode !== "ranged") return true;
+    if (eff.name === "Reach" && currentMode !== "melee") return true;
+    if (eff.requirement === "Range" && currentMode === "melee") return true;
+    return false;
+}
+
+const effectsPanel = document.getElementById("effects-panel");
+
+effectsPanel.addEventListener("click", e => {
+    const btn = e.target.closest("[data-step]");
+    if (btn) {
+        const row = btn.closest("[data-var]");
+        if (row) {
+            const idx = parseInt(row.dataset.var, 10);
+            setState(idx, state[idx] + parseInt(btn.dataset.step, 10));
+        }
+        return;
+    }
+    const cbtn = e.target.closest("[data-choice-step]");
+    if (cbtn) {
+        const name = cbtn.dataset.choice;
+        setChoice(name, "stacks", choiceState[name].stacks + parseInt(cbtn.dataset.choiceStep, 10));
+    }
+    const remove = e.target.closest("[data-remove-penetrative]");
+    if (remove) {
+        removePenetrativeRow(parseInt(remove.dataset.removePenetrative, 10));
+    }
+});
+
+effectsPanel.addEventListener("change", e => {
+    if (e.target.dataset.stepper) {
+        setState(parseInt(e.target.dataset.stepper, 10), parseInt(e.target.value, 10));
+    } else if (e.target.dataset.check) {
+        setState(parseInt(e.target.dataset.check, 10), e.target.checked ? 1 : 0);
+    } else if (e.target.dataset.loadedToggle) {
+        setLoadedPair(e.target.checked);
+    } else if (e.target.dataset.penetrativeSelect) {
+        const id = parseInt(e.target.dataset.penetrativeSelect, 10);
+        if (penetrativeData.state[id]) {
+            penetrativeData.state[id].type = e.target.value || null;
+            refresh();
+        }
+    } else if (e.target.dataset.choiceSelect) {
+        setChoice(e.target.dataset.choiceSelect, "type", e.target.value);
+    } else if (e.target.dataset.choiceStepper) {
+        setChoice(e.target.dataset.choiceStepper, "stacks", parseInt(e.target.value, 10));
+    } else if (e.target.dataset.choiceCheck) {
+        setChoice(e.target.dataset.choiceCheck, "check", e.target.checked);
+    }
+});
+
+document.getElementById("btn-add-penetrative").addEventListener("click", () => addPenetrativeRow());
+
+document.getElementById("btn-reset").addEventListener("click", () => {
+    state.forEach((_, i) => { state[i] = 0; });
+    choiceEffects.forEach(eff => { choiceState[eff.name] = { type: null, stacks: 0 }; });
+    penetrativeData.entries = [];
+    penetrativeData.state = {};
+    SLOW_ONLY_NAMES.forEach(name => { savedSlowOnly[name] = 0; });
+    dismissedMsgs.clear();
+    refresh();
+});
+
+/* ---- Save / Load build ---- */
+function collectSaveData() {
+    return {
+        version: 1,
+        weaponBuilder: true,
+        currentType: currentType,
+        currentMode: currentMode,
+        state: state.slice(),
+        choiceState: JSON.parse(JSON.stringify(choiceState)),
+        penetrativeData: JSON.parse(JSON.stringify(penetrativeData)),
+        savedSlowOnly: Object.assign({}, savedSlowOnly)
+    };
+}
+
+function applySaveData(data) {
+    state.forEach((_, i) => {
+        const n = data && Array.isArray(data.state) ? data.state[i] : 0;
+        state[i] = clamp(Math.floor(n) || 0, 0, variants[i].maxStacks);
+    });
+    choiceEffects.forEach(eff => {
+        const cs = data && data.choiceState ? data.choiceState[eff.name] : null;
+        const type = cs && STAT_TYPES.indexOf(cs.type) !== -1 ? cs.type : null;
+        choiceState[eff.name] = {
+            type: type,
+            stacks: clamp(Math.floor(cs && cs.stacks) || 0, 0, MAX_STACKS)
+        };
+        if (!type) choiceState[eff.name].stacks = 0;
+    });
+    penetrativeData.entries = [];
+    penetrativeData.state = {};
+    penetrativeData.nextId = 0;
+    if (data && data.penetrativeData && Array.isArray(data.penetrativeData.entries)) {
+        data.penetrativeData.entries.forEach(id => {
+            const e = data.penetrativeData.state ? data.penetrativeData.state[id] : null;
+            if (e && STAT_TYPES.indexOf(e.type) !== -1) {
+                const nid = penetrativeData.nextId++;
+                penetrativeData.entries.push(nid);
+                penetrativeData.state[nid] = { type: e.type };
+            }
+        });
+    }
+    SLOW_ONLY_NAMES.forEach(name => { savedSlowOnly[name] = 0; });
+    if (data && data.savedSlowOnly) {
+        SLOW_ONLY_NAMES.forEach(name => {
+            const n = data.savedSlowOnly[name];
+            if (typeof n === "number") savedSlowOnly[name] = clamp(Math.floor(n) || 0, 0, 1);
+        });
+    }
+    if (data && WEAPON_TYPES.indexOf(data.currentType) !== -1) currentType = data.currentType;
+    if (data && (data.currentMode === "melee" || data.currentMode === "ranged")) currentMode = data.currentMode;
+    const typeInput = document.querySelector('[name="weapon-type"][value="' + currentType + '"]');
+    if (typeInput) typeInput.checked = true;
+    const modeInput = document.querySelector('[name="weapon-mode"][value="' + currentMode + '"]');
+    if (modeInput) modeInput.checked = true;
+    buildLists();
+    refresh();
+}
+
+document.getElementById("btn-save-build").addEventListener("click", () => {
+    let name = prompt("Name your weapon build:", "weapon-build");
+    if (name === null) return;
+    name = (name.trim() || "weapon-build").replace(/[\\/:*?"<>|]/g, "_");
+    if (!/\.json$/i.test(name)) name += ".json";
+    const blob = new Blob([JSON.stringify(collectSaveData(), null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(a.href), 0);
+});
+
+document.getElementById("btn-load-build").addEventListener("click", () => {
+    document.getElementById("file-load-build").click();
+});
+
+document.getElementById("file-load-build").addEventListener("change", e => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+        try {
+            applySaveData(JSON.parse(reader.result));
+        } catch (err) {
+            alert("Could not load build: " + err.message);
+        }
+    };
+    reader.readAsText(file);
+});
+
+document.getElementById("btn-dismiss").addEventListener("click", () => {
+    const list = document.getElementById("error-list");
+    Array.from(list.children).forEach(li => {
+        const t = li.textContent;
+        if (!currentPinned.has(t)) dismissedMsgs.add(t);
+    });
+    refresh();
+});
+
+document.getElementById("weapon-toggle").addEventListener("change", e => {
+    if (e.target.name === "weapon-type" && e.target.checked) switchType(e.target.value);
+});
+
+document.getElementById("weapon-mode-toggle").addEventListener("change", e => {
+    if (e.target.name === "weapon-mode" && e.target.checked) switchMode(e.target.value);
+});
+
+/* ---- Switch Melee/Ranged. ---- */
+function switchMode(mode) {
+    if (mode === currentMode) return;
+    currentMode = mode;
+    if (mode === "melee") {
+        const rg = effIndex("Range");
+        if (rg !== -1) state[rg] = 0;
+    } else {
+        const rc = effIndex("Reach");
+        if (rc !== -1) state[rc] = 0;
+        const rg = effIndex("Range");
+        if (rg !== -1 && state[rg] === 0) state[rg] = 1;
+    }
+    buildLists();
+    refresh();
+}
+
+/* ---- Switch weapon type. The shared build carries over; slow-only
+       features are turned off while away and restored on return. ---- */
+function switchType(type) {
+    if (type === currentType) return;
+    if (currentType === "slow") {
+        SLOW_ONLY_NAMES.forEach(name => {
+            const i = effIndex(name);
+            if (i !== -1) { savedSlowOnly[name] = state[i]; state[i] = 0; }
+        });
+    }
+    currentType = type;
+    if (type === "slow") {
+        SLOW_ONLY_NAMES.forEach(name => {
+            const i = effIndex(name);
+            if (i !== -1) state[i] = savedSlowOnly[name] || 0;
+        });
+    }
+    buildLists();
+    refresh();
+}
+
+function rarityFromRP(rp) {
+    if (rp <= 0) return 0;
+    for (let i = 0; i < RARITIES.length; i++) {
+        if (rp <= RARITIES[i].max) return i;
+    }
+    return -1;
+}
+
+function rarityFromStacks(n) {
+    for (let i = 0; i < RARITIES.length; i++) {
+        if (n <= RARITIES[i].maxStacks) return i;
+    }
+    return -1;
+}
+
+function compute() {
+    const warnings = [];
+
+    /* Auto-pair Loaded / Loading */
+    const loadedTotal = effStackTotal("Loaded");
+    const loadingTotal = effStackTotal("Loading");
+    if (loadedTotal > 0 || loadingTotal > 0) {
+        const li = effIndex("Loading");
+        const lo = effIndex("Loaded");
+        if (li !== -1 && state[li] === 0) state[li] = 1;
+        if (lo !== -1 && state[lo] === 0) state[lo] = 1;
+    }
+
+    /* Ranged weapons require at least 1 stack of Range */
+    if (currentMode === "ranged") {
+        const rg = effIndex("Range");
+        if (rg !== -1 && state[rg] === 0) state[rg] = 1;
+    }
+
+    /* Standard requirement enforcement */
+    variants.forEach((v, i) => {
+        if (!v.eff.requirement || state[i] <= 0) return;
+        if (effectHiddenInMode(v.eff)) return;
+        const reqActive = effStackTotal(v.eff.requirement) > 0;
+        if (!reqActive) {
+            state[i] = 0;
+            warnings.push(v.eff.name + " requires " + v.eff.requirement + ", so it was removed.");
+        }
+    });
+
+    /* Choice effects must use an active damage type */
+    const active = activeTypes();
+    choiceEffects.forEach(eff => {
+        const cs = choiceState[eff.name];
+        if (cs.type && active.indexOf(cs.type) === -1) {
+            warnings.push(eff.name + " requires the weapon to deal " + cs.type + " damage, so it was removed.");
+            cs.type = null;
+            cs.stacks = 0;
+        }
+    });
+
+    /* Penetrative: each row must use an active damage type, distinct per row, capped at active count */
+    penetrativeData.entries.slice().forEach(id => {
+        const e = penetrativeData.state[id];
+        if (!e) return;
+        if (e.type && active.indexOf(e.type) === -1) {
+            warnings.push("Penetrative requires the weapon to deal " + e.type + " damage, so it was removed.");
+            removePenetrativeEntry(id);
+        }
+    });
+    const seen = {};
+    penetrativeData.entries.slice().forEach(id => {
+        const e = penetrativeData.state[id];
+        if (!e || !e.type) return;
+        if (seen[e.type]) {
+            warnings.push("Penetrative: each damage type can only be chosen once (" + e.type + " was removed).");
+            removePenetrativeEntry(id);
+        } else {
+            seen[e.type] = true;
+        }
+    });
+
+    const rangeStacks = currentMode === "ranged" ? effStackTotal("Range") : 0;
+    const ctx = {
+        rangeClose: rangeStacks * 5,
+        rangeFar: rangeStacks * 10
+    };
+
+    const t = {
+        rp: 0,
+        material: currentWeapon().baseComponents.material,
+        refinement: currentWeapon().baseComponents.refinement,
+        power: currentWeapon().baseComponents.power,
+        stacks: 0
+    };
+    const attack = {};
+    STAT_TYPES.forEach(d => { attack[d] = 0; });
+    let hands = ITEM_DATA.innateStats.hands;
+    let turnActions = currentWeapon().turnActions;
+    let reach = ITEM_DATA.innateStats.reach;
+    let attackType = ITEM_DATA.innateStats.attackType;
+    let staminaRequired = ITEM_DATA.innateStats.staminaRequired;
+    let selfDamage = ITEM_DATA.innateStats.selfDamage;
+    const activeEffects = {};
+    let slotVariant = null;
+
+    variants.forEach((v, i) => {
+        const n = state[i];
+        if (n <= 0) return;
+        if (v.slowOnly && currentType !== "slow") return;
+        if (effectHiddenInMode(v.eff)) return;
+        activeEffects[v.eff.name] = true;
+        t.rp += v.eff.rpFn ? v.eff.rpFn(n, ctx) : effRPCost(v.eff) * n;
+        t.stacks += n;
+        if (v.eff.name === "Slam") attack["Physical"] += n;
+        if (v.eff.name === "Harsh") attack[v.type] += n;
+        if (v.eff.name === "Reach") reach += n;
+        if (v.eff.name === "Range") { attackType = "Ranged"; }
+        if (v.eff.name === "Unwieldy") hands += n;
+        if (v.eff.name === "Sapping") staminaRequired += n;
+        if (v.eff.name === "Thorned") selfDamage += n;
+        if (v.eff.group === "Slots") slotVariant = v;
+        if (v.eff.turnActions) turnActions = v.eff.turnActions;
+    });
+
+    choiceEffects.forEach(eff => {
+        const cs = choiceState[eff.name];
+        if (!cs.type) return;
+        activeEffects[eff.name] = true;
+        if (eff.stackable) {
+            t.rp += effRPCost(eff) * cs.stacks;
+            t.stacks += cs.stacks;
+        } else {
+            t.rp += effRPCost(eff);
+        }
+    });
+
+    penetrativeData.entries.forEach(id => {
+        const e = penetrativeData.state[id];
+        if (!e || !e.type) return;
+        activeEffects["Penetrative"] = true;
+        t.rp += effRPCost(penetrativeEffect);
+        t.stacks += 1;
+    });
+
+    const applied = {};
+    variants.forEach((v, i) => {
+        if (state[i] <= 0 || applied[v.eff.name]) return;
+        if (v.slowOnly && currentType !== "slow") return;
+        applied[v.eff.name] = true;
+        t.material += v.eff.materialCost;
+        t.refinement += v.eff.refinementCost;
+        t.power += v.eff.powerCost;
+    });
+    choiceEffects.forEach(eff => {
+        const cs = choiceState[eff.name];
+        if (!cs.type) return;
+        t.material += eff.materialCost;
+        t.refinement += eff.refinementCost;
+        t.power += eff.powerCost;
+    });
+    if (penetrativeData.entries.some(id => penetrativeData.state[id] && penetrativeData.state[id].type)) {
+        t.refinement += penetrativeEffect.refinementCost;
+    }
+
+    let slots = ITEM_DATA.innateStats.slots;
+    if (slotVariant) {
+        if (slotVariant.eff.name === "Inordinate") slots = 27;
+        else if (slotVariant.eff.name === "Awkward") slots = 9;
+        else if (slotVariant.eff.name === "Compact") slots = 1;
+    }
+
+    const errors = [];
+    const pinnedErrors = [];
+    const slamHarsh = effStackTotal("Slam") + effStackTotal("Harsh");
+    if (slamHarsh < 1) {
+        const msg = "This weapon requires at least 1 stack of Slam or Harsh.";
+        errors.push(msg);
+        pinnedErrors.push(msg);
+    }
+    if (t.material < currentWeapon().minComponents.material) {
+        errors.push("Material (" + t.material + ") is below the minimum required (" + currentWeapon().minComponents.material + ").");
+    }
+    if (t.refinement < currentWeapon().minComponents.refinement) {
+        errors.push("Refinement (" + t.refinement + ") is below the minimum required (" + currentWeapon().minComponents.refinement + ").");
+    }
+    if (t.power < currentWeapon().minComponents.power) {
+        errors.push("Power (" + t.power + ") is below the minimum required (" + currentWeapon().minComponents.power + ").");
+    }
+
+    const rpIdx = rarityFromRP(t.rp);
+    const stackIdx = rarityFromStacks(t.stacks);
+    if (rpIdx === -1) errors.push("Total RP (" + t.rp + ") exceeds the maximum supported (220 RP).");
+    if (stackIdx === -1) errors.push("Total stacks (" + t.stacks + ") exceed the maximum supported (60).");
+
+    let effIdx = 0;
+    if (rpIdx === -1) effIdx = RARITIES.length - 1;
+    else effIdx = Math.max(rpIdx, stackIdx === -1 ? 0 : stackIdx);
+
+    variants.forEach((v, i) => {
+        if (state[i] <= 0 || !v.eff.minRarity) return;
+        const idx = RARITIES.findIndex(r => r.name === v.eff.minRarity);
+        if (idx > effIdx) effIdx = idx;
+    });
+    choiceEffects.forEach(eff => {
+        if (!choiceState[eff.name].type || !eff.minRarity) return;
+        const idx = RARITIES.findIndex(r => r.name === eff.minRarity);
+        if (idx > effIdx) effIdx = idx;
+    });
+    if (penetrativeData.entries.some(id => penetrativeData.state[id] && penetrativeData.state[id].type)) {
+        const idx = RARITIES.findIndex(r => r.name === penetrativeEffect.minRarity);
+        if (idx > effIdx) effIdx = idx;
+    }
+
+    const tier = RARITIES[effIdx];
+    const value = Math.max(t.rp * tier.multiplier, tier.minValue);
+
+    return {
+        totals: t,
+        attack: attack,
+        hands: hands,
+        turnActions: turnActions,
+        reach: reach,
+        rangeClose: ctx.rangeClose,
+        rangeFar: ctx.rangeFar,
+        attackType: attackType,
+        staminaRequired: staminaRequired,
+        selfDamage: selfDamage,
+        slots: slots,
+        active: activeEffects,
+        tier: tier,
+        effIdx: effIdx,
+        value: value,
+        overRPCap: rpIdx === -1,
+        overStackCap: stackIdx === -1,
+        errors: errors,
+        pinnedErrors: pinnedErrors,
+        warnings: warnings
+    };
+}
+
+function refresh() {
+    const c = compute();
+
+    variants.forEach((v, i) => {
+        const row = effectsPanel.querySelector('.effect-row[data-var="' + v.index + '"]');
+        if (!row) return;
+        const input = row.querySelector("[data-stepper]");
+        if (input) input.value = state[i];
+        const cb = row.querySelector("[data-check]");
+        if (cb) {
+            cb.checked = state[i] > 0;
+            const unmet = v.eff.requirement ? effStackTotal(v.eff.requirement) === 0 : false;
+            cb.disabled = unmet;
+            row.classList.toggle("dim", unmet && state[i] === 0);
+        }
+        if (v.eff.name === "Loaded" || v.eff.name === "Loading") {
+            const pairActive = effStackTotal("Loaded") > 0 || effStackTotal("Loading") > 0;
+            const stepper = row.querySelector(".stepper");
+            if (stepper) stepper.style.opacity = pairActive ? "1" : "0.35";
+            const stepInput = row.querySelector("[data-stepper]");
+            if (stepInput) stepInput.disabled = !pairActive;
+        }
+    });
+
+    const loadedMaster = effectsPanel.querySelector('[data-loaded-toggle="on"]');
+    if (loadedMaster) {
+        loadedMaster.checked = effStackTotal("Loaded") > 0 || effStackTotal("Loading") > 0;
+    }
+
+    choiceEffects.forEach(eff => {
+        const cs = choiceState[eff.name];
+        const row = effectsPanel.querySelector('.effect-row[data-choice="' + eff.name + '"]');
+        if (!row) return;
+        refreshChoiceOptions(eff);
+        const stepper = row.querySelector("[data-choice-stepper]");
+        if (stepper) stepper.value = cs.stacks;
+        const cb = row.querySelector("[data-choice-check]");
+        if (cb) cb.checked = !!cs.type;
+        const hasActive = activeTypes().length > 0;
+        if (stepper) stepper.closest(".stepper").style.opacity = hasActive ? "1" : "0.35";
+        if (cb) {
+            cb.disabled = !hasActive;
+            if (!hasActive && !cs.type) row.classList.add("dim");
+            else row.classList.remove("dim");
+        }
+        const hint = row.querySelector("[data-choice-hint]");
+        if (hint) {
+            hint.textContent = hasActive
+                ? "Damage type must be dealt by the weapon (currently: " + activeTypes().join(", ") + ")."
+                : "No damage types active yet \u2014 add Slam or Harsh first.";
+        }
+    });
+
+    rebuildPenetrativeList();
+
+    const rarityEl = document.getElementById("rarity-value");
+    rarityEl.textContent = c.tier.name;
+    rarityEl.style.color = c.tier.color;
+
+    document.getElementById("sum-rp").textContent = c.totals.rp;
+    document.getElementById("sum-value").textContent = (c.overRPCap || c.overStackCap) ? "\u2014" : c.value;
+    document.getElementById("sum-stacks").textContent = c.totals.stacks;
+    document.getElementById("sum-max-stacks").textContent = c.overStackCap ? "\u2014" : c.tier.maxStacks;
+
+    const min = currentWeapon().minComponents;
+    document.getElementById("comp-material").textContent = c.totals.material + " (Min " + min.material + ")";
+    document.getElementById("comp-refinement").textContent = c.totals.refinement + " (Min " + min.refinement + ")";
+    document.getElementById("comp-power").textContent = c.totals.power + " (Min " + min.power + ")";
+    document.getElementById("comp-slots").textContent = c.slots;
+
+    const stats = document.getElementById("stats-list");
+    stats.innerHTML = "";
+    function addStat(label, val) {
+        const li = document.createElement("li");
+        const l = document.createElement("span");
+        l.textContent = label;
+        const v = document.createElement("span");
+        v.textContent = val;
+        li.append(l, v);
+        stats.appendChild(li);
+    }
+    addStat("Hands", c.hands);
+    addStat("Turn Actions", c.turnActions);
+    addStat("Attack Type", c.attackType);
+    if (currentMode === "melee") {
+        addStat("Reach", c.reach + " m");
+    } else {
+        addStat("Range", c.rangeClose + "/" + c.rangeFar + " m");
+    }
+    if (c.staminaRequired > 0) addStat("Stamina Required", c.staminaRequired);
+    if (c.selfDamage > 0) addStat("Self Damage", c.selfDamage);
+    STAT_TYPES.forEach(d => {
+        if (c.attack[d] > 0) {
+            addStat("Attack (" + d + ")", diceOptions(c.attack[d] * 4).join(" / "));
+        }
+    });
+    if (effStackTotal("Armed") > 0) addStat("Requires Ammunition", "Yes");
+    const loadedTotal = effStackTotal("Loaded");
+    const loadingTotal = effStackTotal("Loading");
+    if (loadedTotal > 0) addStat("Reload after", loadedTotal + " shot" + (loadedTotal === 1 ? "" : "s"));
+    if (loadingTotal > 0) addStat("Reloading takes", loadingTotal + " turn action" + (loadingTotal === 1 ? "" : "s"));
+
+    stats.querySelectorAll("li").forEach(li => {
+        if (li.lastElementChild.offsetTop > li.firstElementChild.offsetTop) li.classList.add("wrapped");
+    });
+
+    const banner = document.getElementById("error-banner");
+    const list = document.getElementById("error-list");
+    const pinned = new Set(c.pinnedErrors || []);
+    currentPinned = pinned;
+    const msgs = c.errors.concat(c.warnings);
+    const visible = msgs.filter(m => pinned.has(m) || !dismissedMsgs.has(m));
+    list.innerHTML = "";
+    visible.forEach(m => {
+        const li = document.createElement("li");
+        li.textContent = m;
+        list.appendChild(li);
+    });
+    banner.classList.toggle("show", visible.length > 0);
+    const dismissBtn = document.getElementById("btn-dismiss");
+    if (dismissBtn) dismissBtn.style.display = visible.some(m => !pinned.has(m)) ? "block" : "none";
+
+    const foot = document.getElementById("foot-note");
+    const w = currentWeapon();
+    foot.textContent = w.label + " base: " + w.baseComponents.material + " Material \u00b7 " +
+        w.baseComponents.refinement + " Refinement \u00b7 " + w.baseComponents.power + " Power \u00a0|\u00a0 " +
+        "Minimum required: " + w.minComponents.material + " Material \u00b7 " +
+        w.minComponents.refinement + " Refinement \u00b7 " + w.minComponents.power + " Power";
+}
+
+buildLists();
+refresh();
+</script>
+
+<script src="../theme.js"></script></body>
+</html>
