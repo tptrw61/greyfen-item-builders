@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "War bow, exceptional draw",
   "currentType": "slow",
   "currentMode": "ranged",
   "state": [

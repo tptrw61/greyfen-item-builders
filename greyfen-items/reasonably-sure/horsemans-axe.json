@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Horseman's axe",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

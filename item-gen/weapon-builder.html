@@ -1440,6 +1440,7 @@ function collectSaveData() {
     return {
         version: 2,
         weaponBuilder: true,
+        name: (document.getElementById("item-name").value || ""),
         currentType: currentType,
         currentMode: currentMode,
         state: state.slice(),
@@ -1451,6 +1452,10 @@ function collectSaveData() {
 }
 
 function applySaveData(data) {
+    if (data && typeof data.name === "string") {
+        const _nm = document.getElementById("item-name");
+        if (_nm) _nm.value = data.name;
+    }
     state.forEach((_, i) => {
         const n = data && Array.isArray(data.state) ? data.state[i] : 0;
         state[i] = clamp(Math.floor(n) || 0, 0, variants[i].maxStacks);

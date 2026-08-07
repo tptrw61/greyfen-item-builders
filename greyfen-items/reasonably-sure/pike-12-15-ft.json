@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Pike, 12-15 ft",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

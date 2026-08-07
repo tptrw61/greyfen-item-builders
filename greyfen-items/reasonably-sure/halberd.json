@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Halberd",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

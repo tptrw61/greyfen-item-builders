@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Flail, military one-handed",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

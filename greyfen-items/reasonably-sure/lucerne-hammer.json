@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Lucerne hammer",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

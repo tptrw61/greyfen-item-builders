@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Meteor hammer",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

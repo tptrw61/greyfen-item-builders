@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Knife, eating",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

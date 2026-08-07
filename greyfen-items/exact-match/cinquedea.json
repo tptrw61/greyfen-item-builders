@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Cinquedea",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

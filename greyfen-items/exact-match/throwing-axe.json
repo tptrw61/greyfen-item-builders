@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Throwing axe",
   "currentType": "fast",
   "currentMode": "ranged",
   "state": [

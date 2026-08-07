@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Lance, light",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

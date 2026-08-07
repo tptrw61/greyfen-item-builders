@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Quarterstaff",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

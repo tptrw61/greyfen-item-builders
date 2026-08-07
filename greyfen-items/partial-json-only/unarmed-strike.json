@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Unarmed strike",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Staff sling",
   "currentType": "moderate",
   "currentMode": "ranged",
   "state": [

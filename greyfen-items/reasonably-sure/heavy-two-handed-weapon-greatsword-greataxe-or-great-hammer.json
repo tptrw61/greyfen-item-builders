@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Heavy two-handed weapon (greatsword, greataxe, or great hammer)",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

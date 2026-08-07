@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Bearded axe",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

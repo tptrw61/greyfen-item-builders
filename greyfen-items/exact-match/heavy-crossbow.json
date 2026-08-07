@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Heavy crossbow",
   "currentType": "slow",
   "currentMode": "ranged",
   "state": [

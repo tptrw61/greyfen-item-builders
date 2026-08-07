@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Dart",
   "currentType": "fast",
   "currentMode": "ranged",
   "state": [

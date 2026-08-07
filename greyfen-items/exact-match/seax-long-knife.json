@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Seax / long knife",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

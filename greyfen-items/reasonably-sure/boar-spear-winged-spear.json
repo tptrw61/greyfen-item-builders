@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Boar spear / winged spear",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

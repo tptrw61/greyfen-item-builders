@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Bill / guisarme",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

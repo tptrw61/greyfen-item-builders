@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Improvised small blade",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

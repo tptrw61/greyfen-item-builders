@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Parrying dagger",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

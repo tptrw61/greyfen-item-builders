@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Longsword / bastard sword / katana",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

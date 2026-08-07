@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Ranseur / spetum",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

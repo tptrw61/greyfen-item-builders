@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Falchion",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

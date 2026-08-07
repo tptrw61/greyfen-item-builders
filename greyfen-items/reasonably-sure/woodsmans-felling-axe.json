@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Woodsman's felling axe",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

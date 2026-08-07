@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Improvised maul",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

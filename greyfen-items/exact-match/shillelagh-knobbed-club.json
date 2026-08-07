@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Shillelagh / knobbed club",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

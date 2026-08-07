@@ -1,6 +1,7 @@
 {
   "version": 2,
   "weaponBuilder": true,
+  "name": "Baselard",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [
