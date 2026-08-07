@@ -506,7 +506,7 @@ const ITEM_DATA = {
             name: "Breathless", rpCost: 10, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null,
-            description: `While equipped, the user does not need to breath.`
+            description: `While equipped, the user does not need to breathe.`
         },
         {
             name: "Sentient", rpCost: 25, stackable: false, isScalingRP: false, isScalingComponent: false,
@@ -565,6 +565,7 @@ const RARITIES = [
 const STAT_TYPES = ["Physical", "Energy", "Heat", "Chill", "Psyche"];
 const MAX_STACKS = 60;
 const DICE_SIDES = [4, 6, 8, 10, 12, 20, 100];
+const FEATURES_NOT_IN_STATS = ["Augmentable", "Breathless", "Constricting", "Corroded", "Sentient", "Shrouded", "Tethered"];
 
 function diceOptions(max) {
     return DICE_SIDES.filter(s => max % s === 0).map(s => (max / s) + "d" + s);
@@ -601,6 +602,23 @@ function compText(eff) {
 }
 
 /* ---- Build standard effect rows ---- */
+function featureDescription(eff, stacks) {
+    let d = eff.description;
+    if (eff.name === "Assisted") d = d.replace("halved", "divided by " + (2 * stacks));
+    return d;
+}
+
+function activeFeatureRows() {
+    const rows = [];
+    variants.forEach((v, i) => {
+        const n = state[i];
+        if (n <= 0) return;
+        if (FEATURES_NOT_IN_STATS.indexOf(v.eff.name) === -1) return;
+        rows.push({ label: v.label, value: featureDescription(v.eff, n) });
+    });
+    return rows;
+}
+
 function buildLists() {
     const pos = document.getElementById("positive-list");
     const neg = document.getElementById("negative-list");
@@ -912,12 +930,13 @@ document.getElementById("btn-reset").addEventListener("click", () => {
 /* ---- Export / Import ---- */
 function collectSaveData() {
     return {
-        version: 1,
+        version: 2,
         builder: "head-armor",
         state: state.slice(),
         intensify: intensifyEntries
             .filter(iid => intensifyState[iid].stacks > 0)
-            .map(iid => ({ subtrait: intensifyState[iid].subtrait, stacks: intensifyState[iid].stacks }))
+            .map(iid => ({ subtrait: intensifyState[iid].subtrait, stacks: intensifyState[iid].stacks })),
+        diceChoices: Object.assign({}, diceChoices)
     };
 }
 
@@ -940,6 +959,13 @@ function applySaveData(data) {
             const iid = intensifyEntries[intensifyEntries.length - 1];
             intensifyState[iid].stacks = clamp(Math.floor(en.stacks) || 1, 1, MAX_STACKS);
             intensifyState[iid].subtrait = en.subtrait;
+        });
+    }
+    Object.keys(diceChoices).forEach(k => { delete diceChoices[k]; });
+    if (data && data.diceChoices && typeof data.diceChoices === "object") {
+        Object.keys(data.diceChoices).forEach(k => {
+            const v = data.diceChoices[k];
+            if (typeof v === "string") diceChoices[k] = v;
         });
     }
     refresh();
@@ -1067,8 +1093,7 @@ const SUMMARY_CSS = `
     .stat-list { list-style: none; margin: 0; padding: 0; }
     .stat-list li {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        flex-direction: column;
         padding: 3px 0;
         border-bottom: 1px dashed #3a3a3a;
         font-size: 0.9em;
@@ -1081,7 +1106,7 @@ function escHtml(s) {
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-function buildSummaryHTML(name, c, compRows, statRows) {
+function buildSummaryHTML(name, c, compRows, statRows, featuresRows) {
     const overCap = c.overRPCap || c.overStackCap;
     const cells = [
         { label: "Total RP", val: c.totals.rp },
@@ -1107,6 +1132,7 @@ function buildSummaryHTML(name, c, compRows, statRows) {
         '<div class="summary-grid">' + cells + '</div>\n' +
         (compRows.length ? '<h3>Components</h3>\n<ul class="stat-list">' + rowsHtml(compRows) + '</ul>\n' : '') +
         '<h3>Resulting Stats</h3>\n<ul class="stat-list">' + rowsHtml(statRows) + '</ul>\n' +
+        (featuresRows && featuresRows.length ? '<h3>Features</h3>\n<ul class="stat-list">' + rowsHtml(featuresRows) + '</ul>\n' : '') +
         '</div>\n' +
         '</body>\n' +
         '</html>\n';
@@ -1166,7 +1192,7 @@ document.getElementById("btn-download-summary").addEventListener("click", () => 
     const name = (document.getElementById("item-name").value || "").trim() || "Unnamed Item";
     let fname = name.replace(/[\\/:*?"<>|]/g, "_").trim() || "item-summary";
     if (!/\.html?$/i.test(fname)) fname += ".html";
-    const html = buildSummaryHTML(name, c, collectRows(document.getElementById("comp-list")), collectRows(statsList));
+    const html = buildSummaryHTML(name, c, collectRows(document.getElementById("comp-list")), collectRows(statsList), activeFeatureRows());
     const blob = new Blob([html], { type: "text/html" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);

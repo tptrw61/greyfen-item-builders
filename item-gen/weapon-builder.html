@@ -533,7 +533,7 @@ const ITEM_DATA = {
     innateStats: {
         slots: 3,
         hands: 1,
-        reach: 1,
+        reach: 0,
         rangeClose: 0,
         rangeFar: 0,
         attackType: "Melee",
@@ -565,14 +565,16 @@ const ITEM_DATA = {
             materialCost: 1, refinementCost: 0, powerCost: 0,
             types: [], minRarity: "Common", requirement: null, group: "Modifier", maxStacks: null,
             typeChoice: true,
-            description: `The weapon deals an additional amount of damage for a damage type it would normally deal, chosen upon crafting, equal to the user's subtrait modifier. The user's Power modifier is used if the weapon is melee, the user's Dexterity modifier is used otherwise.`
+            description: `The weapon deals an additional amount of damage of the chosen type equal to the user's Power modifier if the weapon is melee, or the user's Dexterity modifier otherwise.`
         },
         {
             name: "Extravagant", rpCosts: { fast: 80, moderate: 45, slow: 20 }, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 0,
             types: [], minRarity: "Extraordinary", requirement: null, group: "Modifier", maxStacks: null,
             typeChoice: true,
-            description: `The weapon deals an additional amount of damage for a damage type it would normally deal, chosen upon crafting, equal to the user's subtrait modifier. The subtrait modifier used is chosen upon crafting.`
+            subtraits: ["Speed", "Dexterity", "Power", "Fortitude", "Engineering", "Memory",
+                        "Resolve", "Awareness", "Portrayal", "Stunt", "Appeal", "Language"],
+            description: `The weapon deals an additional amount of damage for a damage type it would normally deal, chosen upon crafting, equal to the user's chosen subtrait modifier.`
         },
         {
             name: "Reach", rpCost: 2, stackable: true, isScalingRP: true, isScalingComponent: false,
@@ -608,7 +610,7 @@ const ITEM_DATA = {
             name: "Penetrative", rpCosts: { fast: 80, moderate: 60, slow: 40 }, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 2, powerCost: 0,
             types: [], minRarity: "Extraordinary", requirement: null, group: null, maxStacks: null,
-            description: `Choose a damage type. This weapon ignores defenses of the chosen type.`
+            description: `This weapon ignores the chosen damage type's defence.`
         },
         {
             name: "Sentient", rpCost: 25, stackable: false, isScalingRP: false, isScalingComponent: false,
@@ -755,6 +757,7 @@ function diceOptions(max) {
 }
 const WEAPON_TYPES = Object.keys(ITEM_DATA.weapons);
 const SLOW_ONLY_NAMES = ["Elaborate", "Articulate", "Convoluted"];
+const FEATURES_NOT_IN_STATS = ["Assisted", "Blasting", "Blinding", "Booming", "Confusing", "Exhausting", "Non-Lethal", "Penetrative", "Poisonous", "Sentient", "Ship Wrecker", "Wounding"];
 
 /* ---- Variants: one per (effect, damage type). typeChoice effects excluded. ---- */
 const variants = [];
@@ -784,7 +787,7 @@ let currentMode = (document.querySelector('input[name="weapon-mode"]:checked') |
 const state = variants.map(() => 0);
 const choiceState = {};
 const diceChoices = {};
-choiceEffects.forEach(eff => { choiceState[eff.name] = { type: null, stacks: 0 }; });
+choiceEffects.forEach(eff => { choiceState[eff.name] = { type: null, stacks: 0, sub: eff.subtraits ? eff.subtraits[0] : null }; });
 const savedSlowOnly = {};
 SLOW_ONLY_NAMES.forEach(name => { savedSlowOnly[name] = 0; });
 let dismissedMsgs = new Set();
@@ -1020,6 +1023,19 @@ function buildChoiceRow(eff) {
     select.dataset.choiceSelect = eff.name;
     controls.appendChild(select);
 
+    if (eff.subtraits) {
+        const sub = document.createElement("select");
+        sub.className = "choice-select";
+        sub.dataset.choiceSub = eff.name;
+        eff.subtraits.forEach(st => {
+            const opt = document.createElement("option");
+            opt.value = st;
+            opt.textContent = st;
+            sub.appendChild(opt);
+        });
+        controls.appendChild(sub);
+    }
+
     row.appendChild(controls);
 
     const hint = document.createElement("div");
@@ -1187,6 +1203,42 @@ function rebuildPenetrativeList() {
     }
 }
 
+function featureDescription(eff, stacks, opts) {
+    let d = eff.description;
+    if (eff.name === "Assisted") d = d.replace("halved", "divided by " + (2 * stacks));
+    if (eff.name === "Penetrative") d = "This weapon ignores " + (opts && opts.type ? opts.type : "the chosen type") + " defence.";
+    return d;
+}
+
+function modifierSuffix(type) {
+    const parts = [];
+    choiceEffects.forEach(eff => {
+        const cs = choiceState[eff.name];
+        if (!cs || !cs.type || cs.type !== type) return;
+        if (eff.name === "Elegant") parts.push(currentMode === "melee" ? "Power" : "Dexterity");
+        if (eff.name === "Extravagant") parts.push(cs.sub || "chosen subtrait");
+    });
+    return parts.length ? " + [" + parts.join("] + [") + "]" : "";
+}
+
+function activeFeatureRows() {
+    const rows = [];
+    variants.forEach((v, i) => {
+        const n = state[i];
+        if (n <= 0) return;
+        if (v.slowOnly && currentType !== "slow") return;
+        if (effectHiddenInMode(v.eff)) return;
+        if (FEATURES_NOT_IN_STATS.indexOf(v.eff.name) === -1) return;
+        rows.push({ label: v.label, value: featureDescription(v.eff, n, {}) });
+    });
+    penetrativeData.entries.forEach(id => {
+        const e = penetrativeData.state[id];
+        if (!e || !e.type) return;
+        rows.push({ label: "Penetrative (" + e.type + ")", value: featureDescription(penetrativeEffect, 1, { type: e.type }) });
+    });
+    return rows;
+}
+
 function buildLists() {
     const pos = document.getElementById("positive-list");
     const neg = document.getElementById("negative-list");
@@ -1302,6 +1354,8 @@ function setChoice(name, field, value) {
         cs.type = value ? (activeTypes()[0] || null) : null;
         if (cs.type) clearGroup();
         else cs.stacks = 0;
+    } else if (field === "sub") {
+        cs.sub = value && eff && eff.subtraits && eff.subtraits.indexOf(value) !== -1 ? value : (eff && eff.subtraits ? eff.subtraits[0] : null);
     }
     refresh();
 }
@@ -1359,6 +1413,8 @@ effectsPanel.addEventListener("change", e => {
         }
     } else if (e.target.dataset.choiceSelect) {
         setChoice(e.target.dataset.choiceSelect, "type", e.target.value);
+    } else if (e.target.dataset.choiceSub) {
+        setChoice(e.target.dataset.choiceSub, "sub", e.target.value);
     } else if (e.target.dataset.choiceStepper) {
         setChoice(e.target.dataset.choiceStepper, "stacks", parseInt(e.target.value, 10));
     } else if (e.target.dataset.choiceCheck) {
@@ -1370,7 +1426,7 @@ document.getElementById("btn-add-penetrative").addEventListener("click", () => a
 
 document.getElementById("btn-reset").addEventListener("click", () => {
     state.forEach((_, i) => { state[i] = 0; });
-    choiceEffects.forEach(eff => { choiceState[eff.name] = { type: null, stacks: 0 }; });
+choiceEffects.forEach(eff => { choiceState[eff.name] = { type: null, stacks: 0, sub: eff.subtraits ? eff.subtraits[0] : null }; });
     penetrativeData.entries = [];
     penetrativeData.state = {};
     SLOW_ONLY_NAMES.forEach(name => { savedSlowOnly[name] = 0; });
@@ -1382,14 +1438,15 @@ document.getElementById("btn-reset").addEventListener("click", () => {
 /* ---- Save / Load build ---- */
 function collectSaveData() {
     return {
-        version: 1,
+        version: 2,
         weaponBuilder: true,
         currentType: currentType,
         currentMode: currentMode,
         state: state.slice(),
         choiceState: JSON.parse(JSON.stringify(choiceState)),
         penetrativeData: JSON.parse(JSON.stringify(penetrativeData)),
-        savedSlowOnly: Object.assign({}, savedSlowOnly)
+        savedSlowOnly: Object.assign({}, savedSlowOnly),
+        diceChoices: Object.assign({}, diceChoices)
     };
 }
 
@@ -1403,7 +1460,8 @@ function applySaveData(data) {
         const type = cs && STAT_TYPES.indexOf(cs.type) !== -1 ? cs.type : null;
         choiceState[eff.name] = {
             type: type,
-            stacks: clamp(Math.floor(cs && cs.stacks) || 0, 0, MAX_STACKS)
+            stacks: clamp(Math.floor(cs && cs.stacks) || 0, 0, MAX_STACKS),
+            sub: eff.subtraits && cs && eff.subtraits.indexOf(cs.sub) !== -1 ? cs.sub : (eff.subtraits ? eff.subtraits[0] : null)
         };
         if (!type) choiceState[eff.name].stacks = 0;
     });
@@ -1429,6 +1487,13 @@ function applySaveData(data) {
     }
     if (data && WEAPON_TYPES.indexOf(data.currentType) !== -1) currentType = data.currentType;
     if (data && (data.currentMode === "melee" || data.currentMode === "ranged")) currentMode = data.currentMode;
+    Object.keys(diceChoices).forEach(k => { delete diceChoices[k]; });
+    if (data && data.diceChoices && typeof data.diceChoices === "object") {
+        Object.keys(data.diceChoices).forEach(k => {
+            const v = data.diceChoices[k];
+            if (typeof v === "string") diceChoices[k] = v;
+        });
+    }
     const typeInput = document.querySelector('[name="weapon-type"][value="' + currentType + '"]');
     if (typeInput) typeInput.checked = true;
     const modeInput = document.querySelector('[name="weapon-mode"][value="' + currentMode + '"]');
@@ -1554,8 +1619,7 @@ const SUMMARY_CSS = `
     .stat-list { list-style: none; margin: 0; padding: 0; }
     .stat-list li {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        flex-direction: column;
         padding: 3px 0;
         border-bottom: 1px dashed #3a3a3a;
         font-size: 0.9em;
@@ -1568,7 +1632,7 @@ function escHtml(s) {
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-function buildSummaryHTML(name, c, compRows, statRows) {
+function buildSummaryHTML(name, c, compRows, statRows, featuresRows) {
     const overCap = c.overRPCap || c.overStackCap;
     const cells = [
         { label: "Total RP", val: c.totals.rp },
@@ -1594,6 +1658,7 @@ function buildSummaryHTML(name, c, compRows, statRows) {
         '<div class="summary-grid">' + cells + '</div>\n' +
         (compRows.length ? '<h3>Components</h3>\n<ul class="stat-list">' + rowsHtml(compRows) + '</ul>\n' : '') +
         '<h3>Resulting Stats</h3>\n<ul class="stat-list">' + rowsHtml(statRows) + '</ul>\n' +
+        (featuresRows && featuresRows.length ? '<h3>Features</h3>\n<ul class="stat-list">' + rowsHtml(featuresRows) + '</ul>\n' : '') +
         '</div>\n' +
         '</body>\n' +
         '</html>\n';
@@ -1605,7 +1670,9 @@ function collectRows(list) {
         if (!li.children || li.children.length === 0) return;
         const last = li.lastElementChild;
         if (last && last.tagName === "SELECT") {
-            rows.push({ label: li.children[0].textContent, value: last.value });
+            const opts = Array.from(last.children || []);
+            const sel = opts.find(o => o.value === last.value) || opts[0];
+            rows.push({ label: li.children[0].textContent, value: sel ? sel.textContent : last.value });
         } else if (li.children.length === 2) {
             rows.push({ label: li.children[0].textContent, value: li.children[1].textContent });
         }
@@ -1617,8 +1684,8 @@ function collectDiceRows(list) {
     const rows = [];
     (list ? list.querySelectorAll("li") : []).forEach(li => {
         if (!li.children || li.children.length < 2) return;
-        const sel = li.lastElementChild;
-        if (sel && sel.tagName === "SELECT") {
+        const sel = Array.from(li.children).find(c => c.tagName === "SELECT");
+        if (sel) {
             const opts = Array.from(sel.children || []).map(o => o.value);
             rows.push({ label: li.children[0].textContent, select: sel, options: opts });
         }
@@ -1653,7 +1720,7 @@ document.getElementById("btn-download-summary").addEventListener("click", () => 
     const name = (document.getElementById("item-name").value || "").trim() || "Unnamed Item";
     let fname = name.replace(/[\\/:*?"<>|]/g, "_").trim() || "item-summary";
     if (!/\.html?$/i.test(fname)) fname += ".html";
-    const html = buildSummaryHTML(name, c, collectRows(document.getElementById("comp-list")), collectRows(statsList));
+    const html = buildSummaryHTML(name, c, collectRows(document.getElementById("comp-list")), collectRows(statsList), activeFeatureRows());
     const blob = new Blob([html], { type: "text/html" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
@@ -1993,6 +2060,8 @@ function refresh() {
         if (stepper) stepper.value = cs.stacks;
         const cb = row.querySelector("[data-choice-check]");
         if (cb) cb.checked = !!cs.type;
+        const subSel = row.querySelector("[data-choice-sub]");
+        if (subSel) subSel.value = eff.subtraits.indexOf(cs.sub) !== -1 ? cs.sub : eff.subtraits[0];
         const hasActive = activeTypes().length > 0;
         if (stepper) stepper.closest(".stepper").style.opacity = hasActive ? "1" : "0.35";
         if (cb) {
@@ -2036,7 +2105,7 @@ function refresh() {
         li.append(l, v);
         stats.appendChild(li);
     }
-    function addStatDice(label, options) {
+    function addStatDice(label, options, suffix) {
         if (!options || !options.length) return;
         const li = document.createElement("li");
         const l = document.createElement("span");
@@ -2047,7 +2116,7 @@ function refresh() {
         options.forEach(o => {
             const opt = document.createElement("option");
             opt.value = o;
-            opt.textContent = o;
+            opt.textContent = suffix ? o + suffix : o;
             sel.appendChild(opt);
         });
         sel.value = (diceChoices[label] && options.indexOf(diceChoices[label]) !== -1) ? diceChoices[label] : options[0];
@@ -2059,7 +2128,7 @@ function refresh() {
     addStat("Turn Actions", c.turnActions);
     addStat("Attack Type", c.attackType);
     if (currentMode === "melee") {
-        addStat("Reach", c.reach + " m");
+        addStat("Range", c.reach + " m");
     } else {
         addStat("Range", c.rangeClose + "/" + c.rangeFar + " m");
     }
@@ -2067,7 +2136,7 @@ function refresh() {
     if (c.selfDamage > 0) addStat("Self Damage", c.selfDamage);
     STAT_TYPES.forEach(d => {
         if (c.attack[d] > 0) {
-            addStatDice("Attack (" + d + ")", diceOptions(c.attack[d] * 4));
+            addStatDice("Attack (" + d + ")", diceOptions(c.attack[d] * 4), modifierSuffix(d));
         }
     });
     if (effStackTotal("Armed") > 0) addStat("Requires Ammunition", "Yes");
