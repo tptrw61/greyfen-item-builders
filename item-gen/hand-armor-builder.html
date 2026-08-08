@@ -403,9 +403,9 @@
                 <div class="value" id="rarity-value">Crude</div>
             </div>
             <div class="summary-grid">
-                <div class="sum-cell"><div class="label">Total RP</div><div class="val mono" id="sum-rp">0</div></div>
+                <div class="sum-cell"><div class="label">RP</div><div class="val mono" id="sum-rp">0</div></div>
                 <div class="sum-cell"><div class="label">Value (SP)</div><div class="val mono" id="sum-value">0</div></div>
-                <div class="sum-cell"><div class="label">Total Stacks</div><div class="val mono" id="sum-stacks">0</div></div>
+                <div class="sum-cell"><div class="label">Stacks</div><div class="val mono" id="sum-stacks">0</div></div>
             </div>
             <h3>Components</h3>
             <ul class="stat-list" id="comp-list">
@@ -1107,9 +1107,9 @@ function escHtml(s) {
 function buildSummaryHTML(name, c, compRows, statRows, featuresRows) {
     const overCap = c.overRPCap || c.overStackCap;
     const cells = [
-        { label: "Total RP", val: c.totals.rp + "/" + c.tier.max },
+        { label: "RP", val: c.totals.rp + "/" + c.tier.max },
         { label: "Value (SP)", val: overCap ? "\u2014" : c.value },
-        { label: "Total Stacks", val: c.totals.stacks + "/" + c.tier.maxStacks }
+        { label: "Stacks", val: c.totals.stacks + "/" + c.tier.maxStacks }
     ].map(x => '<div class="sum-cell"><div class="label">' + escHtml(x.label) + '</div><div class="val">' + escHtml(x.val) + '</div></div>').join("");
     function rowsHtml(rows) {
         return rows.map(r => '<li><span>' + escHtml(r.label) + '</span><span>' + escHtml(r.value) + '</span></li>').join("");
