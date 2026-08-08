@@ -27,7 +27,7 @@
     0,
     0,
     0,
-    0,
+    1,
     0,
     0,
     1,
@@ -59,7 +59,7 @@
     "Articulate": 0,
     "Convoluted": 0
   },
-  "ammoType": "",
+  "ammoType": "bolts",
   "diceChoices": {
     "Attack (Physical)": "4d6"
   }

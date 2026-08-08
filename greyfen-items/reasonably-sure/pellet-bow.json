@@ -27,7 +27,7 @@
     0,
     0,
     1,
-    0,
+    1,
     0,
     0,
     0,
@@ -59,7 +59,7 @@
     "Articulate": 0,
     "Convoluted": 0
   },
-  "ammoType": "",
+  "ammoType": "pellets",
   "diceChoices": {
     "Attack (Physical)": "2d6"
   }

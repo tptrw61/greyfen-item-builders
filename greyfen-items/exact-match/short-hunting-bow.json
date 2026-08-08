@@ -27,7 +27,7 @@
     1,
     0,
     1,
-    0,
+    1,
     0,
     0,
     0,
@@ -59,7 +59,7 @@
     "Articulate": 0,
     "Convoluted": 0
   },
-  "ammoType": "",
+  "ammoType": "arrows",
   "diceChoices": {
     "Attack (Physical)": "3d8"
   }
