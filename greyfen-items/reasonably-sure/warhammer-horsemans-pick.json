@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Warhammer / horseman's pick",
-  "description": "",
+  "description": "Hammer or armour-piercing pick; spend 1 additional action to ignore 3 Armour Defense.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

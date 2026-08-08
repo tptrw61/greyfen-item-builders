@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Chain, weighted",
-  "description": "",
+  "description": "Improvised control weapon; Instead of damage, make a Power or Dexterity contest against target's Strength or Agility to disarm it or knock it Prone.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

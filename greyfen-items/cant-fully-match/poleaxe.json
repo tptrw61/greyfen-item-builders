@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Poleaxe",
-  "description": "",
+  "description": "Knightly foot-combat weapon; choose before attacking: halve Armour Defense with the spike/hammer or use the billhook effect.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

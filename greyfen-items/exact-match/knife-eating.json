@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Knife, eating",
-  "description": "",
+  "description": "Light domestic blade; Crude and easily concealed.",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

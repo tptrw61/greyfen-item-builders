@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Knife, belt",
-  "description": "",
+  "description": "Utility knife; usable in combat; Also functions as an ordinary cutting tool.",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

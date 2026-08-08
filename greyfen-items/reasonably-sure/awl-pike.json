@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Awl pike",
-  "description": "",
+  "description": "Long narrow armour-piercing head; halves Armour Defense, rounded down; cannot attack at 0-1 m.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

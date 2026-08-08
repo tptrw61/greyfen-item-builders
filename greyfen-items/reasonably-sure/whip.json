@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Whip",
-  "description": "",
+  "description": "Control, disarm, and animal handling more than killing; Instead of damage, make a Dexterity contest against the target's Agility to disarm it or knock it Prone; target must be no more than one size larger.",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

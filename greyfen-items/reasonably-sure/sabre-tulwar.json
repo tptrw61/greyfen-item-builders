@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Sabre / tulwar",
-  "description": "",
+  "description": "Curved cavalry sword; includes tulwar. From horseback, 1 favor on tests to retain the weapon or resist disarmament; foreign forms may be harder to obtain outside their homeland without changing mechanical rarity.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

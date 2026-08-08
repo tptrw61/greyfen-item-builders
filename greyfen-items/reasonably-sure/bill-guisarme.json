@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Bill / guisarme",
-  "description": "",
+  "description": "Agricultural or purpose-made hooking polearm; instead of damage, make a Power contest against the target's Strength or Agility to pull it 1 m or knock it Prone.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

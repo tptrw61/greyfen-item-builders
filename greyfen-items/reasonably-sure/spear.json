@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Spear",
-  "description": "",
+  "description": "General infantry and hunting spear; With 2 hands, may Brace.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Throwing spear",
-  "description": "",
+  "description": "Heavier than javelin; May be used at 1 m melee.",
   "currentType": "moderate",
   "currentMode": "ranged",
   "state": [

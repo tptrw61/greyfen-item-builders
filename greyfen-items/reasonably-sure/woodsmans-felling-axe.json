@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Woodsman's felling axe",
-  "description": "",
+  "description": "Tool; slow but formidable; 1 disfavor on tests to retain it when disarmed; double damage to unattended wood.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

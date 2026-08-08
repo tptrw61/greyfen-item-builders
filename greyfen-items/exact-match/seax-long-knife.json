@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Seax / long knife",
-  "description": "",
+  "description": "Heavy single-edged utility blade; Also functions as a light chopping tool.",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

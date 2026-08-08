@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Club",
-  "description": "",
+  "description": "Shaped hardwood cudgel.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

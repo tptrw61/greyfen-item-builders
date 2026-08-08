@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Lance, light",
-  "description": "",
+  "description": "Mounted use; can be couched; Mounted Charge: after at least 4 m of straight mounted travel, deals 4d8 instead.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

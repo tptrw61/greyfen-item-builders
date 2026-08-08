@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Flail, military one-handed",
-  "description": "",
+  "description": "Short chain and striking head; 1 disfavor on Block rolls granted by a shield.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

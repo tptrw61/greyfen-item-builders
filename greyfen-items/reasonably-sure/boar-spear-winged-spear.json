@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Boar spear / winged spear",
-  "description": "",
+  "description": "Crossbar or wings beneath the head; 1 favor on contests to prevent a struck creature from Scaling or Grappling the user.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

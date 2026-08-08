@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Glaive",
-  "description": "",
+  "description": "Single-edged blade on pole; Core Guide profile.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

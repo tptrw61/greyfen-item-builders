@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Battleaxe",
-  "description": "",
+  "description": "Purpose-made fighting axe; Deals double damage to unattended wood.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Sap / cosh",
-  "description": "",
+  "description": "Concealable, intended to stun; Non-Lethal: if damage would reduce DHP, halve that damage, rounded up.",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

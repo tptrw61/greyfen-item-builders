@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Javelin",
-  "description": "",
+  "description": "Light throwing spear; May be used at 0 m melee.",
   "currentType": "fast",
   "currentMode": "ranged",
   "state": [

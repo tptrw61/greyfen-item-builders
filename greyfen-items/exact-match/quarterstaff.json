@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Quarterstaff",
-  "description": "",
+  "description": "Six- to eight-foot hardwood staff; Core Guide profile.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

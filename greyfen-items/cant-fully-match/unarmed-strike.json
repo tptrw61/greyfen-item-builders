@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Unarmed strike",
-  "description": "",
+  "description": "Fist, kick, elbow, head-butt; Core Guide default; may use any limb.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Improvised maul",
-  "description": "",
+  "description": "Beam, sledge, heavy debris; Unbalanced: 1 disfavor on tests to retain it when disarmed. It is scavenged from the surroundings and has no fixed purchase price.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

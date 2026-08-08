@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Lucerne hammer",
-  "description": "",
+  "description": "Pole hammer with beak and spike; choose on each attack: halve Armour Defense with the beak, or double damage to unattended objects with the hammer.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

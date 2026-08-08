@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Parrying dagger",
-  "description": "",
+  "description": "Enlarged guard; defensive off-hand use; While held in an otherwise free off hand, grants +1d4 Block Rating against melee weapon damage; does not stack with a shield.",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

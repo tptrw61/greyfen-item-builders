@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Throwing cord / stone sling",
-  "description": "",
+  "description": "Ammunition often gathered free; Lead bullets add 1d4 damage; stones are free.",
   "currentType": "fast",
   "currentMode": "ranged",
   "state": [

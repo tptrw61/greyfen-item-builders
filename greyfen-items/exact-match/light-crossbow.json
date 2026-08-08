@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Light crossbow",
-  "description": "",
+  "description": "Lever- or belt-spanned; Requires 1 loading action after each shot; Core Guide profile.",
   "currentType": "moderate",
   "currentMode": "ranged",
   "state": [

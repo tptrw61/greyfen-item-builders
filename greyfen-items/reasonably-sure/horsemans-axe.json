@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Horseman's axe",
-  "description": "",
+  "description": "Compact cavalry axe; No mounted-use penalty from cramped reach.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Combat staff, iron-shod",
-  "description": "",
+  "description": "Reinforced ends.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Armour-piercing dagger (awl, misericorde, or rondel)",
-  "description": "",
+  "description": "Stiff, armour-seeking point; against a Grappled, Prone, or unaware target, ignores 3 Armour Defense.",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

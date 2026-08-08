@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Arbalest",
-  "description": "",
+  "description": "Heavy steel-prod military crossbow; Requires 5 loading actions after each shot; when fired from a rest, accuracy tests have 1 favor.",
   "currentType": "slow",
   "currentMode": "ranged",
   "state": [

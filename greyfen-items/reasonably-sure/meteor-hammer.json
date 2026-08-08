@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Meteor hammer",
-  "description": "",
+  "description": "Foreign weighted rope or chain; 1 disfavor on Block rolls granted by a shield; 1 disfavor on tests to retain it when disarmed.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

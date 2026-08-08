@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Short / hunting bow",
-  "description": "",
+  "description": "Compact self bow for hunting or light war; consolidates the shortbow and hunting-bow profiles.",
   "currentType": "moderate",
   "currentMode": "ranged",
   "state": [

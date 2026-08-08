@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Estoc",
-  "description": "",
+  "description": "Rigid thrusting sword for armoured combat; spend 1 additional action to halve the target's Armour Defense against this attack, rounded down.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

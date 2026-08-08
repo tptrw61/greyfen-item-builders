@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Cinquedea",
-  "description": "",
+  "description": "Broad short sword.",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

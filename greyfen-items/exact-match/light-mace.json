@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Light mace",
-  "description": "",
+  "description": "Flanged or knobbed head.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

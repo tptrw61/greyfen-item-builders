@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Heavy mace",
-  "description": "",
+  "description": "Large military mace.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

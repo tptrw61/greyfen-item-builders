@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Maul",
-  "description": "",
+  "description": "Heavy wood or iron striking tool; Deals double damage to unattended objects.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

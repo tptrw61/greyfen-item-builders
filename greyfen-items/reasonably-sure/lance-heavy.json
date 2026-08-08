@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Lance, heavy",
-  "description": "",
+  "description": "War saddle and stirrups assumed; Mounted Charge: after at least 4 m of straight mounted travel, deals 12d8 instead; requires war saddle.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

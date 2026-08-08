@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Long spear",
-  "description": "",
+  "description": "Formation weapon; May Brace.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

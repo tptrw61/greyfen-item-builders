@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Hand axe / hatchet",
-  "description": "",
+  "description": "Tool and weapon; Deals double damage to unattended wood.",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

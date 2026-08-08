@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Shortsword",
-  "description": "",
+  "description": "Compact military sidearm.",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

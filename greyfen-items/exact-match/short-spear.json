@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Short spear",
-  "description": "",
+  "description": "Usable with shield; May be thrown 5/10 m without adding a modifier.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

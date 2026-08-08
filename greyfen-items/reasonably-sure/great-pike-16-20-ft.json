@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Great pike, 16-20 ft",
-  "description": "",
+  "description": "Formation only; cumbersome alone; May Brace; 1 disfavor on attacks unless at least one allied pike user is adjacent; cannot attack at 0-1 m.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

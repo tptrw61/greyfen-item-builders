@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Heavy two-handed weapon (greatsword, greataxe, or great hammer)",
-  "description": "",
+  "description": "Choose a greatsword, greataxe, or great hammer form when purchased. Edged forms deal double damage to unattended wood, rope, and hide; hammer forms deal double damage to rigid unattended objects. All forms otherwise share this profile.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

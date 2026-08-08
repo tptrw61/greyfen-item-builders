@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Throwing axe",
-  "description": "",
+  "description": "Balanced for throwing; May also be used at 0 m melee.",
   "currentType": "fast",
   "currentMode": "ranged",
   "state": [

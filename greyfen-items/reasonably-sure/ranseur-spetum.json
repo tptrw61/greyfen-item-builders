@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Ranseur / spetum",
-  "description": "",
+  "description": "Spear with lateral tines; Instead of damage, make a Power contest to disarm the target; user has 1 favor.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

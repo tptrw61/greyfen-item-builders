@@ -22,5 +22,5 @@
     0
   ],
   "name": "Chamfron only",
-  "description": ""
+  "description": "Armoured faceplate; adds its listed Armour Defense only when the barding does not already include a chamfron."
 }

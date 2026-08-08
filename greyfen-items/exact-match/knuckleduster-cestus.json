@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Knuckleduster / cestus",
-  "description": "",
+  "description": "Reinforced fist weapon; Counts as both a weapon and a weaponless attack for effects that require either.",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

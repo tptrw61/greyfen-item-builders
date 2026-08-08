@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Falchion",
-  "description": "",
+  "description": "Broad single-edged cutter; Deals double damage to unattended wood, rope, hide, and similar soft objects.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

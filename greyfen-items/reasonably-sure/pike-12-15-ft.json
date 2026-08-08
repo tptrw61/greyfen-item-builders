@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Pike, 12-15 ft",
-  "description": "",
+  "description": "Massed infantry weapon; May Brace; cannot attack a target at 0 m unless the user first spends 1 action shortening the grip.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

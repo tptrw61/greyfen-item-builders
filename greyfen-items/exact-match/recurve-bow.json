@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Recurve bow",
-  "description": "",
+  "description": "Compact composite or laminated bow.",
   "currentType": "moderate",
   "currentMode": "ranged",
   "state": [

@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Baselard",
-  "description": "",
+  "description": "Long dagger / very short sword.",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Bola",
-  "description": "",
+  "description": "Entangles legs; If it deals damage, target makes an Agility test against the attacker's Dexterity test; on failure it becomes Grappled by the bola and falls Prone.",
   "currentType": "fast",
   "currentMode": "ranged",
   "state": [

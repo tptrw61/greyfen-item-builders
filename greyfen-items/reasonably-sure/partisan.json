@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Partisan",
-  "description": "",
+  "description": "Broad spearhead with side projections; 1 favor on contests to resist being disarmed.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

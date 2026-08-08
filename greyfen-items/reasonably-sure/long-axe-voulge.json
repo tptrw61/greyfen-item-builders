@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Long axe / voulge",
-  "description": "",
+  "description": "Long-hafted axe or cleaver-like voulge; deals double damage to unattended wood.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Repeating crossbow",
-  "description": "",
+  "description": "Low-power rapid magazine weapon; six-shot magazine. After six attacks, requires 3 loading actions and six bolts.",
   "currentType": "fast",
   "currentMode": "ranged",
   "state": [

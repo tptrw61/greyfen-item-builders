@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Heavy crossbow",
-  "description": "",
+  "description": "Goat's-foot, windlass, or cranequin; Requires 3 loading actions after each shot.",
   "currentType": "slow",
   "currentMode": "ranged",
   "state": [

@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Sword-cane",
-  "description": "",
+  "description": "Concealed narrow blade; Before it is revealed, an inspection made without handling it has 1 disfavor.",
   "currentType": "fast",
   "currentMode": "melee",
   "state": [

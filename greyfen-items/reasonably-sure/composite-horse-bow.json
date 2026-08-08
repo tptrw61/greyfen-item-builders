@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Composite horse bow",
-  "description": "",
+  "description": "Kirathi-style mounted bow; No disfavor for firing from a moving mount solely because of the mount's movement.",
   "currentType": "moderate",
   "currentMode": "ranged",
   "state": [

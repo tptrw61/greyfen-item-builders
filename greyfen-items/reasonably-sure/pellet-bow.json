@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Pellet bow",
-  "description": "",
+  "description": "Fires clay or lead pellets; Clay pellets are Non-Lethal; lead pellets are lethal and add 1d6 damage.",
   "currentType": "fast",
   "currentMode": "ranged",
   "state": [

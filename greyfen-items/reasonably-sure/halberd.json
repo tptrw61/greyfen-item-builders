@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Halberd",
-  "description": "",
+  "description": "Axe, hook, and thrusting spike; choose before attacking: halve Armour Defense with the spike, double damage to unattended wood with the axe, or use the billhook effect.",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [

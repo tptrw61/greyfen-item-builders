@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Longbow",
-  "description": "",
+  "description": "Powerful self bow; trained use; Core Guide profile.",
   "currentType": "slow",
   "currentMode": "ranged",
   "state": [

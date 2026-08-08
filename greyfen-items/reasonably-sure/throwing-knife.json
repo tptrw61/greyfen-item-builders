@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Throwing knife",
-  "description": "",
+  "description": "Balanced, usually sold singly; May be used at 0 m melee.",
   "currentType": "fast",
   "currentMode": "ranged",
   "state": [

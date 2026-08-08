@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Staff sling",
-  "description": "",
+  "description": "Staff sling or slingstaff; hurls large stones farther than a hand sling and may use stones or sling bullets.",
   "currentType": "moderate",
   "currentMode": "ranged",
   "state": [

@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "War bow, exceptional draw",
-  "description": "",
+  "description": "Made to archer's measure; Requires Power 5; otherwise attacks have 1 disfavor and cost 2 stamina.",
   "currentType": "slow",
   "currentMode": "ranged",
   "state": [

@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Hanger / cutlass",
-  "description": "",
+  "description": "Short naval or hunting sword; Deals double damage to unattended rigging, rope, brush, or canvas and grants 1 favor on related cutting tests.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

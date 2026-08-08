@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Improvised club",
-  "description": "",
+  "description": "Chair leg, weighted stick, heavy tool handle. It is scavenged from the surroundings and has no fixed purchase price.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

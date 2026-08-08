@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Bearded axe",
-  "description": "",
+  "description": "Hooking lower edge; Instead of damage, make a Power contest against target's Strength or Agility to disarm it or pull it Prone.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [

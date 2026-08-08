@@ -2,7 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Arming sword / broadsword / plain regional sword",
-  "description": "",
+  "description": "Standard one-handed military sword. Broadswords, jian, scimitars, shamshirs, and dao without a distinct tactical feature use this profile; foreign forms may be harder to obtain outside their homeland without changing mechanical rarity.",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [
