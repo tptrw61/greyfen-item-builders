@@ -2002,7 +2002,7 @@ function compute() {
     }
 
     const tier = RARITIES[effIdx];
-    const value = Math.max(t.rp * tier.multiplier, tier.minValue);
+    const value = 2 * Math.max(t.rp * tier.multiplier, tier.minValue); /* Greyfen house rule: SP value doubled */
 
     return {
         totals: t,
