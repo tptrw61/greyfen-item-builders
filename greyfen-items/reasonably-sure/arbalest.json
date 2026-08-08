@@ -2,6 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Arbalest",
+  "description": "",
   "currentType": "slow",
   "currentMode": "ranged",
   "state": [
@@ -58,6 +59,7 @@
     "Articulate": 0,
     "Convoluted": 0
   },
+  "ammoType": "",
   "diceChoices": {
     "Attack (Physical)": "10d10"
   }

@@ -2,6 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Estoc",
+  "description": "",
   "currentType": "moderate",
   "currentMode": "melee",
   "state": [
@@ -58,6 +59,7 @@
     "Articulate": 0,
     "Convoluted": 0
   },
+  "ammoType": "",
   "diceChoices": {
     "Attack (Physical)": "5d8"
   }

@@ -360,6 +360,53 @@
         color: var(--muted);
         font-size: 0.8em;
     }
+
+    /* ---------- Summary & Save modal ---------- */
+    .modal-backdrop {
+        position: fixed; inset: 0; z-index: 50;
+        background: rgba(0,0,0,0.72);
+        display: flex; align-items: flex-start; justify-content: center;
+        padding: 28px 16px; overflow-y: auto;
+    }
+    .modal-backdrop[hidden] { display: none; }
+    .modal-card {
+        background: var(--panel); border: 2px solid var(--border); border-radius: 8px;
+        width: 100%; max-width: 680px; box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+    .modal-head {
+        display: flex; align-items: center; gap: 10px;
+        border-bottom: 1px solid var(--border); padding: 14px 18px;
+    }
+    .modal-head h2 {
+        margin: 0; flex: 1; color: var(--gold);
+        font-size: 1.1em; text-transform: uppercase; letter-spacing: 1px;
+    }
+    .modal-x {
+        background: none; border: none; color: var(--muted);
+        font-size: 1.6em; line-height: 1; cursor: pointer; padding: 0 4px;
+    }
+    .modal-x:hover { color: var(--text); }
+    .modal-body { padding: 16px 18px 18px; }
+    .modal-body .label {
+        display: block; font-size: 0.75em; color: var(--muted);
+        text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;
+    }
+    .modal-body input[type="text"], .modal-body textarea {
+        width: 100%; padding: 8px 10px; margin-bottom: 14px;
+        background: var(--panel-2); border: 1px solid var(--border); border-radius: 6px;
+        color: var(--text); font-size: 1em; font-family: inherit;
+    }
+    .modal-body textarea { resize: vertical; line-height: 1.45; }
+    .modal-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .modal-actions .btn-reset { flex: 1 1 auto; margin: 0; width: auto; }
+    .preview-h {
+        color: #a8dadc; font-size: 0.9em; text-transform: uppercase;
+        letter-spacing: 1px; margin: 18px 0 6px;
+    }
+    #summary-preview {
+        width: 100%; height: 460px; background: #1a1a1a;
+        border: 1px solid var(--border); border-radius: 6px;
+    }
 </style>
 <link rel="stylesheet" href="../theme.css">
 <body>
@@ -396,7 +443,7 @@
             <h2>Summary</h2>
             <div class="name-box">
                 <label class="label" for="item-name">Item Name</label>
-                <input type="text" id="item-name" class="name-input" placeholder="Name this item">
+                <input type="text" id="item-name" class="name-input" placeholder="Name this item" autocomplete="off">
             </div>
             <div class="rarity-box">
                 <div class="label">Rarity</div>
@@ -417,17 +464,39 @@
             <h3>Resulting Stats</h3>
             <ul class="stat-list" id="stats-list"></ul>
             <button class="btn-reset" id="btn-reset">Reset All</button>
-            <div class="build-actions">
-                <button class="btn-reset" id="btn-save-build">Export</button>
-                <button class="btn-reset" id="btn-load-build">Import</button>
-                <input type="file" id="file-load-build" accept=".json,application/json" style="display:none">
-            </div>
-            <button class="btn-reset" id="btn-download-summary">Download Summary (HTML)</button>
+            <button class="btn-reset" id="btn-open-summary">Summary &amp; Save&hellip;</button>
+            <input type="file" id="file-load-build" accept=".json,application/json" style="display:none">
         </div>
     </div>
 </div>
 
 <div class="foot">Component base: 3 Material &middot; 1 Refinement &middot; 0 Power &nbsp;|&nbsp; Minimum required: 3 Material &middot; 1 Refinement</div>
+
+
+<div class="modal-backdrop" id="summary-modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="summary-modal-title">
+        <div class="modal-head">
+            <h2 id="summary-modal-title">Summary &amp; Save</h2>
+            <button class="modal-x" id="btn-modal-close" type="button" aria-label="Close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <label class="label" for="modal-name">Item Name</label>
+            <input type="text" id="modal-name" placeholder="Name this item" autocomplete="off">
+            <label class="label" for="item-desc">Description</label>
+            <textarea id="item-desc" rows="5" autocomplete="off" placeholder="Optional. Saved with the build and shown at the end of the summary."></textarea>
+            <div class="modal-actions">
+                <button class="btn-reset" id="btn-modal-preview" type="button">Show Example</button>
+                <button class="btn-reset" id="btn-modal-download" type="button">Download HTML</button>
+                <button class="btn-reset" id="btn-modal-export" type="button">Export JSON</button>
+                <button class="btn-reset" id="btn-modal-import" type="button">Import JSON</button>
+            </div>
+            <div id="preview-wrap" hidden>
+                <h3 class="preview-h">Preview</h3>
+                <iframe id="summary-preview" title="Summary preview"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
 "use strict";
@@ -936,7 +1005,8 @@ function collectSaveData() {
             .filter(iid => intensifyState[iid].stacks > 0)
             .map(iid => ({ subtrait: intensifyState[iid].subtrait, stacks: intensifyState[iid].stacks })),
         diceChoices: Object.assign({}, diceChoices),
-        name: (document.getElementById("item-name").value || "")
+        name: (document.getElementById("item-name").value || ""),
+        description: (document.getElementById("item-desc") ? document.getElementById("item-desc").value : "")
     };
 }
 
@@ -944,6 +1014,12 @@ function applySaveData(data) {
     if (data && typeof data.name === "string") {
         const _nm = document.getElementById("item-name");
         if (_nm) _nm.value = data.name;
+        const _mn = document.getElementById("modal-name");
+        if (_mn) _mn.value = data.name;
+    }
+    if (data && typeof data.description === "string") {
+        const _dc = document.getElementById("item-desc");
+        if (_dc) _dc.value = data.description;
     }
     state.forEach((_, i) => {
         const n = data && Array.isArray(data.state) ? data.state[i] : 0;
@@ -975,10 +1051,9 @@ function applySaveData(data) {
     refresh();
 }
 
-document.getElementById("btn-save-build").addEventListener("click", () => {
-    let name = prompt("Name your head armor build:", "head-armor-build");
-    if (name === null) return;
-    name = (name.trim() || "head-armor-build").replace(/[\\/:*?"<>|]/g, "_");
+document.getElementById("btn-modal-export").addEventListener("click", () => {
+    const item = (document.getElementById("item-name").value || "").trim();
+    let name = item.replace(/[\\/:*?"<>|]/g, "_").trim() || "head-armor-build";
     if (!/\.json$/i.test(name)) name += ".json";
     const blob = new Blob([JSON.stringify(collectSaveData(), null, 2)], { type: "application/json" });
     const a = document.createElement("a");
@@ -990,7 +1065,7 @@ document.getElementById("btn-save-build").addEventListener("click", () => {
     setTimeout(() => URL.revokeObjectURL(a.href), 0);
 });
 
-document.getElementById("btn-load-build").addEventListener("click", () => {
+document.getElementById("btn-modal-import").addEventListener("click", () => {
     document.getElementById("file-load-build").click();
 });
 
@@ -1104,13 +1179,14 @@ const SUMMARY_CSS = `
     }
     .stat-list li span:first-child { color: #bde0fe; }
     .stat-list li span:last-child { font-weight: bold; margin-left: auto; text-align: right; }
+    .item-desc-text { white-space: pre-wrap; color: #d6d6d6; font-size: 0.92em; line-height: 1.5; margin: 0; }
 `;
 
 function escHtml(s) {
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-function buildSummaryHTML(name, c, compRows, statRows, featuresRows) {
+function buildSummaryHTML(name, c, compRows, statRows, featuresRows, desc) {
     const overCap = c.overRPCap || c.overStackCap;
     const cells = [
         { label: "RP", val: c.totals.rp + "/" + c.tier.max },
@@ -1137,6 +1213,7 @@ function buildSummaryHTML(name, c, compRows, statRows, featuresRows) {
         (compRows.length ? '<h3>Components</h3>\n<ul class="stat-list">' + rowsHtml(compRows) + '</ul>\n' : '') +
         '<h3>Resulting Stats</h3>\n<ul class="stat-list">' + rowsHtml(statRows) + '</ul>\n' +
         (featuresRows && featuresRows.length ? '<h3>Features</h3>\n<ul class="stat-list">' + rowsHtml(featuresRows) + '</ul>\n' : '') +
+        (desc && desc.trim() ? '<h3>Description</h3>\n<p class="item-desc-text">' + escHtml(desc.trim()) + '</p>\n' : '') +
         '</div>\n' +
         '</body>\n' +
         '</html>\n';
@@ -1169,38 +1246,69 @@ function collectDiceRows(list) {
     return rows;
 }
 
-document.getElementById("btn-download-summary").addEventListener("click", () => {
+/* ---- Summary & Save modal ---- */
+const summaryModal = document.getElementById("summary-modal");
+const modalName = document.getElementById("modal-name");
+const itemDesc = document.getElementById("item-desc");
+const previewWrap = document.getElementById("preview-wrap");
+const previewFrame = document.getElementById("summary-preview");
+
+function openSummaryModal() {
+    modalName.value = document.getElementById("item-name").value || "";
+    previewWrap.hidden = true;
+    previewFrame.removeAttribute("srcdoc");
+    summaryModal.hidden = false;
+    modalName.focus();
+}
+
+function closeSummaryModal() {
+    summaryModal.hidden = true;
+}
+
+/* the panel's name box stays the single source of truth */
+modalName.addEventListener("input", () => {
+    document.getElementById("item-name").value = modalName.value;
+});
+
+document.getElementById("btn-open-summary").addEventListener("click", openSummaryModal);
+document.getElementById("btn-modal-close").addEventListener("click", closeSummaryModal);
+summaryModal.addEventListener("mousedown", e => { if (e.target === summaryModal) closeSummaryModal(); });
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && !summaryModal.hidden) closeSummaryModal();
+});
+
+/* Builds the summary document, or returns null if the build is not valid. */
+function summaryDoc() {
     const c = compute();
     refresh();
     if (c.errors && c.errors.length) {
-        alert("Cannot download summary: the build is not valid.\n\n- " + c.errors.join("\n- "));
-        return;
+        alert("Cannot build the summary: the build is not valid.\n\n- " + c.errors.join("\n- "));
+        return null;
     }
-    const statsList = document.getElementById("stats-list");
-    let cancelled = false;
-    collectDiceRows(statsList).forEach(dr => {
-        if (cancelled) return;
-        if (dr.options.length > 1 && (diceChoices[dr.label] === undefined || dr.options.indexOf(diceChoices[dr.label]) === -1)) {
-            const chosen = prompt("Choose dice for " + dr.label + ":\n\n" + dr.options.join("\n"), dr.options[0]);
-            if (chosen === null) { cancelled = true; return; }
-            if (dr.options.indexOf(chosen) === -1) {
-                alert("Invalid dice choice for " + dr.label + ". Choose one of:\n" + dr.options.join("\n"));
-                cancelled = true;
-                return;
-            }
-            diceChoices[dr.label] = chosen;
-            dr.select.value = chosen;
-        }
-    });
-    if (cancelled) return;
     const name = (document.getElementById("item-name").value || "").trim() || "Unnamed Item";
     let fname = name.replace(/[\\/:*?"<>|]/g, "_").trim() || "item-summary";
     if (!/\.html?$/i.test(fname)) fname += ".html";
-    const html = buildSummaryHTML(name, c, collectRows(document.getElementById("comp-list")), collectRows(statsList), activeFeatureRows());
-    const blob = new Blob([html], { type: "text/html" });
+    const html = buildSummaryHTML(name, c,
+        collectRows(document.getElementById("comp-list")),
+        collectRows(document.getElementById("stats-list")),
+        activeFeatureRows(), itemDesc.value);
+    return { name: name, fname: fname, html: html };
+}
+
+document.getElementById("btn-modal-preview").addEventListener("click", () => {
+    const doc = summaryDoc();
+    if (!doc) return;
+    previewFrame.srcdoc = doc.html;
+    previewWrap.hidden = false;
+});
+
+document.getElementById("btn-modal-download").addEventListener("click", () => {
+    const doc = summaryDoc();
+    if (!doc) return;
+    const blob = new Blob([doc.html], { type: "text/html" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = fname;
+    a.download = doc.fname;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -1444,6 +1552,19 @@ function refresh() {
     });
     banner.classList.toggle("show", msgs.length > 0);
 }
+
+/* A reload starts an empty build, so the browser must not restore the previous
+   name/description into these fields. `load` does not fire on a back/forward
+   cache restore, where the whole build is still in memory and the name should
+   be kept. */
+function clearItemFields() {
+    ["item-name", "modal-name", "item-desc"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+    });
+}
+clearItemFields();
+window.addEventListener("load", clearItemFields);
 
 buildLists();
 refresh();

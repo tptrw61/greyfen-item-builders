@@ -2,6 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "Awl pike",
+  "description": "",
   "currentType": "slow",
   "currentMode": "melee",
   "state": [
@@ -58,6 +59,7 @@
     "Articulate": 0,
     "Convoluted": 0
   },
+  "ammoType": "",
   "diceChoices": {
     "Attack (Physical)": "6d8"
   }

@@ -2,6 +2,7 @@
   "version": 2,
   "weaponBuilder": true,
   "name": "War bow, exceptional draw",
+  "description": "",
   "currentType": "slow",
   "currentMode": "ranged",
   "state": [
@@ -58,6 +59,7 @@
     "Articulate": 0,
     "Convoluted": 0
   },
+  "ammoType": "",
   "diceChoices": {
     "Attack (Physical)": "12d4"
   }

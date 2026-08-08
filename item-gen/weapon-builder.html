@@ -202,6 +202,12 @@
         margin-top: 6px;
     }
     .effect-row.dim { opacity: 0.55; }
+    .ammo-input {
+        width: 100%; margin-top: 8px; padding: 6px 9px;
+        background: #1e1e1e; border: 1px solid var(--border); border-radius: 6px;
+        color: var(--text); font-size: 0.9em;
+    }
+    .ammo-input::placeholder { color: var(--muted); opacity: 0.7; }
 
     .choice-controls {
         display: flex;
@@ -424,6 +430,61 @@
         color: var(--muted);
         font-size: 0.8em;
     }
+
+    /* ---------- Summary & Save modal ---------- */
+    .modal-backdrop {
+        position: fixed; inset: 0; z-index: 50;
+        background: rgba(0,0,0,0.72);
+        display: flex; align-items: flex-start; justify-content: center;
+        padding: 28px 16px; overflow-y: auto;
+    }
+    .modal-backdrop[hidden] { display: none; }
+    .modal-card {
+        background: var(--panel); border: 2px solid var(--border); border-radius: 8px;
+        width: 100%; max-width: 680px; box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+    .modal-head {
+        display: flex; align-items: center; gap: 10px;
+        border-bottom: 1px solid var(--border); padding: 14px 18px;
+    }
+    .modal-head h2 {
+        margin: 0; flex: 1; color: var(--gold);
+        font-size: 1.1em; text-transform: uppercase; letter-spacing: 1px;
+    }
+    .modal-x {
+        background: none; border: none; color: var(--muted);
+        font-size: 1.6em; line-height: 1; cursor: pointer; padding: 0 4px;
+    }
+    .modal-x:hover { color: var(--text); }
+    .modal-body { padding: 16px 18px 18px; }
+    .modal-body .label {
+        display: block; font-size: 0.75em; color: var(--muted);
+        text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;
+    }
+    .modal-body input[type="text"], .modal-body textarea {
+        width: 100%; padding: 8px 10px; margin-bottom: 14px;
+        background: var(--panel-2); border: 1px solid var(--border); border-radius: 6px;
+        color: var(--text); font-size: 1em; font-family: inherit;
+    }
+    .modal-body textarea { resize: vertical; line-height: 1.45; }
+    #dice-list { margin-bottom: 14px; }
+    .dice-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .dice-row span { flex: 1; color: var(--blue-hi); font-size: 0.9em; }
+    .dice-row select {
+        background: var(--panel-2); color: var(--text);
+        border: 1px solid var(--border); border-radius: 6px;
+        padding: 6px 8px; font-size: 0.95em; font-family: Consolas, monospace;
+    }
+    .modal-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .modal-actions .btn-reset { flex: 1 1 auto; margin: 0; width: auto; }
+    .preview-h {
+        color: #a8dadc; font-size: 0.9em; text-transform: uppercase;
+        letter-spacing: 1px; margin: 18px 0 6px;
+    }
+    #summary-preview {
+        width: 100%; height: 460px; background: #1a1a1a;
+        border: 1px solid var(--border); border-radius: 6px;
+    }
 </style>
 <link rel="stylesheet" href="../theme.css">
 <body>
@@ -472,7 +533,7 @@
             <h2>Summary</h2>
             <div class="name-box">
                 <label class="label" for="item-name">Item Name</label>
-                <input type="text" id="item-name" class="name-input" placeholder="Name this item">
+                <input type="text" id="item-name" class="name-input" placeholder="Name this item" autocomplete="off">
             </div>
             <div class="rarity-box">
                 <div class="label">Rarity</div>
@@ -493,17 +554,47 @@
             <h3>Resulting Stats</h3>
             <ul class="stat-list" id="stats-list"></ul>
             <button class="btn-reset" id="btn-reset">Reset All</button>
-            <div class="build-actions">
-                <button class="btn-reset" id="btn-save-build">Export</button>
-                <button class="btn-reset" id="btn-load-build">Import</button>
-                <input type="file" id="file-load-build" accept=".json,application/json" style="display:none">
-            </div>
-            <button class="btn-reset" id="btn-download-summary">Download Summary (HTML)</button>
+            <button class="btn-reset" id="btn-open-summary">Summary &amp; Save&hellip;</button>
+            <input type="file" id="file-load-build" accept=".json,application/json" style="display:none">
         </div>
     </div>
 </div>
 
 <div class="foot" id="foot-note"></div>
+
+
+<div class="modal-backdrop" id="summary-modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="summary-modal-title">
+        <div class="modal-head">
+            <h2 id="summary-modal-title">Summary &amp; Save</h2>
+            <button class="modal-x" id="btn-modal-close" type="button" aria-label="Close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <label class="label" for="modal-name">Item Name</label>
+            <input type="text" id="modal-name" placeholder="Name this item" autocomplete="off">
+            <label class="label" for="item-desc">Description</label>
+            <textarea id="item-desc" rows="5" autocomplete="off" placeholder="Optional. Saved with the build and shown at the end of the summary."></textarea>
+            <div id="ammo-wrap" hidden>
+                <label class="label" for="modal-ammo">Ammunition Type</label>
+                <input type="text" id="modal-ammo" autocomplete="off" placeholder="e.g. arrows, bolts, stones">
+            </div>
+            <div id="dice-wrap" hidden>
+                <label class="label">Damage Dice</label>
+                <div id="dice-list"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-reset" id="btn-modal-preview" type="button">Show Example</button>
+                <button class="btn-reset" id="btn-modal-download" type="button">Download HTML</button>
+                <button class="btn-reset" id="btn-modal-export" type="button">Export JSON</button>
+                <button class="btn-reset" id="btn-modal-import" type="button">Import JSON</button>
+            </div>
+            <div id="preview-wrap" hidden>
+                <h3 class="preview-h">Preview</h3>
+                <iframe id="summary-preview" title="Summary preview"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
 "use strict";
@@ -786,6 +877,16 @@ let currentMode = (document.querySelector('input[name="weapon-mode"]:checked') |
 const state = variants.map(() => 0);
 const choiceState = {};
 const diceChoices = {};
+let ammoType = "";
+
+/* Keeps the Armed row's field and the modal's field showing the same value. */
+function setAmmoType(v) {
+    ammoType = v;
+    ["ammo-type", "modal-ammo"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.value !== v) el.value = v;
+    });
+}
 choiceEffects.forEach(eff => { choiceState[eff.name] = { type: null, stacks: 0, sub: eff.subtraits ? eff.subtraits[0] : null }; });
 const savedSlowOnly = {};
 SLOW_ONLY_NAMES.forEach(name => { savedSlowOnly[name] = 0; });
@@ -934,6 +1035,16 @@ function buildVariantRow(v) {
         label.appendChild(cb);
         label.appendChild(document.createTextNode(" Add this effect"));
         row.appendChild(label);
+        if (eff.name === "Armed") {
+            const ammo = document.createElement("input");
+            ammo.type = "text";
+            ammo.id = "ammo-type";
+            ammo.className = "ammo-input";
+            ammo.autocomplete = "off";
+            ammo.placeholder = "Ammunition type (e.g. arrows, bolts, stones)";
+            ammo.addEventListener("input", () => { setAmmoType(ammo.value); refresh(); });
+            row.appendChild(ammo);
+        }
     }
 
     return row;
@@ -1431,6 +1542,7 @@ choiceEffects.forEach(eff => { choiceState[eff.name] = { type: null, stacks: 0, 
     SLOW_ONLY_NAMES.forEach(name => { savedSlowOnly[name] = 0; });
     dismissedMsgs.clear();
     Object.keys(diceChoices).forEach(k => { delete diceChoices[k]; });
+    setAmmoType("");
     refresh();
 });
 
@@ -1440,12 +1552,14 @@ function collectSaveData() {
         version: 2,
         weaponBuilder: true,
         name: (document.getElementById("item-name").value || ""),
+        description: (document.getElementById("item-desc") ? document.getElementById("item-desc").value : ""),
         currentType: currentType,
         currentMode: currentMode,
         state: state.slice(),
         choiceState: JSON.parse(JSON.stringify(choiceState)),
         penetrativeData: JSON.parse(JSON.stringify(penetrativeData)),
         savedSlowOnly: Object.assign({}, savedSlowOnly),
+        ammoType: ammoType,
         diceChoices: Object.assign({}, diceChoices)
     };
 }
@@ -1454,6 +1568,12 @@ function applySaveData(data) {
     if (data && typeof data.name === "string") {
         const _nm = document.getElementById("item-name");
         if (_nm) _nm.value = data.name;
+        const _mn = document.getElementById("modal-name");
+        if (_mn) _mn.value = data.name;
+    }
+    if (data && typeof data.description === "string") {
+        const _dc = document.getElementById("item-desc");
+        if (_dc) _dc.value = data.description;
     }
     state.forEach((_, i) => {
         const n = data && Array.isArray(data.state) ? data.state[i] : 0;
@@ -1491,6 +1611,7 @@ function applySaveData(data) {
     }
     if (data && WEAPON_TYPES.indexOf(data.currentType) !== -1) currentType = data.currentType;
     if (data && (data.currentMode === "melee" || data.currentMode === "ranged")) currentMode = data.currentMode;
+    setAmmoType(data && typeof data.ammoType === "string" ? data.ammoType : "");
     Object.keys(diceChoices).forEach(k => { delete diceChoices[k]; });
     if (data && data.diceChoices && typeof data.diceChoices === "object") {
         Object.keys(data.diceChoices).forEach(k => {
@@ -1506,10 +1627,9 @@ function applySaveData(data) {
     refresh();
 }
 
-document.getElementById("btn-save-build").addEventListener("click", () => {
-    let name = prompt("Name your weapon build:", "weapon-build");
-    if (name === null) return;
-    name = (name.trim() || "weapon-build").replace(/[\\/:*?"<>|]/g, "_");
+document.getElementById("btn-modal-export").addEventListener("click", () => {
+    const item = (document.getElementById("item-name").value || "").trim();
+    let name = item.replace(/[\\/:*?"<>|]/g, "_").trim() || "weapon-build";
     if (!/\.json$/i.test(name)) name += ".json";
     const blob = new Blob([JSON.stringify(collectSaveData(), null, 2)], { type: "application/json" });
     const a = document.createElement("a");
@@ -1521,7 +1641,7 @@ document.getElementById("btn-save-build").addEventListener("click", () => {
     setTimeout(() => URL.revokeObjectURL(a.href), 0);
 });
 
-document.getElementById("btn-load-build").addEventListener("click", () => {
+document.getElementById("btn-modal-import").addEventListener("click", () => {
     document.getElementById("file-load-build").click();
 });
 
@@ -1630,13 +1750,14 @@ const SUMMARY_CSS = `
     }
     .stat-list li span:first-child { color: #bde0fe; }
     .stat-list li span:last-child { font-weight: bold; margin-left: auto; text-align: right; }
+    .item-desc-text { white-space: pre-wrap; color: #d6d6d6; font-size: 0.92em; line-height: 1.5; margin: 0; }
 `;
 
 function escHtml(s) {
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-function buildSummaryHTML(name, c, compRows, statRows, featuresRows) {
+function buildSummaryHTML(name, c, compRows, statRows, featuresRows, desc) {
     const overCap = c.overRPCap || c.overStackCap;
     const cells = [
         { label: "RP", val: c.totals.rp + "/" + c.tier.max },
@@ -1663,6 +1784,7 @@ function buildSummaryHTML(name, c, compRows, statRows, featuresRows) {
         (compRows.length ? '<h3>Components</h3>\n<ul class="stat-list">' + rowsHtml(compRows) + '</ul>\n' : '') +
         '<h3>Resulting Stats</h3>\n<ul class="stat-list">' + rowsHtml(statRows) + '</ul>\n' +
         (featuresRows && featuresRows.length ? '<h3>Features</h3>\n<ul class="stat-list">' + rowsHtml(featuresRows) + '</ul>\n' : '') +
+        (desc && desc.trim() ? '<h3>Description</h3>\n<p class="item-desc-text">' + escHtml(desc.trim()) + '</p>\n' : '') +
         '</div>\n' +
         '</body>\n' +
         '</html>\n';
@@ -1697,38 +1819,113 @@ function collectDiceRows(list) {
     return rows;
 }
 
-document.getElementById("btn-download-summary").addEventListener("click", () => {
+/* ---- Summary & Save modal ---- */
+const summaryModal = document.getElementById("summary-modal");
+const modalName = document.getElementById("modal-name");
+const itemDesc = document.getElementById("item-desc");
+const previewWrap = document.getElementById("preview-wrap");
+const previewFrame = document.getElementById("summary-preview");
+
+/* Damage dice are chosen here rather than through a prompt. Each entry is a
+   damage total that can be rolled several equivalent ways (e.g. 24 max damage
+   as 6d4, 4d6, 3d8 or 2d12); the chosen form is what the summary prints. */
+function buildDiceControls() {
+    const wrap = document.getElementById("dice-wrap");
+    const list = document.getElementById("dice-list");
+    list.innerHTML = "";
+    const rows = collectDiceRows(document.getElementById("stats-list"))
+        .filter(dr => dr.options.length > 1);
+    wrap.hidden = rows.length === 0;
+    rows.forEach(dr => {
+        const row = document.createElement("div");
+        row.className = "dice-row";
+        const label = document.createElement("span");
+        label.textContent = dr.label;
+        const sel = document.createElement("select");
+        dr.options.forEach(o => {
+            const opt = document.createElement("option");
+            opt.value = o;
+            opt.textContent = o;
+            sel.appendChild(opt);
+        });
+        sel.value = (diceChoices[dr.label] && dr.options.indexOf(diceChoices[dr.label]) !== -1)
+            ? diceChoices[dr.label] : dr.select.value;
+        diceChoices[dr.label] = sel.value;   // record it, so the summary matches what is shown
+        sel.addEventListener("change", () => {
+            diceChoices[dr.label] = sel.value;
+            refresh();
+        });
+        row.append(label, sel);
+        list.appendChild(row);
+    });
+}
+
+function openSummaryModal() {
+    modalName.value = document.getElementById("item-name").value || "";
+    previewWrap.hidden = true;
+    previewFrame.removeAttribute("srcdoc");
+    refresh();
+    buildDiceControls();
+    const ammoWrap = document.getElementById("ammo-wrap");
+    ammoWrap.hidden = effStackTotal("Armed") === 0;
+    document.getElementById("modal-ammo").value = ammoType;
+    summaryModal.hidden = false;
+    modalName.focus();
+}
+
+function closeSummaryModal() {
+    summaryModal.hidden = true;
+}
+
+/* the panel's name box stays the single source of truth */
+modalName.addEventListener("input", () => {
+    document.getElementById("item-name").value = modalName.value;
+});
+
+document.getElementById("modal-ammo").addEventListener("input", e => {
+    setAmmoType(e.target.value);
+    refresh();
+});
+
+document.getElementById("btn-open-summary").addEventListener("click", openSummaryModal);
+document.getElementById("btn-modal-close").addEventListener("click", closeSummaryModal);
+summaryModal.addEventListener("mousedown", e => { if (e.target === summaryModal) closeSummaryModal(); });
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && !summaryModal.hidden) closeSummaryModal();
+});
+
+/* Builds the summary document, or returns null if the build is not valid. */
+function summaryDoc() {
     const c = compute();
     refresh();
     if (c.errors && c.errors.length) {
-        alert("Cannot download summary: the build is not valid.\n\n- " + c.errors.join("\n- "));
-        return;
+        alert("Cannot build the summary: the build is not valid.\n\n- " + c.errors.join("\n- "));
+        return null;
     }
-    const statsList = document.getElementById("stats-list");
-    let cancelled = false;
-    collectDiceRows(statsList).forEach(dr => {
-        if (cancelled) return;
-        if (dr.options.length > 1 && (diceChoices[dr.label] === undefined || dr.options.indexOf(diceChoices[dr.label]) === -1)) {
-            const chosen = prompt("Choose dice for " + dr.label + ":\n\n" + dr.options.join("\n"), dr.options[0]);
-            if (chosen === null) { cancelled = true; return; }
-            if (dr.options.indexOf(chosen) === -1) {
-                alert("Invalid dice choice for " + dr.label + ". Choose one of:\n" + dr.options.join("\n"));
-                cancelled = true;
-                return;
-            }
-            diceChoices[dr.label] = chosen;
-            dr.select.value = chosen;
-        }
-    });
-    if (cancelled) return;
     const name = (document.getElementById("item-name").value || "").trim() || "Unnamed Item";
     let fname = name.replace(/[\\/:*?"<>|]/g, "_").trim() || "item-summary";
     if (!/\.html?$/i.test(fname)) fname += ".html";
-    const html = buildSummaryHTML(name, c, collectRows(document.getElementById("comp-list")), collectRows(statsList), activeFeatureRows());
-    const blob = new Blob([html], { type: "text/html" });
+    const html = buildSummaryHTML(name, c,
+        collectRows(document.getElementById("comp-list")),
+        collectRows(document.getElementById("stats-list")),
+        activeFeatureRows(), itemDesc.value);
+    return { name: name, fname: fname, html: html };
+}
+
+document.getElementById("btn-modal-preview").addEventListener("click", () => {
+    const doc = summaryDoc();
+    if (!doc) return;
+    previewFrame.srcdoc = doc.html;
+    previewWrap.hidden = false;
+});
+
+document.getElementById("btn-modal-download").addEventListener("click", () => {
+    const doc = summaryDoc();
+    if (!doc) return;
+    const blob = new Blob([doc.html], { type: "text/html" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = fname;
+    a.download = doc.fname;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -2150,7 +2347,13 @@ function refresh() {
             addStatDice("Attack (" + d + ")", diceOptions(c.attack[d] * 4), modifierSuffix(d));
         }
     });
-    if (effStackTotal("Armed") > 0) addStat("Requires Ammunition", "Yes");
+    const armedOn = effStackTotal("Armed") > 0;
+    if (armedOn) addStat("Requires Ammunition", ammoType.trim() || "Yes");
+    const ammoField = document.getElementById("ammo-type");
+    if (ammoField) {
+        ammoField.style.display = armedOn ? "block" : "none";
+        if (ammoField.value !== ammoType) ammoField.value = ammoType;
+    }
     const loadedTotal = effStackTotal("Loaded");
     const loadingTotal = effStackTotal("Loading");
     if (loadedTotal > 0) addStat("Reload after", loadedTotal + " shot" + (loadedTotal === 1 ? "" : "s"));
@@ -2183,6 +2386,20 @@ function refresh() {
         "Minimum required: " + w.minComponents.material + " Material \u00b7 " +
         w.minComponents.refinement + " Refinement \u00b7 " + w.minComponents.power + " Power";
 }
+
+/* A reload starts an empty build, so the browser must not restore the previous
+   name/description into these fields. `load` does not fire on a back/forward
+   cache restore, where the whole build is still in memory and the name should
+   be kept. */
+function clearItemFields() {
+    setAmmoType("");
+    ["item-name", "modal-name", "item-desc", "ammo-type", "modal-ammo"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+    });
+}
+clearItemFields();
+window.addEventListener("load", clearItemFields);
 
 buildLists();
 refresh();
