@@ -217,7 +217,7 @@
     .name-box input::placeholder { color: var(--muted); opacity: 0.7; }
     .summary-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(3, 1fr);
         gap: 8px;
         margin-bottom: 14px;
     }
@@ -338,7 +338,6 @@
                 <div class="sum-cell"><div class="label">Total RP</div><div class="val mono" id="sum-rp">0</div></div>
                 <div class="sum-cell"><div class="label">Value (SP)</div><div class="val mono" id="sum-value">0</div></div>
                 <div class="sum-cell"><div class="label">Total Stacks</div><div class="val mono" id="sum-stacks">0</div></div>
-                <div class="sum-cell"><div class="label">Max Stacks</div><div class="val mono" id="sum-max-stacks">10</div></div>
             </div>
             <h3>Components</h3>
             <ul class="stat-list" id="comp-list">
@@ -1018,10 +1017,9 @@ function refresh() {
     rarityEl.textContent = c.tier.name;
     rarityEl.style.color = c.tier.color;
 
-    document.getElementById("sum-rp").textContent = c.totals.rp;
+    document.getElementById("sum-rp").textContent = c.totals.rp + "/" + c.tier.max;
     document.getElementById("sum-value").textContent = (c.overRPCap || c.overStackCap) ? "\u2014" : c.value;
-    document.getElementById("sum-stacks").textContent = c.totals.stacks;
-    document.getElementById("sum-max-stacks").textContent = c.overStackCap ? "\u2014" : c.tier.maxStacks;
+    document.getElementById("sum-stacks").textContent = c.totals.stacks + "/" + c.tier.maxStacks;
 
     document.getElementById("comp-material").textContent = c.totals.material + " (Min " + ITEM_DATA.minComponents.material + ")";
     document.getElementById("comp-refinement").textContent = c.totals.refinement + " (Min " + ITEM_DATA.minComponents.refinement + ")";
