@@ -1982,7 +1982,11 @@ function compute() {
         errors.push(msg);
         pinnedErrors.push(msg);
     }
-    if (stackIdx === -1) errors.push("Total stacks (" + t.stacks + ") exceed the maximum supported (60).");
+    if (stackIdx === -1) {
+        const msg = "Total stacks (" + t.stacks + ") exceed the maximum supported (60).";
+        errors.push(msg);
+        pinnedErrors.push(msg);
+    }
 
     let effIdx = 0;
     if (rpIdx === -1) effIdx = RARITIES.length - 1;
