@@ -750,7 +750,7 @@ const SUMMARY_CSS = `
     }
     .summary-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(3, 1fr);
         gap: 8px;
         margin-bottom: 14px;
     }
@@ -797,10 +797,9 @@ function escHtml(s) {
 function buildSummaryHTML(name, c, compRows, statRows, featuresRows) {
     const overCap = c.overRPCap || c.overStackCap;
     const cells = [
-        { label: "Total RP", val: c.totals.rp },
+        { label: "Total RP", val: c.totals.rp + "/" + c.tier.max },
         { label: "Value (SP)", val: overCap ? "\u2014" : c.value },
-        { label: "Total Stacks", val: c.totals.stacks },
-        { label: "Max Stacks", val: overCap ? "\u2014" : c.tier.maxStacks }
+        { label: "Total Stacks", val: c.totals.stacks + "/" + c.tier.maxStacks }
     ].map(x => '<div class="sum-cell"><div class="label">' + escHtml(x.label) + '</div><div class="val">' + escHtml(x.val) + '</div></div>').join("");
     function rowsHtml(rows) {
         return rows.map(r => '<li><span>' + escHtml(r.label) + '</span><span>' + escHtml(r.value) + '</span></li>').join("");
