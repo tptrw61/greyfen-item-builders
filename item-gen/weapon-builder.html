@@ -1977,7 +1977,11 @@ function compute() {
 
     const rpIdx = rarityFromRP(t.rp);
     const stackIdx = rarityFromStacks(t.stacks);
-    if (rpIdx === -1) errors.push("Total RP (" + t.rp + ") exceeds the maximum supported (220 RP).");
+    if (rpIdx === -1) {
+        const msg = "Total RP (" + t.rp + ") exceeds the maximum supported (220 RP).";
+        errors.push(msg);
+        pinnedErrors.push(msg);
+    }
     if (stackIdx === -1) errors.push("Total stacks (" + t.stacks + ") exceed the maximum supported (60).");
 
     let effIdx = 0;
