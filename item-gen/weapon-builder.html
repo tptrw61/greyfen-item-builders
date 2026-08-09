@@ -1550,6 +1550,7 @@ choiceEffects.forEach(eff => { choiceState[eff.name] = { type: null, stacks: 0, 
     dismissedMsgs.clear();
     Object.keys(diceChoices).forEach(k => { delete diceChoices[k]; });
     setAmmoType("");
+    clearItemFields();
     refresh();
 });
 

@@ -4,7 +4,7 @@ cd "$(dirname "$0")"
 
 SRC_DIR="${SRC_DIR:-../utopia/item-gen}"
 DEST_DIR="item-gen"
-BUILDERS=(weapon-builder chest-armor-builder shield-builder head-armor-builder hand-armor-builder foot-armor-builder)
+BUILDERS=(weapon-builder chest-armor-builder shield-builder head-armor-builder hand-armor-builder foot-armor-builder consumable-builder)
 
 mkdir -p "$DEST_DIR"
 touch .nojekyll

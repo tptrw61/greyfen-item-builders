@@ -993,6 +993,7 @@ document.getElementById("btn-reset").addEventListener("click", () => {
     nextIntensifyId = 0;
     updateIntensifyAddButton();
     Object.keys(diceChoices).forEach(k => { delete diceChoices[k]; });
+    clearItemFields();
     refresh();
 });
 

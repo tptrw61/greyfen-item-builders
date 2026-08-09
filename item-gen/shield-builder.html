@@ -709,6 +709,7 @@ effectsPanel.addEventListener("change", e => {
 
 document.getElementById("btn-reset").addEventListener("click", () => {
     state.forEach((_, i) => { state[i] = 0; });
+    clearItemFields();
     refresh();
 });
 

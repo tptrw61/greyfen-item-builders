@@ -1,0 +1,1951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script>document.documentElement.setAttribute("data-theme", localStorage.getItem("utopia-theme") || "dark");</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consumable Builder</title>
+<style>
+    :root {
+        --bg: #1a1a1a;
+        --panel: #2d2d2d;
+        --panel-2: #242424;
+        --border: #444;
+        --text: #e0e0e0;
+        --muted: #9a9a9a;
+        --gold: #ffd700;
+        --green: #52b788;
+        --red: #e63946;
+        --blue-hi: #bde0fe;
+        --accent: #007bff;
+    }
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 20px;
+        line-height: 1.5;
+    }
+    header {
+        max-width: 1100px;
+        margin: 0 auto 24px;
+        text-align: center;
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 14px;
+    }
+    header h1 {
+        color: var(--gold);
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 1.8em;
+    }
+    header p { color: var(--muted); margin: 6px 0 0; font-size: 0.9em; }
+    nav.top {
+        max-width: 1100px;
+        margin: 0 auto 16px;
+    }
+    .back-link {
+        display: inline-block;
+        text-decoration: none;
+        color: var(--accent);
+        font-weight: bold;
+        font-size: 14px;
+    }
+    .back-link:hover { text-decoration: underline; }
+    .layout {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 24px;
+        max-width: 1100px;
+        margin: 0 auto;
+        align-items: start;
+    }
+    @media (max-width: 900px) {
+        .layout { grid-template-columns: 1fr; }
+        .summary { position: static !important; }
+    }
+
+    .panel {
+        background-color: var(--panel);
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .effects h2 {
+        color: var(--green);
+        font-size: 1.2em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 6px;
+        margin: 0 0 14px;
+    }
+    .effects h2.neg { color: var(--red); }
+    .effects .section { margin-bottom: 26px; }
+
+    .effect-row {
+        background-color: var(--panel-2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 10px 12px;
+        margin-bottom: 10px;
+    }
+    .effect-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+    }
+    .effect-name {
+        font-weight: bold;
+        color: var(--blue-hi);
+        margin-right: auto;
+    }
+    .effect-desc {
+        font-style: italic;
+        color: var(--muted);
+        margin: 8px 0 10px;
+        font-size: 0.88em;
+    }
+    .tag {
+        display: inline-block;
+        background: #444;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75em;
+        color: #d0d0d0;
+    }
+    .tag.cost { color: #ffb703; }
+    .tag.req { color: #ff8fa3; }
+    .tag.min { color: #a5d8ff; }
+
+    .stepper {
+        display: inline-flex;
+        align-items: center;
+        gap: 0;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        overflow: hidden;
+        background: #1e1e1e;
+    }
+    .stepper button {
+        background: #333;
+        border: none;
+        color: var(--gold);
+        font-size: 1.1em;
+        width: 32px;
+        height: 30px;
+        cursor: pointer;
+    }
+    .stepper button:hover { background: #444; }
+    .stepper input {
+        width: 52px;
+        height: 30px;
+        text-align: center;
+        background: #1e1e1e;
+        color: var(--text);
+        border: none;
+        border-left: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+        -moz-appearance: textfield;
+    }
+    .stepper input::-webkit-outer-spin-button,
+    .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    .check {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        user-select: none;
+    }
+    .check input { width: 17px; height: 17px; accent-color: var(--accent); }
+    .check input:disabled { opacity: 0.35; cursor: not-allowed; }
+    .row-hint {
+        font-size: 0.75em;
+        color: var(--muted);
+        margin-top: 6px;
+    }
+    .effect-row.dim { opacity: 0.55; }
+
+
+    /* ---------- Penetrative ---------- */
+    .instance-section {
+        margin-top: 16px;
+        border-top: 1px solid var(--border);
+        padding-top: 14px;
+    }
+    .instance-section h3 {
+        color: #8ecae6;
+        font-size: 1em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 0 0 10px;
+    }
+    .instance-row-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 6px;
+        flex-wrap: wrap;
+    }
+    .instance-select {
+        background: #1e1e1e;
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 5px 8px;
+        font-size: 0.88em;
+    }
+    .instance-select:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-remove {
+        background: none;
+        border: none;
+        color: var(--red);
+        font-size: 1.3em;
+        cursor: pointer;
+        padding: 0 4px;
+        margin-left: auto;
+        line-height: 1;
+    }
+    .btn-remove:hover { color: #ff6b6b; }
+    .btn-add {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 6px 14px;
+        background: #333;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--accent);
+        cursor: pointer;
+        font-size: 0.88em;
+    }
+    .btn-add:hover { background: #444; }
+    .btn-add:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-add:disabled:hover { background: #333; }
+
+    /* ---------- Summary ---------- */
+    .summary {
+        position: sticky;
+        top: 20px;
+    }
+    .summary h2 {
+        color: #8ecae6;
+        font-size: 1.2em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 6px;
+        margin: 0 0 14px;
+    }
+    .rarity-box {
+        text-align: center;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        padding: 14px;
+        margin-bottom: 14px;
+        background: var(--panel-2);
+    }
+    .rarity-box .label { font-size: 0.75em; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .rarity-box .value {
+        font-size: 1.6em;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .name-box { margin-bottom: 14px; }
+    .name-box .label { font-size: 0.75em; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .name-box input {
+        width: 100%;
+        margin-top: 4px;
+        padding: 8px 10px;
+        background: var(--panel-2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 1em;
+    }
+    .name-box input::placeholder { color: var(--muted); opacity: 0.7; }
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+    .sum-cell {
+        background: var(--panel-2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 8px 10px;
+    }
+    .sum-cell .label { font-size: 0.72em; color: var(--muted); text-transform: uppercase; }
+    .sum-cell .val { font-size: 1.15em; font-weight: bold; color: var(--gold); }
+    .sum-cell.wide { grid-column: 1 / -1; }
+    .sum-cell .val.mono { font-family: Consolas, monospace; }
+
+    .summary h3 {
+        color: #a8dadc;
+        font-size: 0.95em;
+        margin: 14px 0 6px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .stat-list { list-style: none; margin: 0; padding: 0; }
+    .stat-list li {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 3px 0;
+        border-bottom: 1px dashed #3a3a3a;
+        font-size: 0.9em;
+    }
+    .stat-list li span:first-child { color: var(--blue-hi); flex: 0 0 auto; }
+    .stat-list li span:last-child { font-weight: bold; flex: 0 0 auto; max-width: 100%; }
+    .stat-list li.wrapped span:last-child { margin-left: auto; text-align: right; }
+    .stat-list select.dice-select {
+        background: #1e1e1e;
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 2px 6px;
+        font-size: 0.88em;
+        font-weight: bold;
+        margin-left: auto;
+        max-width: 100%;
+    }
+
+    .error-banner {
+        display: none;
+        position: relative;
+        background: var(--red);
+        color: #fff;
+        border-radius: 6px;
+        padding: 10px 34px 10px 12px;
+        margin-bottom: 14px;
+        font-size: 0.88em;
+    }
+    .error-banner.show { display: block; }
+    .error-banner ul { margin: 0; padding-left: 18px; }
+    .error-banner ul li { margin-bottom: 3px; }
+    .btn-dismiss {
+        position: absolute;
+        top: 4px;
+        right: 8px;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.25em;
+        line-height: 1;
+        cursor: pointer;
+        padding: 2px 6px;
+    }
+    .btn-dismiss:hover { color: #ffd7d7; }
+
+    .btn-reset {
+        margin-top: 16px;
+        width: 100%;
+        padding: 10px;
+        background: #333;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        cursor: pointer;
+        font-size: 0.95em;
+    }
+    .btn-reset:hover { background: #444; }
+
+    .build-actions {
+        margin-top: 8px;
+        display: flex;
+        gap: 8px;
+    }
+    .build-actions .btn-reset {
+        margin-top: 0;
+        flex: 1;
+        padding: 8px;
+        font-size: 0.9em;
+    }
+
+    .foot {
+        max-width: 1100px;
+        margin: 28px auto 0;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.8em;
+    }
+
+    /* ---------- Summary & Save modal ---------- */
+    .modal-backdrop {
+        position: fixed; inset: 0; z-index: 50;
+        background: rgba(0,0,0,0.72);
+        display: flex; align-items: flex-start; justify-content: center;
+        padding: 28px 16px; overflow-y: auto;
+    }
+    .modal-backdrop[hidden] { display: none; }
+    .modal-card {
+        background: var(--panel); border: 2px solid var(--border); border-radius: 8px;
+        width: 100%; max-width: 680px; box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+    .modal-head {
+        display: flex; align-items: center; gap: 10px;
+        border-bottom: 1px solid var(--border); padding: 14px 18px;
+    }
+    .modal-head h2 {
+        margin: 0; flex: 1; color: var(--gold);
+        font-size: 1.1em; text-transform: uppercase; letter-spacing: 1px;
+    }
+    .modal-x {
+        background: none; border: none; color: var(--muted);
+        font-size: 1.6em; line-height: 1; cursor: pointer; padding: 0 4px;
+    }
+    .modal-x:hover { color: var(--text); }
+    .modal-body { padding: 16px 18px 18px; }
+    .modal-body .label {
+        display: block; font-size: 0.75em; color: var(--muted);
+        text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;
+    }
+    .modal-body input[type="text"], .modal-body textarea {
+        width: 100%; padding: 8px 10px; margin-bottom: 14px;
+        background: var(--panel-2); border: 1px solid var(--border); border-radius: 6px;
+        color: var(--text); font-size: 1em; font-family: inherit;
+    }
+    .modal-body textarea { resize: vertical; line-height: 1.45; }
+    #dice-list { margin-bottom: 14px; }
+    .dice-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .dice-row span { flex: 1; color: var(--blue-hi); font-size: 0.9em; }
+    .dice-row select {
+        background: var(--panel-2); color: var(--text);
+        border: 1px solid var(--border); border-radius: 6px;
+        padding: 6px 8px; font-size: 0.95em; font-family: Consolas, monospace;
+    }
+    .modal-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .modal-actions .btn-reset { flex: 1 1 auto; margin: 0; width: auto; }
+    .preview-h {
+        color: #a8dadc; font-size: 0.9em; text-transform: uppercase;
+        letter-spacing: 1px; margin: 18px 0 6px;
+    }
+    #summary-preview {
+        width: 100%; height: 460px; background: #1a1a1a;
+        border: 1px solid var(--border); border-radius: 6px;
+    }
+    .instance-row-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        margin-top: 8px;
+    }
+    .instance-field {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.85em;
+        color: var(--muted);
+    }
+    .instance-field input {
+        background-color: var(--panel-2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 4px;
+        padding: 6px 8px;
+        font-family: inherit;
+        font-size: 14px;
+    }
+    .instance-field input[type="number"] { width: 74px; text-align: center; }
+    .instance-field input[type="text"] { min-width: 180px; flex: 1; }
+    .instance-field input::placeholder { color: #7a7a7a; }
+</style>
+<link rel="stylesheet" href="../theme.css">
+<body>
+
+<nav class="top">
+    <a href="../index.html" class="back-link">&larr; Main Menu</a>
+</nav>
+
+<header>
+    <h1>Consumable Builder</h1>
+    <p>Select effects to craft a consumable &mdash; totals, rarity, and resulting stats update in real time.</p>
+</header>
+
+<div class="layout">
+    <div class="panel effects" id="effects-panel">
+        <div class="section">
+            <h2>Positive Effects</h2>
+            <div id="positive-list"></div>
+            <div class="instance-section">
+                <h3>Spelltech</h3>
+                <div id="spelltech-list"></div>
+                <button id="btn-add-spelltech" class="btn-add">+ Add Spell</button>
+                <div class="row-hint">One row per spell the consumable can cast. Each row costs 10 RP per point of stamina and counts as a single stack.</div>
+            </div>
+        </div>
+        <div class="section">
+            <h2 class="neg">Negative Effects</h2>
+            <div id="negative-list"></div>
+        </div>
+        <div class="section">
+            <h2>Prolonged Features</h2>
+            <div id="prolonged-list"></div>
+        </div>
+    </div>
+
+    <div class="summary">
+        <div class="panel">
+            <div class="error-banner" id="error-banner"><button class="btn-dismiss" id="btn-dismiss" type="button" aria-label="Dismiss messages">&times;</button><ul id="error-list"></ul></div>
+            <h2>Summary</h2>
+            <div class="name-box">
+                <label class="label" for="item-name">Item Name</label>
+                <input type="text" id="item-name" class="name-input" placeholder="Name this item" autocomplete="off">
+            </div>
+            <div class="rarity-box">
+                <div class="label">Rarity</div>
+                <div class="value" id="rarity-value">Crude</div>
+            </div>
+            <div class="summary-grid">
+                <div class="sum-cell"><div class="label">RP</div><div class="val mono" id="sum-rp">0</div></div>
+                <div class="sum-cell"><div class="label">Value (SP)</div><div class="val mono" id="sum-value">0</div></div>
+                <div class="sum-cell"><div class="label">Stacks</div><div class="val mono" id="sum-stacks">0</div></div>
+                <div class="sum-cell"><div class="label">Slots</div><div class="val mono" id="sum-slots">3</div></div>
+            </div>
+            <h3>Components</h3>
+            <ul class="stat-list" id="comp-list">
+                <li><span>Material</span><span id="comp-material">0 (Min 0)</span></li>
+                <li><span>Refinement</span><span id="comp-refinement">1 (Min 1)</span></li>
+                <li><span>Power</span><span id="comp-power">1 (Min 1)</span></li>
+            </ul>
+            <h3>Resulting Stats</h3>
+            <ul class="stat-list" id="stats-list"></ul>
+            <button class="btn-reset" id="btn-reset">Reset All</button>
+            <button class="btn-reset" id="btn-open-summary">Summary &amp; Save&hellip;</button>
+            <input type="file" id="file-load-build" accept=".json,application/json" style="display:none">
+        </div>
+    </div>
+</div>
+
+<div class="foot" id="foot-note"></div>
+
+<div class="modal-backdrop" id="summary-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="summary-modal-title">
+        <div class="modal-head">
+            <h2 id="summary-modal-title">Summary &amp; Save</h2>
+            <button class="modal-x" id="btn-modal-close" type="button" aria-label="Close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <label class="modal-label" for="modal-name">Item Name</label>
+            <input type="text" id="modal-name" placeholder="Name this item" autocomplete="off">
+            <label class="modal-label" for="item-desc">Description</label>
+            <textarea id="item-desc" rows="5" autocomplete="off" placeholder="Optional. Saved with the build and shown at the end of the summary."></textarea>
+            <div id="dice-wrap" hidden>
+                <label class="modal-label">Dice</label>
+                <div id="dice-list"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-reset" id="btn-modal-preview" type="button">Show Example</button>
+                <button class="btn-reset" id="btn-modal-download" type="button">Download HTML</button>
+                <button class="btn-reset" id="btn-modal-export" type="button">Export JSON</button>
+                <button class="btn-reset" id="btn-modal-import" type="button">Import JSON</button>
+            </div>
+            <div id="preview-wrap" hidden>
+                <label class="modal-label">Example</label>
+                <iframe id="summary-preview" title="Summary preview"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ---- Transcribed from item-rules/consumables.txt ---- */
+const ITEM_DATA = {
+    baseComponents: { material: 0, refinement: 1, power: 1 },
+    minComponents: { material: 0, refinement: 1, power: 1 },
+    /* Unlike the other item types, no effect carries a component cost: the
+       requirement scales with the finished RP total instead, one more of each
+       per this many RP, rounded down. */
+    componentPerRP: { material: 0, refinement: 40, power: 50 },
+    innateStats: {
+        slots: 3,
+        hands: 1,
+        turnActions: 2,
+        range: 0,
+        radius: 0,
+        damage: { Physical: 0, Energy: 0, Heat: 0, Chill: 0, Psyche: 0 }
+    },
+    effects: [
+        {
+            id: "destructive", name: "Destructive", rpCost: 2, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: ["Physical", "Energy", "Heat", "Chill"], minRarity: null, requirement: null, groups: [], maxStacks: null,
+            damageIncrease: 1,
+            description: `Affected objects and creatures take an additional 1d4 damage of any type other than Psyche. Damage dice may be redistributed in any fashion as long as the maximum damage per damage type is the same. Damage dealt this way may be blocked or dodged.`
+        },
+        {
+            id: "simple", name: "Simple", rpCost: 20, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: ["Activation Time"], maxStacks: null,
+            description: `This consumable requires 1 less turn action to activate, minimum cost of 1.`
+        },
+        {
+            id: "compact", name: "Compact", rpCost: 25, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: ["Slots"], maxStacks: null,
+            description: `This consumable takes up 1 slot.`
+        },
+        {
+            id: "splash", name: "Splash", rpCost: 10, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: ["Thrown"], maxStacks: null,
+            description: `Upon activation, this consumable is thrown at any point up to a number of meters away equal to the user's Strength or Agility score, whichever is higher. Objects and creatures that are impacted are considered affected.`
+        },
+        {
+            id: "radiating", name: "Radiating", rpCost: 4, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: ["AoE"], maxStacks: null,
+            xCost: true, rpText: "+4X RP",
+            description: `This consumable affects all objects and creatures within X meters of itself upon activation.`
+        },
+        {
+            id: "psychosis", name: "Psychosis", rpCost: 3, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: [], maxStacks: null,
+            damageType: "Psyche", damageIncrease: 1,
+            description: `Affected creatures take an additional 1d4 Psyche damage. Damage dice may be redistributed in any fashion as long as the maximum damage per damage type is the same. Affected creatures may spend 1 turn action or 1 interrupt to make a Will test. Upon succeeding the amount of damage dealt, it ignores all damage dealt.`
+        },
+        {
+            id: "heal", name: "Heal", rpCost: 8, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: [], maxStacks: null,
+            healType: "SHP",
+            description: `Affected creatures regain 1d4 SHP. Healing dice may be redistributed in any fashion as long as the maximum healing is the same.`
+        },
+        {
+            id: "stimulating", name: "Stimulating", rpCost: 6, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: [], maxStacks: null,
+            healType: "Stamina",
+            description: `Affected creatures regain 1d4 stamina. Healing dice may be redistributed in any fashion as long as the maximum healing is the same.`
+        },
+        {
+            id: "medical", name: "Medical", rpCost: 10, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: "Common", requirement: null, groups: [], maxStacks: null,
+            healType: "DHP",
+            description: `Affected creatures regain 1d4 DHP. Healing dice may be redistributed in any fashion as long as the maximum healing is the same.`
+        },
+        {
+            id: "spelltech", name: "Spelltech", rpCost: 10, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: ["AoE"], maxStacks: null,
+            xCost: true, instanced: true, rpText: "+10X RP",
+            description: `The user casts a spell costing X stamina using this consumable. A specific spell must be chosen upon crafting per instance of using this feature. The activation of this feature is not considered casting a spell and no stamina must be paid. Spells that have non-stamina costs cannot be chosen. Regardless of the spell, the consumable is treated as the origin of the spell and the user is treated as the caster. A creature does not need to know any arcane arts to use this feature.`
+        },
+        {
+            id: "sentient", name: "Sentient", rpCost: 20, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: [], maxStacks: null,
+            description: `This equipment has a conscious mind and can sense objects within 10 meters of it. It can communicate simple emotions and ideas directly with only its user and has a personality of its own. Emotions and decisions are under GM discretion.`
+        },
+        {
+            id: "awkward", name: "Awkward", rpCost: -10, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: ["Slots"], maxStacks: null,
+            description: `This consumable takes up 9 slots.`
+        },
+        {
+            id: "inordinate", name: "Inordinate", rpCost: -30, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: ["Slots"], maxStacks: null,
+            description: `This consumable takes up 27 slots.`
+        },
+        {
+            id: "unwieldy", name: "Unwieldy", rpCost: -10, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: [], maxStacks: 5,
+            handsIncrease: 1,
+            description: `This consumable requires an additional hand to activate.`
+        },
+        {
+            id: "complicated", name: "Complicated", rpCost: -30, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: ["Activation Time"], maxStacks: 4,
+            turnActionIncrease: 1,
+            description: `This consumable requires 1 additional turn action to activate.`
+        },
+        {
+            id: "charged", name: "Charged", rpCost: -35, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: ["Activation Time", "Thrown"], maxStacks: null,
+            activation: { unit: "minute", amount: 1 },
+            description: `This consumable requires 1 minute to activate.`
+        },
+        {
+            id: "deployed", name: "Deployed", rpCost: -50, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: ["Activation Time", "Thrown"], maxStacks: null,
+            activation: { unit: "hour", amount: 1 },
+            description: `This consumable requires 1 hour to activate.`
+        },
+        {
+            id: "residual", name: "Residual", rpCost: 2, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: ["Prolonged"], maxStacks: null,
+            prolonged: true, durationUnit: "turn",
+            description: `Prolonged features last for 1 additional turn.`
+        },
+        {
+            id: "lingering", name: "Lingering", rpCost: 10, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: ["Prolonged"], maxStacks: null,
+            prolonged: true, durationUnit: "minute",
+            description: `Prolonged features last for 1 additional minute.`
+        },
+        {
+            id: "persisting", name: "Persisting", rpCost: 75, stackable: true, isScalingRP: true, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null, groups: ["Prolonged"], maxStacks: null,
+            prolonged: true, durationUnit: "hour",
+            description: `Prolonged features last for 1 additional hour.`
+        },
+        {
+            id: "resistance", name: "Resistance", rpCost: 50, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            /* One specific type, chosen on the row: the feature is not
+               stackable, so it is a dropdown rather than a row per type. */
+            typeChoice: ["Physical", "Energy", "Heat", "Chill", "Psyche"],
+            types: [], minRarity: null, requirement: null,
+            requirementAny: ["residual", "lingering", "persisting"], groups: [], maxStacks: null,
+            prolongedSection: true,
+            description: `Affected creatures ignore all damage of one specific type, for the consumable's duration. This has no effect on creatures that already ignore all damage of a specific type.`
+        },
+        {
+            id: "necrotic", name: "Necrotic", rpCost: 15, stackable: false, isScalingRP: false, isScalingComponent: false,
+            materialCost: 0, refinementCost: 0, powerCost: 0,
+            types: [], minRarity: null, requirement: null,
+            requirementAny: ["residual", "lingering", "persisting"], groups: [], maxStacks: null,
+            prolongedSection: true,
+            description: `Affected creatures cannot gain SHP, DHP, or stamina for the consumable's duration.`
+        }
+    ]
+};
+
+const RARITIES = [
+    { name: "Crude", min: 0, max: 20, multiplier: 1, minValue: 2, maxStacks: 10, color: "#9e9e9e" },
+    { name: "Common", min: 21, max: 40, multiplier: 2, minValue: 10, maxStacks: 20, color: "#81c784" },
+    { name: "Extraordinary", min: 41, max: 70, multiplier: 4, minValue: 40, maxStacks: 30, color: "#64b5f6" },
+    { name: "Rare", min: 71, max: 110, multiplier: 8, minValue: 160, maxStacks: 40, color: "#ffb74d" },
+    { name: "Legendary", min: 111, max: 160, multiplier: 16, minValue: 560, maxStacks: 50, color: "#ffd54f" },
+    { name: "Mythical", min: 161, max: 220, multiplier: 32, minValue: 1760, maxStacks: 60, color: "#f06292" }
+];
+
+const STAT_TYPES = ["Physical", "Energy", "Heat", "Chill", "Psyche"];
+const HEAL_TYPES = ["SHP", "Stamina", "DHP"];
+const MAX_STACKS = 60;
+const DICE_SIDES = [4, 6, 8, 10, 12, 20, 100];
+
+function diceOptions(max) {
+    return DICE_SIDES.filter(s => max % s === 0).map(s => (max / s) + "d" + s);
+}
+
+/* Effects with no numeric stat of their own: their description is what the
+   summary prints. */
+const FEATURES_NOT_IN_STATS = ["sentient", "resistance", "necrotic"];
+
+/* Effects are identified by their permanent id in the rules below; a name is
+   only ever used for display, so renaming one stays a data-only change. */
+const EFFECT_NAME = {};
+ITEM_DATA.effects.forEach(eff => { EFFECT_NAME[eff.id] = eff.name; });
+function effectName(id) { return EFFECT_NAME[id] || id; }
+
+/* What the exported card prints under the item name. */
+function summarySubtitle() { return "Consumable"; }
+
+/* ---- Variants: one per (effect, damage type). Spelltech is instanced, so it
+        has rows of its own instead of a variant. ---- */
+const variants = [];
+
+ITEM_DATA.effects.forEach(eff => {
+    if (eff.instanced) return;
+    const types = eff.types && eff.types.length ? eff.types : [null];
+    types.forEach(type => {
+        variants.push({
+            index: variants.length,
+            eff: eff,
+            type: type,
+            label: eff.name + (type ? " (" + type + ")" : ""),
+            key: eff.id + (type ? ":" + type.toLowerCase() : ""),
+            maxStacks: eff.maxStacks ? Math.min(eff.maxStacks, MAX_STACKS) : MAX_STACKS
+        });
+    });
+});
+
+const state = variants.map(() => 0);
+/* effect id -> the damage type picked on its row, for effects that choose one */
+const typeChoices = {};
+ITEM_DATA.effects.forEach(eff => { if (eff.typeChoice) typeChoices[eff.id] = eff.typeChoice[0]; });
+const diceChoices = {};
+let dismissedMsgs = new Set();
+let currentPinned = new Set();
+
+/* ---- Spelltech: one dynamic row per spell, each with its own stamina cost ---- */
+const spelltechEffect = ITEM_DATA.effects.find(e => e.id === "spelltech");
+const spelltechData = { nextId: 0, entries: [], state: {} };
+
+function spelltechStacks() {
+    return spelltechData.entries.length;
+}
+function spelltechRP() {
+    let rp = 0;
+    spelltechData.entries.forEach(id => {
+        const e = spelltechData.state[id];
+        if (e) rp += spelltechEffect.rpCost * Math.max(1, e.stamina);
+    });
+    return rp;
+}
+
+function effIndex(id) {
+    return variants.findIndex(v => v.eff.id === id);
+}
+function effStackTotal(id) {
+    if (id === "spelltech") return spelltechStacks();
+    let total = 0;
+    variants.forEach((v, i) => { if (v.eff.id === id) total += state[i]; });
+    return total;
+}
+function effGroups(eff) {
+    return eff.groups || [];
+}
+/* Two features clash when they share any mutual exclusive group -- Charged is
+   in both "Activation Time" and "Thrown", so it clears Simple and Splash. */
+function groupsClash(a, b) {
+    return effGroups(a).some(g => effGroups(b).indexOf(g) !== -1);
+}
+
+function compText(eff) {
+    const parts = [];
+    if (eff.materialCost) parts.push("+" + eff.materialCost + " Material");
+    if (eff.refinementCost) parts.push("+" + eff.refinementCost + " Refinement");
+    if (eff.powerCost) parts.push("+" + eff.powerCost + " Power");
+    if (!parts.length) return "";
+    return parts.join(", ");
+}
+
+function rpTagText(eff) {
+    if (eff.rpText) return eff.rpText;
+    const sign = eff.rpCost >= 0 ? "+" : "";
+    return eff.stackable ? sign + eff.rpCost + " RP / stack" : sign + eff.rpCost + " RP";
+}
+
+function requirementText(eff) {
+    if (eff.requirementAny) {
+        const names = eff.requirementAny.map(effectName);
+        return names.slice(0, -1).join(", ") + ", or " + names[names.length - 1];
+    }
+    return eff.requirement ? effectName(eff.requirement) : "";
+}
+function requirementMet(eff) {
+    if (eff.requirementAny) return eff.requirementAny.some(id => effStackTotal(id) > 0);
+    if (eff.requirement) return effStackTotal(eff.requirement) > 0;
+    return true;
+}
+
+/* ---- Build rows ---- */
+function buildVariantRow(v) {
+    const eff = v.eff;
+    const row = document.createElement("div");
+    row.className = "effect-row";
+    row.dataset.var = String(v.index);
+
+    const head = document.createElement("div");
+    head.className = "effect-head";
+    const name = document.createElement("span");
+    name.className = "effect-name";
+    name.textContent = v.label;
+    head.appendChild(name);
+
+    const rpTag = document.createElement("span");
+    rpTag.className = "tag cost";
+    rpTag.textContent = rpTagText(eff);
+    head.appendChild(rpTag);
+
+    const cText = compText(eff);
+    if (cText) {
+        const cTag = document.createElement("span");
+        cTag.className = "tag cost";
+        cTag.textContent = cText;
+        head.appendChild(cTag);
+    }
+    if (eff.minRarity) {
+        const t = document.createElement("span");
+        t.className = "tag min";
+        t.textContent = "Min Rarity: " + eff.minRarity;
+        head.appendChild(t);
+    }
+    const reqText = requirementText(eff);
+    if (reqText) {
+        const t = document.createElement("span");
+        t.className = "tag req";
+        t.textContent = "Requires: " + reqText;
+        head.appendChild(t);
+    }
+    effGroups(eff).forEach(g => {
+        const t = document.createElement("span");
+        t.className = "tag";
+        t.textContent = "Exclusive group: " + g;
+        head.appendChild(t);
+    });
+    row.appendChild(head);
+
+    const desc = document.createElement("p");
+    desc.className = "effect-desc";
+    desc.textContent = eff.description;
+    row.appendChild(desc);
+
+    if (eff.stackable) {
+        const stepper = document.createElement("div");
+        stepper.className = "stepper";
+        const dec = document.createElement("button");
+        dec.type = "button";
+        dec.textContent = "−";
+        dec.dataset.step = "-1";
+        const input = document.createElement("input");
+        input.type = "number";
+        input.min = 0;
+        input.max = v.maxStacks;
+        input.dataset.stepper = String(v.index);
+        input.value = 0;
+        const inc = document.createElement("button");
+        inc.type = "button";
+        inc.textContent = "+";
+        inc.dataset.step = "1";
+        stepper.append(dec, input, inc);
+        row.appendChild(stepper);
+        const hint = document.createElement("div");
+        hint.className = "row-hint";
+        if (eff.xCost) {
+            hint.textContent = eff.maxStacks
+                ? "X (0 = off, max " + eff.maxStacks + ") — one stack whatever X is"
+                : "X (0 = off) — one stack whatever X is";
+        } else {
+            hint.textContent = eff.maxStacks
+                ? "Stack count (0 = off, max " + eff.maxStacks + ")"
+                : "Stack count (0 = off)";
+        }
+        row.appendChild(hint);
+    } else {
+        const label = document.createElement("label");
+        label.className = "check";
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.dataset.check = String(v.index);
+        label.appendChild(cb);
+        label.appendChild(document.createTextNode(" Add this effect"));
+        row.appendChild(label);
+        if (eff.typeChoice) {
+            const controls = document.createElement("div");
+            controls.className = "instance-row-controls";
+            const field = document.createElement("label");
+            field.className = "instance-field";
+            field.appendChild(document.createTextNode("Damage type"));
+            const sel = document.createElement("select");
+            sel.className = "instance-select";
+            sel.dataset.typeChoice = eff.id;
+            eff.typeChoice.forEach(t => {
+                const opt = document.createElement("option");
+                opt.value = t;
+                opt.textContent = t;
+                sel.appendChild(opt);
+            });
+            sel.value = typeChoices[eff.id];
+            field.appendChild(sel);
+            controls.appendChild(field);
+            row.appendChild(controls);
+        }
+    }
+
+    return row;
+}
+
+/* ---- Spelltech rows: a stamina cost and the spell it casts ---- */
+const spelltechList = document.getElementById("spelltech-list");
+
+function buildSpelltechRow(id) {
+    const entry = spelltechData.state[id];
+    const row = document.createElement("div");
+    row.className = "effect-row";
+    row.dataset.spelltech = String(id);
+
+    const head = document.createElement("div");
+    head.className = "effect-head";
+    const name = document.createElement("span");
+    name.className = "effect-name";
+    name.textContent = "Spelltech";
+    head.appendChild(name);
+    const rpTag = document.createElement("span");
+    rpTag.className = "tag cost";
+    rpTag.textContent = "+" + (spelltechEffect.rpCost * Math.max(1, entry.stamina)) + " RP";
+    head.appendChild(rpTag);
+    effGroups(spelltechEffect).forEach(g => {
+        const t = document.createElement("span");
+        t.className = "tag";
+        t.textContent = "Exclusive group: " + g;
+        head.appendChild(t);
+    });
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "btn-remove";
+    removeBtn.type = "button";
+    removeBtn.dataset.removeSpelltech = String(id);
+    removeBtn.textContent = "×";
+    head.appendChild(removeBtn);
+    row.appendChild(head);
+
+    const controls = document.createElement("div");
+    controls.className = "instance-row-controls";
+
+    const staminaField = document.createElement("label");
+    staminaField.className = "instance-field";
+    staminaField.appendChild(document.createTextNode("Stamina cost"));
+    const stamina = document.createElement("input");
+    stamina.type = "number";
+    stamina.min = 1;
+    stamina.max = MAX_STACKS;
+    stamina.value = entry.stamina;
+    stamina.dataset.spelltechStamina = String(id);
+    staminaField.appendChild(stamina);
+    controls.appendChild(staminaField);
+
+    const spellField = document.createElement("label");
+    spellField.className = "instance-field";
+    spellField.appendChild(document.createTextNode("Spell"));
+    const spell = document.createElement("input");
+    spell.type = "text";
+    spell.autocomplete = "off";
+    spell.placeholder = "Name of the spell";
+    spell.value = entry.spell || "";
+    spell.dataset.spelltechSpell = String(id);
+    spellField.appendChild(spell);
+    controls.appendChild(spellField);
+
+    row.appendChild(controls);
+
+    const hint = document.createElement("div");
+    hint.className = "row-hint";
+    hint.textContent = "Costs 10 RP per point of stamina, and counts as one stack.";
+    row.appendChild(hint);
+
+    spelltechList.appendChild(row);
+}
+
+function addSpelltechRow() {
+    /* Spelltech shares the AoE group, so a spell clears anything competing. */
+    clearGroupsExcept(spelltechEffect, null);
+    const id = spelltechData.nextId++;
+    spelltechData.state[id] = { stamina: 1, spell: "" };
+    spelltechData.entries.push(id);
+    refresh();
+}
+
+function removeSpelltechEntry(id) {
+    const idx = spelltechData.entries.indexOf(id);
+    if (idx !== -1) spelltechData.entries.splice(idx, 1);
+    delete spelltechData.state[id];
+}
+
+function removeSpelltechRow(id) {
+    removeSpelltechEntry(id);
+    refresh();
+}
+
+function clearSpelltechRows() {
+    spelltechData.entries = [];
+    spelltechData.state = {};
+}
+
+function rebuildSpelltechList() {
+    spelltechList.innerHTML = "";
+    spelltechData.entries.forEach(id => buildSpelltechRow(id));
+}
+
+function featureDescription(eff, stacks, opts) {
+    if (eff.id === "resistance" && opts && opts.type) {
+        return "Affected creatures ignore all " + opts.type + " damage for the consumable's duration. " +
+               "This has no effect on creatures that already ignore all damage of a specific type.";
+    }
+    return eff.description;
+}
+
+function activeFeatureRows() {
+    const rows = [];
+    variants.forEach((v, i) => {
+        if (state[i] <= 0) return;
+        if (FEATURES_NOT_IN_STATS.indexOf(v.eff.id) === -1) return;
+        const type = v.type || (v.eff.typeChoice ? typeChoices[v.eff.id] : null);
+        rows.push({
+            label: v.label + (v.type ? "" : type ? " (" + type + ")" : ""),
+            value: featureDescription(v.eff, state[i], { type: type })
+        });
+    });
+    spelltechData.entries.forEach(id => {
+        const e = spelltechData.state[id];
+        if (!e) return;
+        rows.push({
+            label: "Spelltech" + (e.spell ? " (" + e.spell + ")" : ""),
+            value: "Casts " + (e.spell || "a chosen spell") + ", a " + Math.max(1, e.stamina) +
+                   " stamina spell, with the consumable as its origin and the user as its caster."
+        });
+    });
+    return rows;
+}
+
+function buildLists() {
+    const pos = document.getElementById("positive-list");
+    const neg = document.getElementById("negative-list");
+    const pro = document.getElementById("prolonged-list");
+    pos.innerHTML = "";
+    neg.innerHTML = "";
+    pro.innerHTML = "";
+    ITEM_DATA.effects.forEach(eff => {
+        if (eff.instanced) return;
+        let list = pos;
+        if (eff.prolonged || eff.prolongedSection) list = pro;
+        else if (eff.rpCost < 0) list = neg;
+        variants.filter(v => v.eff === eff).forEach(v => list.appendChild(buildVariantRow(v)));
+    });
+}
+
+/* ---- setState with mutual-exclusion across every shared group ---- */
+function clearGroupsExcept(eff, keepIdx) {
+    if (!effGroups(eff).length) return;
+    variants.forEach((other, oi) => {
+        if (oi === keepIdx) return;
+        if (state[oi] <= 0 || !groupsClash(eff, other.eff)) return;
+        state[oi] = 0;
+    });
+    if (eff.id !== "spelltech" && groupsClash(eff, spelltechEffect)) clearSpelltechRows();
+}
+
+function setState(idx, value) {
+    const v = variants[idx];
+    value = clamp(Math.floor(value) || 0, 0, v.maxStacks);
+    if (value > 0) clearGroupsExcept(v.eff, idx);
+    state[idx] = value;
+    refresh();
+}
+
+function setSpelltech(id, field, value) {
+    const e = spelltechData.state[id];
+    if (!e) return;
+    if (field === "stamina") e.stamina = clamp(Math.floor(value) || 1, 1, MAX_STACKS);
+    else e.spell = value;
+    refresh();
+}
+
+function clamp(n, lo, hi) {
+    return Math.max(lo, Math.min(hi, n));
+}
+
+const effectsPanel = document.getElementById("effects-panel");
+
+effectsPanel.addEventListener("click", e => {
+    const btn = e.target.closest("[data-step]");
+    if (btn) {
+        const row = btn.closest("[data-var]");
+        if (row) {
+            const idx = parseInt(row.dataset.var, 10);
+            setState(idx, state[idx] + parseInt(btn.dataset.step, 10));
+        }
+        return;
+    }
+    const remove = e.target.closest("[data-remove-spelltech]");
+    if (remove) removeSpelltechRow(parseInt(remove.dataset.removeSpelltech, 10));
+});
+
+effectsPanel.addEventListener("change", e => {
+    if (e.target.dataset.stepper) {
+        setState(parseInt(e.target.dataset.stepper, 10), parseInt(e.target.value, 10));
+    } else if (e.target.dataset.check) {
+        setState(parseInt(e.target.dataset.check, 10), e.target.checked ? 1 : 0);
+    } else if (e.target.dataset.typeChoice) {
+        typeChoices[e.target.dataset.typeChoice] = e.target.value;
+        refresh();
+    } else if (e.target.dataset.spelltechStamina) {
+        setSpelltech(parseInt(e.target.dataset.spelltechStamina, 10), "stamina", parseInt(e.target.value, 10));
+    }
+});
+
+/* the spell name is free text, so it updates as it is typed */
+effectsPanel.addEventListener("input", e => {
+    if (e.target.dataset.spelltechSpell) {
+        setSpelltech(parseInt(e.target.dataset.spelltechSpell, 10), "spell", e.target.value);
+    }
+});
+
+document.getElementById("btn-add-spelltech").addEventListener("click", () => addSpelltechRow());
+
+document.getElementById("btn-reset").addEventListener("click", () => {
+    state.forEach((_, i) => { state[i] = 0; });
+    ITEM_DATA.effects.forEach(eff => { if (eff.typeChoice) typeChoices[eff.id] = eff.typeChoice[0]; });
+    clearSpelltechRows();
+    dismissedMsgs.clear();
+    Object.keys(diceChoices).forEach(k => { delete diceChoices[k]; });
+    clearItemFields();
+    refresh();
+});
+
+/* ---- Save / Load build ---- */
+
+/* Which builder a save belongs to, so a build cannot be loaded into the wrong
+   builder by accident. */
+const BUILDER_ID = "consumable";
+
+/* Reads that id back out of a save. Weapon saves written before this field
+   existed carry weaponBuilder instead; a save with neither is older still and
+   is accepted rather than guessed at. */
+function saveBuilderId(data) {
+    if (!data || typeof data !== "object") return null;
+    if (typeof data.builder === "string") return data.builder;
+    if (data.weaponBuilder) return "weapon";
+    return null;
+}
+
+/* Stacks are saved as a { "<effect id>[:<type>]": stacks } dictionary rather than
+   an array indexed by position, so a save still loads correctly if the effect
+   list is ever added to or reordered, and so the file reads on its own. The id
+   is fixed in ITEM_DATA and never follows a renamed effect. Variants left at
+   zero are omitted. */
+function saveState() {
+    const out = {};
+    state.forEach((n, i) => { if (n > 0) out[variants[i].key] = n; });
+    return out;
+}
+
+/* Accepts that dictionary as well as the positional array of version 1 and 2
+   saves. */
+function readSavedState(data) {
+    const saved = data && data.state;
+    const out = {};
+    if (Array.isArray(saved)) variants.forEach((v, i) => { out[v.key] = saved[i]; });
+    else if (saved && typeof saved === "object") Object.assign(out, saved);
+    return out;
+}
+
+function collectSaveData() {
+    return {
+        version: 3,
+        builder: BUILDER_ID,
+        name: (document.getElementById("item-name").value || ""),
+        description: (document.getElementById("item-desc") ? document.getElementById("item-desc").value : ""),
+        state: saveState(),
+        typeChoices: Object.assign({}, typeChoices),
+        spelltech: spelltechData.entries.map(id => ({
+            stamina: Math.max(1, spelltechData.state[id].stamina),
+            spell: spelltechData.state[id].spell || ""
+        })),
+        diceChoices: Object.assign({}, diceChoices)
+    };
+}
+
+function applySaveData(data) {
+    if (data && typeof data.name === "string") {
+        const _nm = document.getElementById("item-name");
+        if (_nm) _nm.value = data.name;
+        const _mn = document.getElementById("modal-name");
+        if (_mn) _mn.value = data.name;
+    }
+    if (data && typeof data.description === "string") {
+        const _dc = document.getElementById("item-desc");
+        if (_dc) _dc.value = data.description;
+    }
+    const savedState = readSavedState(data);
+    state.forEach((_, i) => {
+        const n = savedState[variants[i].key];
+        state[i] = clamp(Math.floor(n) || 0, 0, variants[i].maxStacks);
+    });
+    ITEM_DATA.effects.forEach(eff => {
+        if (!eff.typeChoice) return;
+        const saved = data && data.typeChoices ? data.typeChoices[eff.id] : null;
+        typeChoices[eff.id] = eff.typeChoice.indexOf(saved) !== -1 ? saved : eff.typeChoice[0];
+    });
+    clearSpelltechRows();
+    if (data && Array.isArray(data.spelltech)) {
+        data.spelltech.forEach(en => {
+            if (!en) return;
+            const id = spelltechData.nextId++;
+            spelltechData.state[id] = {
+                stamina: clamp(Math.floor(en.stamina) || 1, 1, MAX_STACKS),
+                spell: typeof en.spell === "string" ? en.spell : ""
+            };
+            spelltechData.entries.push(id);
+        });
+    }
+    Object.keys(diceChoices).forEach(k => { delete diceChoices[k]; });
+    if (data && data.diceChoices && typeof data.diceChoices === "object") {
+        Object.keys(data.diceChoices).forEach(k => {
+            const v = data.diceChoices[k];
+            if (typeof v === "string") diceChoices[k] = v;
+        });
+    }
+    buildLists();
+    refresh();
+}
+
+document.getElementById("btn-modal-export").addEventListener("click", () => {
+    const item = (document.getElementById("item-name").value || "").trim();
+    let name = item.replace(/[\\/:*?"<>|]/g, "_").trim() || "consumable-build";
+    if (!/\.json$/i.test(name)) name += ".json";
+    const blob = new Blob([JSON.stringify(collectSaveData(), null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(a.href), 0);
+});
+
+document.getElementById("btn-modal-import").addEventListener("click", () => {
+    document.getElementById("file-load-build").click();
+});
+
+document.getElementById("file-load-build").addEventListener("change", e => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+        try {
+            const data = JSON.parse(reader.result);
+            const id = saveBuilderId(data);
+            if (id && id !== BUILDER_ID) {
+                alert("This file is not a consumable build (it was saved from the " + id + " builder).");
+                return;
+            }
+            applySaveData(data);
+        } catch (err) {
+            alert("Could not load build: " + err.message);
+        }
+    };
+    reader.readAsText(file);
+});
+
+function rarityFromRP(rp) {
+    if (rp <= 0) return 0;
+    for (let i = 0; i < RARITIES.length; i++) {
+        if (rp <= RARITIES[i].max) return i;
+    }
+    return -1;
+}
+
+function rarityFromStacks(n) {
+    for (let i = 0; i < RARITIES.length; i++) {
+        if (n <= RARITIES[i].maxStacks) return i;
+    }
+    return -1;
+}
+
+function compute() {
+    const warnings = [];
+
+    /* Dependency fix-ups run before anything is summed, so a removed feature
+       cannot leak its cost into the totals. */
+    variants.forEach((v, i) => {
+        if (state[i] <= 0 || requirementMet(v.eff)) return;
+        state[i] = 0;
+        warnings.push(v.eff.name + " requires " + requirementText(v.eff) + ", so it was removed.");
+    });
+
+    const base = ITEM_DATA.baseComponents;
+    const innate = ITEM_DATA.innateStats;
+    const t = { rp: 0, material: base.material, refinement: base.refinement, power: base.power, stacks: 0 };
+    const damage = { Physical: 0, Energy: 0, Heat: 0, Chill: 0, Psyche: 0 };
+    const healing = { SHP: 0, Stamina: 0, DHP: 0 };
+    const activeEffects = {};
+    const resistances = [];
+    let hands = innate.hands;
+    let turnActions = innate.turnActions;
+    let slots = innate.slots;
+    let radius = innate.radius;
+    let thrown = false, necrotic = false;
+    let activation = null, duration = null, slotVariant = null;
+
+    variants.forEach((v, i) => {
+        const n = state[i];
+        if (n <= 0) return;
+        activeEffects[v.eff.id] = true;
+        t.rp += v.eff.rpCost * n;
+        /* A cost written with an X scales through that X, so the feature counts
+           as a single stack no matter how high it is taken. */
+        t.stacks += v.eff.xCost ? 1 : n;
+        if (v.eff.damageIncrease) {
+            const dt = v.type || v.eff.damageType;
+            if (dt) damage[dt] += v.eff.damageIncrease * n;
+        }
+        if (v.eff.healType) healing[v.eff.healType] += n;
+        if (v.eff.handsIncrease) hands += v.eff.handsIncrease * n;
+        if (v.eff.turnActionIncrease) turnActions += v.eff.turnActionIncrease * n;
+        if (v.eff.id === "simple") turnActions -= 1;
+        if (v.eff.activation) activation = v.eff.activation;
+        if (v.eff.id === "splash") thrown = true;
+        if (v.eff.id === "radiating") radius += n;
+        if (v.eff.prolonged) duration = { unit: v.eff.durationUnit, amount: n };
+        if (v.eff.id === "resistance") resistances.push(typeChoices[v.eff.id]);
+        if (v.eff.id === "necrotic") necrotic = true;
+        if (effGroups(v.eff).indexOf("Slots") !== -1) slotVariant = v;
+    });
+
+    /* Each spell is its own instance of Spelltech: 10 RP per point of stamina,
+       and one stack, however expensive the spell. */
+    let spells = 0;
+    spelltechData.entries.forEach(id => {
+        const e = spelltechData.state[id];
+        if (!e) return;
+        activeEffects.spelltech = true;
+        t.rp += spelltechEffect.rpCost * Math.max(1, e.stamina);
+        t.stacks += 1;
+        spells++;
+    });
+
+    /* No effect carries a component cost; the requirement scales with the
+       finished RP total instead. */
+    const per = ITEM_DATA.componentPerRP;
+    if (per.material) t.material = base.material + Math.max(0, Math.floor(t.rp / per.material));
+    if (per.refinement) t.refinement = base.refinement + Math.max(0, Math.floor(t.rp / per.refinement));
+    if (per.power) t.power = base.power + Math.max(0, Math.floor(t.rp / per.power));
+
+    turnActions = Math.max(1, turnActions);
+    if (slotVariant) {
+        if (slotVariant.eff.id === "inordinate") slots = 27;
+        else if (slotVariant.eff.id === "awkward") slots = 9;
+        else if (slotVariant.eff.id === "compact") slots = 1;
+    }
+
+    const errors = [];
+    const pinnedErrors = [];
+    const min = ITEM_DATA.minComponents;
+    if (t.material < min.material) errors.push("Material (" + t.material + ") is below the minimum required (" + min.material + ").");
+    if (t.refinement < min.refinement) errors.push("Refinement (" + t.refinement + ") is below the minimum required (" + min.refinement + ").");
+    if (t.power < min.power) errors.push("Power (" + t.power + ") is below the minimum required (" + min.power + ").");
+
+    const rpIdx = rarityFromRP(t.rp);
+    const stackIdx = rarityFromStacks(t.stacks);
+    if (rpIdx === -1) {
+        const msg = "Total RP (" + t.rp + ") exceeds the maximum supported (220 RP).";
+        errors.push(msg);
+        pinnedErrors.push(msg);
+    }
+    if (stackIdx === -1) {
+        const msg = "Total stacks (" + t.stacks + ") exceed the maximum supported (60).";
+        errors.push(msg);
+        pinnedErrors.push(msg);
+    }
+
+    let effIdx = 0;
+    if (rpIdx === -1) effIdx = RARITIES.length - 1;
+    else effIdx = Math.max(rpIdx, stackIdx === -1 ? 0 : stackIdx);
+    variants.forEach((v, i) => {
+        if (state[i] <= 0 || !v.eff.minRarity) return;
+        const idx = RARITIES.findIndex(r => r.name === v.eff.minRarity);
+        if (idx > effIdx) effIdx = idx;
+    });
+
+    const tier = RARITIES[effIdx];
+    const value = 2 * Math.max(t.rp * tier.multiplier, tier.minValue); /* Greyfen house rule: SP value doubled */
+
+    return {
+        totals: t,
+        damage: damage,
+        healing: healing,
+        hands: hands,
+        turnActions: turnActions,
+        activation: activation,
+        thrown: thrown,
+        radius: radius,
+        duration: duration,
+        resistances: resistances,
+        necrotic: necrotic,
+        spells: spells,
+        slots: slots,
+        active: activeEffects,
+        tier: tier,
+        effIdx: effIdx,
+        value: value,
+        overRPCap: rpIdx === -1,
+        overStackCap: stackIdx === -1,
+        errors: errors,
+        pinnedErrors: pinnedErrors,
+        warnings: warnings
+    };
+}
+
+function activationText(c) {
+    if (c.activation) return c.activation.amount + " " + c.activation.unit + (c.activation.amount === 1 ? "" : "s");
+    return c.turnActions + " turn action" + (c.turnActions === 1 ? "" : "s");
+}
+
+function durationText(d) {
+    return d.amount + " " + d.unit + (d.amount === 1 ? "" : "s");
+}
+
+/* Rows are rebuilt only when a spell is added or removed: rebuilding on every
+   keystroke would take the caret out of the spell name field. */
+let spelltechSig = null;
+function syncSpelltechList() {
+    const sig = spelltechData.entries.join(",");
+    if (sig !== spelltechSig) {
+        spelltechSig = sig;
+        rebuildSpelltechList();
+        return;
+    }
+    spelltechData.entries.forEach(id => {
+        const row = spelltechList.querySelector('[data-spelltech="' + id + '"]');
+        const e = spelltechData.state[id];
+        if (!row || !e) return;
+        const rpTag = row.querySelector(".tag.cost");
+        if (rpTag) rpTag.textContent = "+" + (spelltechEffect.rpCost * Math.max(1, e.stamina)) + " RP";
+        const stam = row.querySelector("[data-spelltech-stamina]");
+        if (stam && document.activeElement !== stam && stam.value !== String(e.stamina)) stam.value = e.stamina;
+        const spell = row.querySelector("[data-spelltech-spell]");
+        if (spell && document.activeElement !== spell && spell.value !== (e.spell || "")) spell.value = e.spell || "";
+    });
+}
+
+function refresh() {
+    const c = compute();
+
+    variants.forEach((v, i) => {
+        const row = effectsPanel.querySelector('.effect-row[data-var="' + v.index + '"]');
+        if (!row) return;
+        const input = row.querySelector("[data-stepper]");
+        if (input) input.value = state[i];
+        const unmet = !requirementMet(v.eff);
+        const cb = row.querySelector("[data-check]");
+        if (cb) {
+            cb.checked = state[i] > 0;
+            cb.disabled = unmet;
+        }
+        const typeSel = row.querySelector("[data-type-choice]");
+        if (typeSel) {
+            typeSel.value = typeChoices[v.eff.id];
+            typeSel.disabled = unmet;
+        }
+        const stepper = row.querySelector(".stepper");
+        if (stepper && input) {
+            input.disabled = unmet;
+            stepper.style.opacity = unmet ? "0.35" : "1";
+        }
+        row.classList.toggle("dim", unmet && state[i] === 0);
+    });
+
+    syncSpelltechList();
+
+    const rarityEl = document.getElementById("rarity-value");
+    rarityEl.textContent = c.tier.name;
+    rarityEl.style.color = c.tier.color;
+
+    document.getElementById("sum-rp").textContent = c.totals.rp + "/" + c.tier.max;
+    document.getElementById("sum-value").textContent = (c.overRPCap || c.overStackCap) ? "—" : c.value;
+    document.getElementById("sum-stacks").textContent = c.totals.stacks + "/" + c.tier.maxStacks;
+    document.getElementById("sum-slots").textContent = c.slots;
+
+    const min = ITEM_DATA.minComponents;
+    document.getElementById("comp-material").textContent = c.totals.material + " (Min " + min.material + ")";
+    document.getElementById("comp-refinement").textContent = c.totals.refinement + " (Min " + min.refinement + ")";
+    document.getElementById("comp-power").textContent = c.totals.power + " (Min " + min.power + ")";
+
+    const stats = document.getElementById("stats-list");
+    stats.innerHTML = "";
+    function addStat(label, val) {
+        const li = document.createElement("li");
+        const l = document.createElement("span");
+        l.textContent = label;
+        const v = document.createElement("span");
+        v.textContent = val;
+        li.append(l, v);
+        stats.appendChild(li);
+    }
+    function addStatDice(label, options) {
+        if (!options || !options.length) return;
+        const li = document.createElement("li");
+        const l = document.createElement("span");
+        l.textContent = label;
+        const sel = document.createElement("select");
+        sel.className = "dice-select";
+        sel.setAttribute("aria-label", label + " dice");
+        options.forEach(o => {
+            const opt = document.createElement("option");
+            opt.value = o;
+            opt.textContent = o;
+            sel.appendChild(opt);
+        });
+        sel.value = (diceChoices[label] && options.indexOf(diceChoices[label]) !== -1) ? diceChoices[label] : options[0];
+        sel.addEventListener("change", () => { diceChoices[label] = sel.value; });
+        li.append(l, sel);
+        stats.appendChild(li);
+    }
+
+    addStat("Hands", c.hands);
+    addStat("Activation", activationText(c));
+    addStat("Range", c.thrown
+        ? "Thrown, up to the user's Strength or Agility score in meters"
+        : ITEM_DATA.innateStats.range + " m");
+    addStat("Radius", c.radius + " m");
+    STAT_TYPES.forEach(d => {
+        if (c.damage[d] > 0) addStatDice("Damage (" + d + ")", diceOptions(c.damage[d] * 4));
+    });
+    HEAL_TYPES.forEach(h => {
+        if (c.healing[h] > 0) addStatDice("Healing (" + h + ")", diceOptions(c.healing[h] * 4));
+    });
+    if (c.duration) addStat("Duration", durationText(c.duration));
+    if (c.spells > 0) addStat("Spells", c.spells);
+
+    stats.querySelectorAll("li").forEach(li => {
+        if (li.lastElementChild.offsetTop > li.firstElementChild.offsetTop) li.classList.add("wrapped");
+    });
+
+    const banner = document.getElementById("error-banner");
+    const list = document.getElementById("error-list");
+    const pinned = new Set(c.pinnedErrors || []);
+    currentPinned = pinned;
+    const msgs = c.errors.concat(c.warnings);
+    const visible = msgs.filter(m => pinned.has(m) || !dismissedMsgs.has(m));
+    list.innerHTML = "";
+    visible.forEach(m => {
+        const li = document.createElement("li");
+        li.textContent = m;
+        list.appendChild(li);
+    });
+    banner.classList.toggle("show", visible.length > 0);
+    const dismissBtn = document.getElementById("btn-dismiss");
+    if (dismissBtn) dismissBtn.style.display = visible.some(m => !pinned.has(m)) ? "block" : "none";
+
+    const b = ITEM_DATA.baseComponents, per = ITEM_DATA.componentPerRP;
+    document.getElementById("foot-note").textContent =
+        "Base: " + b.material + " Material · " + b.refinement + " Refinement · " + b.power + " Power" +
+        "  |  Required: +1 Refinement per " + per.refinement + " RP, +1 Power per " + per.power +
+        " RP (rounded down)";
+}
+
+/* ---- Download Summary (standalone HTML) ---- */
+const SUMMARY_CSS = `
+    :root {
+        --bg: #1a1a1a;
+        --panel: #2d2d2d;
+        --panel-2: #242424;
+        --border: #444;
+        --border-dashed: #3a3a3a;
+        --text: #e0e0e0;
+        --muted: #9a9a9a;
+        --gold: #ffd700;
+        --heading: #a8dadc;
+        --blue-hi: #bde0fe;
+        --desc-text: #d6d6d6;
+    }
+    html[data-theme="light"] {
+        --bg: #f4f4f4;
+        --panel: #ffffff;
+        --panel-2: #ececec;
+        --border: #c9c9c9;
+        --border-dashed: #d8d8d8;
+        --text: #1b1b1b;
+        --muted: #5c5c5c;
+        --gold: #b8860b;
+        --heading: #457b9d;
+        --blue-hi: #1f4e8c;
+        --desc-text: #3a3a3a;
+    }
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 20px;
+        line-height: 1.5;
+    }
+    .card {
+        max-width: 640px;
+        margin: 0 auto;
+        background-color: var(--panel);
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .item-name {
+        color: var(--gold);
+        font-size: 1.5em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-align: center;
+        margin: 0 0 14px;
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 10px;
+    }
+    .rarity-box {
+        text-align: center;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        padding: 14px;
+        margin-bottom: 14px;
+        background-color: var(--panel-2);
+    }
+    .rarity-box .label {
+        font-size: 0.75em;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .rarity-box .value {
+        font-size: 1.6em;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+    .sum-cell {
+        background-color: var(--panel-2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 8px 10px;
+    }
+    .sum-cell .label {
+        font-size: 0.72em;
+        color: var(--muted);
+        text-transform: uppercase;
+    }
+    .sum-cell .val {
+        font-size: 1.15em;
+        font-weight: bold;
+        color: var(--gold);
+        font-family: Consolas, monospace;
+    }
+    h3 {
+        color: var(--heading);
+        font-size: 0.95em;
+        margin: 14px 0 6px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .stat-list { list-style: none; margin: 0; padding: 0; }
+    .stat-list li {
+        display: flex;
+        flex-direction: column;
+        padding: 3px 0;
+        border-bottom: 1px dashed var(--border-dashed);
+        font-size: 0.9em;
+    }
+    .stat-list li span:first-child { color: var(--blue-hi); }
+    .stat-list li span:last-child { font-weight: bold; margin-left: auto; text-align: right; }
+    .item-desc-text { white-space: pre-wrap; color: var(--desc-text); font-size: 0.92em; line-height: 1.5; margin: 0; }
+`;
+
+function escHtml(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function buildSummaryHTML(name, c, compRows, statRows, featuresRows, desc) {
+    /* Match the page's own light/dark toggle, so the preview and the
+       downloaded file look the way the page currently looks. */
+    const theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+    const overCap = c.overRPCap || c.overStackCap;
+    const cells = [
+        { label: "RP", val: c.totals.rp + "/" + c.tier.max },
+        { label: "Value (SP)", val: overCap ? "\u2014" : c.value },
+        { label: "Stacks", val: c.totals.stacks + "/" + c.tier.maxStacks },
+        { label: "Slots", val: c.slots }
+    ].map(x => '<div class="sum-cell"><div class="label">' + escHtml(x.label) + '</div><div class="val">' + escHtml(x.val) + '</div></div>').join("");
+    function rowsHtml(rows) {
+        return rows.map(r => '<li><span>' + escHtml(r.label) + '</span><span>' + escHtml(r.value) + '</span></li>').join("");
+    }
+    return '<!DOCTYPE html>\n' +
+        '<html lang="en" data-theme="' + theme + '">\n' +
+        '<head>\n' +
+        '<meta charset="UTF-8">\n' +
+        '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+        '<title>' + escHtml(name) + '</title>\n' +
+        '<style>' + SUMMARY_CSS + '</style>\n' +
+        '</head>\n' +
+        '<body>\n' +
+        '<div class="card">\n' +
+        '<h1 class="item-name">' + escHtml(name) + '</h1>\n' +
+        '<div style="text-align:center;color:var(--heading);text-transform:uppercase;letter-spacing:2px;font-size:0.78em;margin:2px 0 14px;">' + escHtml(summarySubtitle()) + '</div>\n' +
+        '<div class="rarity-box"><div class="label">Rarity</div><div class="value" style="color:' + c.tier.color + '">' + escHtml(c.tier.name) + '</div></div>\n' +
+        '<div class="summary-grid">' + cells + '</div>\n' +
+        (compRows.length ? '<h3>Components</h3>\n<ul class="stat-list">' + rowsHtml(compRows) + '</ul>\n' : '') +
+        '<h3>Resulting Stats</h3>\n<ul class="stat-list">' + rowsHtml(statRows) + '</ul>\n' +
+        (featuresRows && featuresRows.length ? '<h3>Features</h3>\n<ul class="stat-list">' + rowsHtml(featuresRows) + '</ul>\n' : '') +
+        (desc && desc.trim() ? '<h3>Description</h3>\n<p class="item-desc-text">' + escHtml(desc.trim()) + '</p>\n' : '') +
+        '</div>\n' +
+        '</body>\n' +
+        '</html>\n';
+}
+
+function collectRows(list) {
+    const rows = [];
+    (list ? list.querySelectorAll("li") : []).forEach(li => {
+        if (!li.children || li.children.length === 0) return;
+        const last = li.lastElementChild;
+        if (last && last.tagName === "SELECT") {
+            const opts = Array.from(last.children || []);
+            const sel = opts.find(o => o.value === last.value) || opts[0];
+            rows.push({ label: li.children[0].textContent, value: sel ? sel.textContent : last.value });
+        } else if (li.children.length === 2) {
+            rows.push({ label: li.children[0].textContent, value: li.children[1].textContent });
+        }
+    });
+    return rows;
+}
+
+function collectDiceRows(list) {
+    const rows = [];
+    (list ? list.querySelectorAll("li") : []).forEach(li => {
+        if (!li.children || li.children.length < 2) return;
+        const sel = Array.from(li.children).find(c => c.tagName === "SELECT");
+        if (sel) {
+            const opts = Array.from(sel.children || []).map(o => o.value);
+            rows.push({ label: li.children[0].textContent, select: sel, options: opts });
+        }
+    });
+    return rows;
+}
+
+
+/* ---- Summary & Save modal ---- */
+const summaryModal = document.getElementById("summary-modal");
+const modalName = document.getElementById("modal-name");
+const itemDesc = document.getElementById("item-desc");
+const previewWrap = document.getElementById("preview-wrap");
+const previewFrame = document.getElementById("summary-preview");
+
+/* Dice are chosen here rather than through a prompt. Each entry is a damage or
+   healing total that can be rolled several equivalent ways (e.g. 24 as 6d4,
+   4d6, 3d8 or 2d12); the chosen form is what the summary prints. */
+function buildDiceControls() {
+    const wrap = document.getElementById("dice-wrap");
+    const list = document.getElementById("dice-list");
+    list.innerHTML = "";
+    const rows = collectDiceRows(document.getElementById("stats-list"))
+        .filter(dr => dr.options.length > 1);
+    wrap.hidden = rows.length === 0;
+    rows.forEach(dr => {
+        const row = document.createElement("div");
+        row.className = "dice-row";
+        const label = document.createElement("span");
+        label.textContent = dr.label;
+        const sel = document.createElement("select");
+        dr.options.forEach(o => {
+            const opt = document.createElement("option");
+            opt.value = o;
+            opt.textContent = o;
+            sel.appendChild(opt);
+        });
+        sel.value = (diceChoices[dr.label] && dr.options.indexOf(diceChoices[dr.label]) !== -1)
+            ? diceChoices[dr.label] : dr.select.value;
+        diceChoices[dr.label] = sel.value;   // record it, so the summary matches what is shown
+        sel.addEventListener("change", () => {
+            diceChoices[dr.label] = sel.value;
+            refresh();
+        });
+        row.append(label, sel);
+        list.appendChild(row);
+    });
+}
+
+function openSummaryModal() {
+    modalName.value = document.getElementById("item-name").value || "";
+    previewWrap.hidden = true;
+    previewFrame.removeAttribute("srcdoc");
+    refresh();
+    buildDiceControls();
+    summaryModal.hidden = false;
+    modalName.focus();
+}
+
+function closeSummaryModal() {
+    summaryModal.hidden = true;
+}
+
+/* the panel's name box stays the single source of truth */
+modalName.addEventListener("input", () => {
+    document.getElementById("item-name").value = modalName.value;
+});
+
+document.getElementById("btn-open-summary").addEventListener("click", openSummaryModal);
+document.getElementById("btn-modal-close").addEventListener("click", closeSummaryModal);
+summaryModal.addEventListener("mousedown", e => { if (e.target === summaryModal) closeSummaryModal(); });
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && !summaryModal.hidden) closeSummaryModal();
+});
+
+/* Builds the summary document, or returns null if the build is not valid. */
+function summaryDoc() {
+    const c = compute();
+    refresh();
+    if (c.errors && c.errors.length) {
+        alert("Cannot build the summary: the build is not valid.\n\n- " + c.errors.join("\n- "));
+        return null;
+    }
+    const name = (document.getElementById("item-name").value || "").trim() || "Unnamed Item";
+    let fname = name.replace(/[\\/:*?"<>|]/g, "_").trim() || "item-summary";
+    if (!/\.html?$/i.test(fname)) fname += ".html";
+    const html = buildSummaryHTML(name, c,
+        collectRows(document.getElementById("comp-list")),
+        collectRows(document.getElementById("stats-list")),
+        activeFeatureRows(), itemDesc.value);
+    return { name: name, fname: fname, html: html };
+}
+
+document.getElementById("btn-modal-preview").addEventListener("click", () => {
+    const doc = summaryDoc();
+    if (!doc) return;
+    previewFrame.srcdoc = doc.html;
+    previewWrap.hidden = false;
+});
+
+document.getElementById("btn-modal-download").addEventListener("click", () => {
+    const doc = summaryDoc();
+    if (!doc) return;
+    const blob = new Blob([doc.html], { type: "text/html" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = doc.fname;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(a.href), 0);
+});
+
+document.getElementById("btn-dismiss").addEventListener("click", () => {
+    const list = document.getElementById("error-list");
+    Array.from(list.children).forEach(li => {
+        const t = li.textContent;
+        if (!currentPinned.has(t)) dismissedMsgs.add(t);
+    });
+    refresh();
+});
+
+/* A reload starts an empty build, so the browser must not restore the previous
+   name/description into these fields. `load` does not fire on a back/forward
+   cache restore, where the whole build is still in memory and the name should
+   be kept. */
+function clearItemFields() {
+    ["item-name", "modal-name", "item-desc"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+    });
+}
+clearItemFields();
+window.addEventListener("load", clearItemFields);
+
+buildLists();
+refresh();
+</script>
+
+<script src="../theme.js"></script>
+</html>
