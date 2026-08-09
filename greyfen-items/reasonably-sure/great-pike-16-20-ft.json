@@ -1,49 +1,24 @@
 {
-  "version": 2,
-  "weaponBuilder": true,
+  "version": 3,
+  "builder": "weapon",
   "name": "Great pike, 16-20 ft",
   "description": "Formation only; cumbersome alone; May Brace; 1 disfavor on attacks unless at least one allied pike user is adjacent; cannot attack at 0-1 m.",
   "currentType": "slow",
   "currentMode": "melee",
-  "state": [
-    14,
-    0,
-    0,
-    0,
-    0,
-    0,
-    3,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0
-  ],
+  "state": {
+    "slam": 14,
+    "reach": 3,
+    "inordinate": 1,
+    "unwieldy": 1,
+    "elaborate": 1
+  },
   "choiceState": {
-    "Elegant": {
+    "elegant": {
       "type": null,
       "stacks": 0,
       "sub": null
     },
-    "Extravagant": {
+    "extravagant": {
       "type": null,
       "stacks": 0,
       "sub": "Speed"
@@ -55,9 +30,9 @@
     "state": {}
   },
   "savedSlowOnly": {
-    "Elaborate": 1,
-    "Articulate": 0,
-    "Convoluted": 0
+    "elaborate": 1,
+    "articulate": 0,
+    "convoluted": 0
   },
   "ammoType": "",
   "diceChoices": {

@@ -1,49 +1,20 @@
 {
-  "version": 2,
-  "weaponBuilder": true,
+  "version": 3,
+  "builder": "weapon",
   "name": "Seax / long knife",
   "description": "Heavy single-edged utility blade; Also functions as a light chopping tool.",
   "currentType": "fast",
   "currentMode": "melee",
-  "state": [
-    4,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "slam": 4
+  },
   "choiceState": {
-    "Elegant": {
+    "elegant": {
       "type": null,
       "stacks": 0,
       "sub": null
     },
-    "Extravagant": {
+    "extravagant": {
       "type": null,
       "stacks": 0,
       "sub": "Speed"
@@ -55,9 +26,9 @@
     "state": {}
   },
   "savedSlowOnly": {
-    "Elaborate": 0,
-    "Articulate": 0,
-    "Convoluted": 0
+    "elaborate": 0,
+    "articulate": 0,
+    "convoluted": 0
   },
   "ammoType": "",
   "diceChoices": {

@@ -1,49 +1,24 @@
 {
-  "version": 2,
-  "weaponBuilder": true,
+  "version": 3,
+  "builder": "weapon",
   "name": "War bow, exceptional draw",
   "description": "Made to archer's measure; Requires Power 5; otherwise attacks have 1 disfavor and cost 2 stamina.",
   "currentType": "slow",
   "currentMode": "ranged",
-  "state": [
-    12,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    5,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "slam": 12,
+    "range": 5,
+    "awkward": 1,
+    "unwieldy": 1,
+    "armed": 1
+  },
   "choiceState": {
-    "Elegant": {
+    "elegant": {
       "type": "Physical",
       "stacks": 0,
       "sub": null
     },
-    "Extravagant": {
+    "extravagant": {
       "type": null,
       "stacks": 0,
       "sub": "Speed"
@@ -55,9 +30,9 @@
     "state": {}
   },
   "savedSlowOnly": {
-    "Elaborate": 0,
-    "Articulate": 0,
-    "Convoluted": 0
+    "elaborate": 0,
+    "articulate": 0,
+    "convoluted": 0
   },
   "ammoType": "arrows",
   "diceChoices": {

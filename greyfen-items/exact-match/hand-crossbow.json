@@ -1,49 +1,24 @@
 {
-  "version": 2,
-  "weaponBuilder": true,
+  "version": 3,
+  "builder": "weapon",
   "name": "Hand crossbow",
   "description": "Concealable mechanical bow; Requires 2 loading actions after each shot; loading needs a free hand.",
   "currentType": "fast",
   "currentMode": "ranged",
-  "state": [
-    6,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    2,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0,
-    1,
-    2,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "slam": 6,
+    "range": 2,
+    "armed": 1,
+    "loaded": 1,
+    "loading": 2
+  },
   "choiceState": {
-    "Elegant": {
+    "elegant": {
       "type": null,
       "stacks": 0,
       "sub": null
     },
-    "Extravagant": {
+    "extravagant": {
       "type": null,
       "stacks": 0,
       "sub": "Speed"
@@ -55,9 +30,9 @@
     "state": {}
   },
   "savedSlowOnly": {
-    "Elaborate": 0,
-    "Articulate": 0,
-    "Convoluted": 0
+    "elaborate": 0,
+    "articulate": 0,
+    "convoluted": 0
   },
   "ammoType": "bolts",
   "diceChoices": {

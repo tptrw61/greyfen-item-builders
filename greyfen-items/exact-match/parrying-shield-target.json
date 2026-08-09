@@ -1,20 +1,10 @@
 {
-  "version": 1,
+  "version": 3,
   "builder": "shield",
-  "state": [
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "guarded": 1,
+    "spry": 1
+  },
   "name": "Parrying shield / target",
   "description": "Small round shield."
 }

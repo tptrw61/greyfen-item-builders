@@ -1,49 +1,22 @@
 {
-  "version": 2,
-  "weaponBuilder": true,
+  "version": 3,
+  "builder": "weapon",
   "name": "Chain, weighted",
   "description": "Improvised control weapon; Instead of damage, make a Power or Dexterity contest against target's Strength or Agility to disarm it or knock it Prone.",
   "currentType": "moderate",
   "currentMode": "melee",
-  "state": [
-    6,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "slam": 6,
+    "reach": 1,
+    "unwieldy": 1
+  },
   "choiceState": {
-    "Elegant": {
+    "elegant": {
       "type": null,
       "stacks": 0,
       "sub": null
     },
-    "Extravagant": {
+    "extravagant": {
       "type": null,
       "stacks": 0,
       "sub": "Speed"
@@ -55,9 +28,9 @@
     "state": {}
   },
   "savedSlowOnly": {
-    "Elaborate": 0,
-    "Articulate": 0,
-    "Convoluted": 0
+    "elaborate": 0,
+    "articulate": 0,
+    "convoluted": 0
   },
   "ammoType": "",
   "diceChoices": {

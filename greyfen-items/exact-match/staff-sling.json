@@ -1,49 +1,23 @@
 {
-  "version": 2,
-  "weaponBuilder": true,
+  "version": 3,
+  "builder": "weapon",
   "name": "Staff sling",
   "description": "Staff sling or slingstaff; hurls large stones farther than a hand sling and may use stones or sling bullets.",
   "currentType": "moderate",
   "currentMode": "ranged",
-  "state": [
-    4,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    3,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "slam": 4,
+    "range": 3,
+    "unwieldy": 1,
+    "armed": 1
+  },
   "choiceState": {
-    "Elegant": {
+    "elegant": {
       "type": "Physical",
       "stacks": 0,
       "sub": null
     },
-    "Extravagant": {
+    "extravagant": {
       "type": null,
       "stacks": 0,
       "sub": "Speed"
@@ -55,9 +29,9 @@
     "state": {}
   },
   "savedSlowOnly": {
-    "Elaborate": 0,
-    "Articulate": 0,
-    "Convoluted": 0
+    "elaborate": 0,
+    "articulate": 0,
+    "convoluted": 0
   },
   "ammoType": "bullets",
   "diceChoices": {

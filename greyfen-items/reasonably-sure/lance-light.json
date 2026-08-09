@@ -1,49 +1,22 @@
 {
-  "version": 2,
-  "weaponBuilder": true,
+  "version": 3,
+  "builder": "weapon",
   "name": "Lance, light",
   "description": "Mounted use; can be couched; Mounted Charge: after at least 4 m of straight mounted travel, deals 4d8 instead.",
   "currentType": "moderate",
   "currentMode": "melee",
-  "state": [
-    6,
-    0,
-    0,
-    0,
-    0,
-    0,
-    2,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "slam": 6,
+    "reach": 2,
+    "awkward": 1
+  },
   "choiceState": {
-    "Elegant": {
+    "elegant": {
       "type": null,
       "stacks": 0,
       "sub": null
     },
-    "Extravagant": {
+    "extravagant": {
       "type": null,
       "stacks": 0,
       "sub": "Speed"
@@ -55,9 +28,9 @@
     "state": {}
   },
   "savedSlowOnly": {
-    "Elaborate": 0,
-    "Articulate": 0,
-    "Convoluted": 0
+    "elaborate": 0,
+    "articulate": 0,
+    "convoluted": 0
   },
   "ammoType": "",
   "diceChoices": {

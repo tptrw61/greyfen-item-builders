@@ -1,26 +1,12 @@
 {
-  "version": 1,
+  "version": 3,
   "builder": "chest-armor",
-  "state": [
-    0,
-    2,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "defensive:physical": 2,
+    "defensive:energy": 1,
+    "defensive:heat": 1,
+    "defensive:chill": 1
+  },
   "name": "Gambeson / aketon",
   "description": "Thick quilted armour; this campaign's Armour Defense value supersedes the Core Guide Body Armor's printed Physical Defense."
 }

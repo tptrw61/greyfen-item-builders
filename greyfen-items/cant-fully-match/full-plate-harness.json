@@ -1,26 +1,13 @@
 {
-  "version": 1,
+  "version": 3,
   "builder": "chest-armor",
-  "state": [
-    0,
-    14,
-    2,
-    2,
-    2,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "defensive:physical": 14,
+    "defensive:energy": 2,
+    "defensive:heat": 2,
+    "defensive:chill": 2,
+    "awkward": 1
+  },
   "name": "Full plate harness",
   "description": "Fitted articulated field armour; properly fitted; an ill-fitted or incomplete harness gives 1 disfavor on Strength, Agility, and Stunt tests involving movement. Occupies Head, Chest, Hands, and Feet; it cannot stack with separate armour pieces."
 }

@@ -1,49 +1,26 @@
 {
-  "version": 2,
-  "weaponBuilder": true,
+  "version": 3,
+  "builder": "weapon",
   "name": "Light crossbow",
   "description": "Lever- or belt-spanned; Requires 1 loading action after each shot; Core Guide profile.",
   "currentType": "moderate",
   "currentMode": "ranged",
-  "state": [
-    12,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    4,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    1,
-    1,
-    0,
-    0,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "slam": 12,
+    "range": 4,
+    "awkward": 1,
+    "unwieldy": 1,
+    "armed": 1,
+    "loaded": 1,
+    "loading": 1
+  },
   "choiceState": {
-    "Elegant": {
+    "elegant": {
       "type": null,
       "stacks": 0,
       "sub": null
     },
-    "Extravagant": {
+    "extravagant": {
       "type": null,
       "stacks": 0,
       "sub": "Speed"
@@ -55,9 +32,9 @@
     "state": {}
   },
   "savedSlowOnly": {
-    "Elaborate": 0,
-    "Articulate": 0,
-    "Convoluted": 0
+    "elaborate": 0,
+    "articulate": 0,
+    "convoluted": 0
   },
   "ammoType": "bolts",
   "diceChoices": {

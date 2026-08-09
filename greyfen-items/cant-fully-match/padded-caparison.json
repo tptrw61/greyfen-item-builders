@@ -1,26 +1,10 @@
 {
-  "version": 1,
+  "version": 3,
   "builder": "chest-armor",
-  "state": [
-    0,
-    4,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "defensive:physical": 4,
+    "inordinate": 1
+  },
   "name": "Padded caparison",
   "description": "Quilted body covering; 1 additional Fatigue during prolonged exertion in hot weather at GM discretion."
 }

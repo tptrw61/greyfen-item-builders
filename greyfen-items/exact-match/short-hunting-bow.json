@@ -1,49 +1,24 @@
 {
-  "version": 2,
-  "weaponBuilder": true,
+  "version": 3,
+  "builder": "weapon",
   "name": "Short / hunting bow",
   "description": "Compact self bow for hunting or light war; consolidates the shortbow and hunting-bow profiles.",
   "currentType": "moderate",
   "currentMode": "ranged",
-  "state": [
-    6,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    3,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "slam": 6,
+    "range": 3,
+    "awkward": 1,
+    "unwieldy": 1,
+    "armed": 1
+  },
   "choiceState": {
-    "Elegant": {
+    "elegant": {
       "type": "Physical",
       "stacks": 0,
       "sub": null
     },
-    "Extravagant": {
+    "extravagant": {
       "type": null,
       "stacks": 0,
       "sub": "Speed"
@@ -55,9 +30,9 @@
     "state": {}
   },
   "savedSlowOnly": {
-    "Elaborate": 0,
-    "Articulate": 0,
-    "Convoluted": 0
+    "elaborate": 0,
+    "articulate": 0,
+    "convoluted": 0
   },
   "ammoType": "arrows",
   "diceChoices": {

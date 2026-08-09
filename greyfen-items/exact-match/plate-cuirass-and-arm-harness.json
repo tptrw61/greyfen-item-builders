@@ -1,26 +1,13 @@
 {
-  "version": 1,
+  "version": 3,
   "builder": "chest-armor",
-  "state": [
-    0,
-    6,
-    2,
-    2,
-    2,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "defensive:physical": 6,
+    "defensive:energy": 2,
+    "defensive:heat": 2,
+    "defensive:chill": 2,
+    "awkward": 1
+  },
   "name": "Plate cuirass and arm harness",
   "description": "Fitted breastplate, backplate, gorget, pauldrons, and arm defences; the Tier V Chest component of a full harness."
 }

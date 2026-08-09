@@ -1,26 +1,13 @@
 {
-  "version": 1,
+  "version": 3,
   "builder": "chest-armor",
-  "state": [
-    0,
-    14,
-    2,
-    2,
-    2,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "defensive:physical": 14,
+    "defensive:energy": 2,
+    "defensive:heat": 2,
+    "defensive:chill": 2,
+    "inordinate": 1
+  },
   "name": "Garniture, noble plate",
   "description": "Interchangeable pieces for field and tournament; same total field protection as full plate; before an encounter, interchangeable pieces may be fitted for field, mounted, or tournament use, removing one situational armour penalty chosen by the GM. Occupies Head, Chest, Hands, and Feet; it cannot stack with separate armour pieces."
 }

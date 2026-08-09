@@ -1,26 +1,13 @@
 {
-  "version": 1,
+  "version": 3,
   "builder": "chest-armor",
-  "state": [
-    0,
-    10,
-    2,
-    2,
-    2,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "defensive:physical": 10,
+    "defensive:energy": 2,
+    "defensive:heat": 2,
+    "defensive:chill": 2,
+    "inordinate": 1
+  },
   "name": "Mail / scale / lamellar barding",
   "description": "Mail, scale, or lamellar heavy cavalry protection; land travel reduced by 1 m. Regional forms may be harder to obtain outside their homeland without changing mechanical rarity."
 }

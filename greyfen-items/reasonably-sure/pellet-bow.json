@@ -1,49 +1,23 @@
 {
-  "version": 2,
-  "weaponBuilder": true,
+  "version": 3,
+  "builder": "weapon",
   "name": "Pellet bow",
   "description": "Fires clay or lead pellets; Clay pellets are Non-Lethal; lead pellets are lethal and add 1d6 damage.",
   "currentType": "fast",
   "currentMode": "ranged",
-  "state": [
-    3,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    2,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "slam": 3,
+    "range": 2,
+    "unwieldy": 1,
+    "armed": 1
+  },
   "choiceState": {
-    "Elegant": {
+    "elegant": {
       "type": "Physical",
       "stacks": 0,
       "sub": null
     },
-    "Extravagant": {
+    "extravagant": {
       "type": null,
       "stacks": 0,
       "sub": "Speed"
@@ -55,9 +29,9 @@
     "state": {}
   },
   "savedSlowOnly": {
-    "Elaborate": 0,
-    "Articulate": 0,
-    "Convoluted": 0
+    "elaborate": 0,
+    "articulate": 0,
+    "convoluted": 0
   },
   "ammoType": "pellets",
   "diceChoices": {

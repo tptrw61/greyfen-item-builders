@@ -1,20 +1,10 @@
 {
-  "version": 1,
+  "version": 3,
   "builder": "shield",
-  "state": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    2,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "spry": 2,
+    "compact": 1
+  },
   "name": "Buckler",
   "description": "Small fist-gripped shield; Compact; its bonus represents active deflection, not passive cover."
 }

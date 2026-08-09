@@ -1,20 +1,9 @@
 {
-  "version": 1,
+  "version": 3,
   "builder": "shield",
-  "state": [
-    0,
-    0,
-    0,
-    0,
-    2,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "guarded": 2
+  },
   "name": "Round shield, wood",
   "description": "Hide-faced, iron boss."
 }

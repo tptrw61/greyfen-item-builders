@@ -1,20 +1,10 @@
 {
-  "version": 1,
+  "version": 3,
   "builder": "shield",
-  "state": [
-    1,
-    0,
-    0,
-    0,
-    2,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "defensive:physical": 1,
+    "guarded": 2
+  },
   "name": "Heater shield",
   "description": "Knightly medium shield; The Defense applies only against attacks the user is aware of."
 }

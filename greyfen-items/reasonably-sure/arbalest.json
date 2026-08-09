@@ -1,49 +1,26 @@
 {
-  "version": 2,
-  "weaponBuilder": true,
+  "version": 3,
+  "builder": "weapon",
   "name": "Arbalest",
   "description": "Heavy steel-prod military crossbow; Requires 5 loading actions after each shot; when fired from a rest, accuracy tests have 1 favor.",
   "currentType": "slow",
   "currentMode": "ranged",
-  "state": [
-    25,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    8,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    1,
-    1,
-    0,
-    0,
-    1,
-    5,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "slam": 25,
+    "range": 8,
+    "awkward": 1,
+    "unwieldy": 1,
+    "armed": 1,
+    "loaded": 1,
+    "loading": 5
+  },
   "choiceState": {
-    "Elegant": {
+    "elegant": {
       "type": null,
       "stacks": 0,
       "sub": null
     },
-    "Extravagant": {
+    "extravagant": {
       "type": null,
       "stacks": 0,
       "sub": "Speed"
@@ -55,9 +32,9 @@
     "state": {}
   },
   "savedSlowOnly": {
-    "Elaborate": 0,
-    "Articulate": 0,
-    "Convoluted": 0
+    "elaborate": 0,
+    "articulate": 0,
+    "convoluted": 0
   },
   "ammoType": "bolts",
   "diceChoices": {

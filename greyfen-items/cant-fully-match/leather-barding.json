@@ -1,26 +1,13 @@
 {
-  "version": 1,
+  "version": 3,
   "builder": "chest-armor",
-  "state": [
-    0,
-    7,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "defensive:physical": 7,
+    "defensive:energy": 1,
+    "defensive:heat": 1,
+    "defensive:chill": 1,
+    "inordinate": 1
+  },
   "name": "Leather barding",
   "description": "Hardened leather sections."
 }

@@ -1,26 +1,12 @@
 {
-  "version": 1,
+  "version": 3,
   "builder": "chest-armor",
-  "state": [
-    0,
-    3,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "defensive:physical": 3,
+    "defensive:energy": 1,
+    "defensive:heat": 1,
+    "defensive:chill": 1
+  },
   "name": "Hardened leather cuirass",
   "description": "Boiled or laminated leather."
 }

@@ -1,20 +1,11 @@
 {
-  "version": 1,
+  "version": 3,
   "builder": "shield",
-  "state": [
-    1,
-    0,
-    0,
-    0,
-    3,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    0
-  ],
+  "state": {
+    "defensive:physical": 1,
+    "guarded": 3,
+    "awkward": 1
+  },
   "name": "Scutum / tall shield",
   "description": "Large curved infantry shield; 1 disfavor on Agility tests in cramped interiors while held."
 }

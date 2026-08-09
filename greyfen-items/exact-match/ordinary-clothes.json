@@ -1,26 +1,11 @@
 {
-  "version": 1,
+  "version": 3,
   "builder": "chest-armor",
-  "state": [
-    0,
-    0,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ],
+  "state": {
+    "defensive:energy": 1,
+    "defensive:heat": 1,
+    "defensive:chill": 1
+  },
   "name": "Ordinary clothes",
   "description": "No meaningful combat protection; uses the Core Guide Garments' secondary defenses; substantial exposure, damage, or inappropriate dress may suspend a relevant bonus."
 }
