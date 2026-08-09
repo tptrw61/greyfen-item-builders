@@ -633,32 +633,32 @@ const ITEM_DATA = {
     },
     effects: [
         {
-            name: "Slam", rpCosts: { fast: 10, moderate: 5, slow: 3 }, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "slam", name: "Slam", rpCosts: { fast: 10, moderate: 5, slow: 3 }, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 1, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
             description: `The weapon deals an additional 1d4 Physical damage. Damage dice may be redistributed in any fashion as long as the maximum damage per damage type is the same.`
         },
         {
-            name: "Harsh", rpCosts: { fast: 15, moderate: 8, slow: 4 }, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "harsh", name: "Harsh", rpCosts: { fast: 15, moderate: 8, slow: 4 }, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 1,
             types: ["Energy", "Heat", "Chill", "Psyche"], minRarity: null, requirement: null, group: null, maxStacks: null,
             description: `The weapon deals an additional 1d4 damage of any type. Damage dice may be redistributed in any fashion as long as the maximum damage per damage type is the same.`
         },
         {
-            name: "Compact", rpCost: 10, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "compact", name: "Compact", rpCost: 10, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: "Slots", maxStacks: null,
             description: `This armor takes up 1 slot.`
         },
         {
-            name: "Elegant", rpCosts: { fast: 60, moderate: 30, slow: 10 }, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "elegant", name: "Elegant", rpCosts: { fast: 60, moderate: 30, slow: 10 }, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 1, refinementCost: 0, powerCost: 0,
             types: [], minRarity: "Common", requirement: null, group: "Modifier", maxStacks: null,
             typeChoice: true,
             description: `The weapon deals an additional amount of damage of the chosen type equal to the user's Power modifier if the weapon is melee, or the user's Dexterity modifier otherwise.`
         },
         {
-            name: "Extravagant", rpCosts: { fast: 80, moderate: 45, slow: 20 }, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "extravagant", name: "Extravagant", rpCosts: { fast: 80, moderate: 45, slow: 20 }, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 0,
             types: [], minRarity: "Extraordinary", requirement: null, group: "Modifier", maxStacks: null,
             typeChoice: true,
@@ -667,160 +667,160 @@ const ITEM_DATA = {
             description: `The weapon deals an additional amount of damage for a damage type it would normally deal, chosen upon crafting, equal to the user's chosen subtrait modifier.`
         },
         {
-            name: "Reach", rpCost: 2, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "reach", name: "Reach", rpCost: 2, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 1, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: "Range", maxStacks: 3,
             description: `The weapon gains X meters of range, maximum of 3. It's still melee.`
         },
         {
-            name: "Range", rpCosts: { fast: 5, moderate: 4, slow: 3 }, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "range", name: "Range", rpCosts: { fast: 5, moderate: 4, slow: 3 }, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: "Range", maxStacks: null,
             description: `The weapon gains an additional 5 times X meters of close range and 10 times X meters of far range.`
         },
         {
-            name: "Assisted", rpCost: 5, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "assisted", name: "Assisted", rpCost: 5, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 0,
-            types: [], minRarity: null, requirement: "Range", group: null, maxStacks: null,
+            types: [], minRarity: null, requirement: "range", group: null, maxStacks: null,
             description: `The TC tests made for accuracy with this weapon are halved, rounded up.`
         },
         {
-            name: "Poisonous", rpCost: 55, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "poisonous", name: "Poisonous", rpCost: 55, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 2, powerCost: 0,
             types: [], minRarity: "Common", requirement: null, group: "DHP Damage", maxStacks: null,
             description: `Damage dealt by this weapon to creatures other than constructs ignores SHP.`
         },
         {
-            name: "Wounding", rpCost: 70, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "wounding", name: "Wounding", rpCost: 70, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 2, powerCost: 0,
             types: [], minRarity: "Extraordinary", requirement: null, group: "DHP Damage", maxStacks: null,
             description: `Damage dealt by this weapon ignores SHP.`
         },
         {
-            name: "Penetrative", rpCosts: { fast: 80, moderate: 60, slow: 40 }, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "penetrative", name: "Penetrative", rpCosts: { fast: 80, moderate: 60, slow: 40 }, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 2, powerCost: 0,
             types: [], minRarity: "Extraordinary", requirement: null, group: null, maxStacks: null,
             description: `This weapon ignores the chosen damage type's defence.`
         },
         {
-            name: "Sentient", rpCost: 25, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "sentient", name: "Sentient", rpCost: 25, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 1,
             types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
             description: `This equipment has a conscious mind and can sense objects within 10 meters of it. It can communicate simple emotions and ideas directly with only its user and has a personality of its own. Emotions and decisions are under GM discretion.`
         },
         {
-            name: "Blinding", rpCost: 15, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "blinding", name: "Blinding", rpCost: 15, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 1,
             types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
             description: `This weapon's user may spend double the number of necessary turn actions to attack with this weapon. If they do, creatures that are dealt damage with it must make a Fortitude test against the amount of damage dealt. Upon failing, the creature becomes Blinded for an additional turn.`
         },
         {
-            name: "Confusing", rpCost: 30, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "confusing", name: "Confusing", rpCost: 30, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 1,
             types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
             description: `This weapon's user may spend double the number of necessary turn actions to attack with this weapon. If they do, creatures that are dealt damage with it must make a Fortitude test against the amount of damage dealt. Upon failing, the creature becomes Dazed for an additional turn.`
         },
         {
-            name: "Ship Wrecker", rpCosts: { fast: 10, moderate: 8, slow: 5 }, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "ship-wrecker", name: "Ship Wrecker", rpCosts: { fast: 10, moderate: 8, slow: 5 }, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 1, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
             description: `This weapon does double damage to targets other than creatures.`
         },
         {
-            name: "Exhausting", rpCost: 50, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "exhausting", name: "Exhausting", rpCost: 50, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 2, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
             description: `When this weapon deals damage to a creature, that creature's stamina is reduced an equal amount.`
         },
         {
-            name: "Blasting", rpCost: 40, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "blasting", name: "Blasting", rpCost: 40, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 1,
-            types: [], minRarity: null, requirement: "Range", group: "Ranged AOE", maxStacks: null,
+            types: [], minRarity: null, requirement: "range", group: "Ranged AOE", maxStacks: null,
             rpText: "+40 + 2 RP / m far",
             rpFn: function (n, ctx) { return 40 + 2 * ctx.rangeFar; },
             description: `Attacks made with this weapon affect all creatures in a line, extending to its far range. Tests of accuracy do not need to be made.`
         },
         {
-            name: "Booming", rpCost: 40, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "booming", name: "Booming", rpCost: 40, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 2,
-            types: [], minRarity: null, requirement: "Range", group: "Ranged AOE", maxStacks: null,
+            types: [], minRarity: null, requirement: "range", group: "Ranged AOE", maxStacks: null,
             rpText: "+40 + 5 RP / m far",
             rpFn: function (n, ctx) { return 40 + 5 * ctx.rangeFar; },
             description: `Attacks made with this weapon affect all creatures in a 90 degree cone, extending to its far range. Tests of accuracy do not need to be made.`
         },
         {
-            name: "Awkward", rpCost: -10, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "awkward", name: "Awkward", rpCost: -10, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: "Slots", maxStacks: null,
             description: `This armor takes up 9 slots.`
         },
         {
-            name: "Inordinate", rpCost: -30, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "inordinate", name: "Inordinate", rpCost: -30, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: "Slots", maxStacks: null,
             description: `This armor takes up 27 slots.`
         },
         {
-            name: "Unwieldy", rpCost: -10, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "unwieldy", name: "Unwieldy", rpCost: -10, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null, maxStacks: 5,
             description: `This armor requires an additional hand to equip.`
         },
         {
-            name: "Armed", rpCosts: { fast: -20, moderate: -15, slow: -10 }, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "armed", name: "Armed", rpCosts: { fast: -20, moderate: -15, slow: -10 }, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
             description: `This weapon requires and consumes a single piece of a specific type of ammunition. Ammunition must be equipped in the user's Back or Waist slot in order to be used this way.`
         },
         {
-            name: "Sapping", rpCosts: { fast: -10, moderate: -5, slow: -2 }, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "sapping", name: "Sapping", rpCosts: { fast: -10, moderate: -5, slow: -2 }, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
             description: `This weapon requires 1 additional stamina to attack with.`
         },
         {
-            name: "Thorned", rpCosts: { fast: -10, moderate: -5, slow: -2 }, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "thorned", name: "Thorned", rpCosts: { fast: -10, moderate: -5, slow: -2 }, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null, maxStacks: null,
             description: `This weapon deals 1 additional damage to its user each attack. This damage has no type and ignores defenses.`
         },
         {
-            name: "Loaded", rpCost: 0, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "loaded", name: "Loaded", rpCost: 0, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
-            types: [], minRarity: null, requirement: "Loading", group: null, maxStacks: 6,
+            types: [], minRarity: null, requirement: "loading", group: null, maxStacks: 6,
             negative: true,
             rpText: "-10 / X RP (rounded down)",
             rpFn: function (n) { return -Math.floor(10 / n); },
             description: `This weapon must be loaded or charged after X attacks, maximum of 6.`
         },
         {
-            name: "Loading", rpCost: -5, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "loading", name: "Loading", rpCost: -5, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
-            types: [], minRarity: null, requirement: "Loaded", group: null, maxStacks: null,
+            types: [], minRarity: null, requirement: "loaded", group: null, maxStacks: null,
             description: `This weapon requires 1 additional turn action to load or charge.`
         },
         {
-            name: "Non-Lethal", rpCosts: { fast: -40, moderate: -30, slow: -20 }, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "non-lethal", name: "Non-Lethal", rpCosts: { fast: -40, moderate: -30, slow: -20 }, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: "DHP Damage", maxStacks: null,
             description: `If damage from this weapon would reduce a creature's DHP, it deals half damage, rounded up, instead.`
         },
         {
-            name: "Elaborate", rpCost: -20, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "elaborate", name: "Elaborate", rpCost: -20, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: "Turn Actions", maxStacks: null,
             slowOnly: true, turnActions: 4,
             description: `This weapon requires 4 turn actions to attack with.`
         },
         {
-            name: "Articulate", rpCost: -30, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "articulate", name: "Articulate", rpCost: -30, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: "Turn Actions", maxStacks: null,
             slowOnly: true, turnActions: 5,
             description: `This weapon requires 5 turn actions to attack with.`
         },
         {
-            name: "Convoluted", rpCost: -40, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "convoluted", name: "Convoluted", rpCost: -40, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: "Turn Actions", maxStacks: null,
             slowOnly: true, turnActions: 6,
@@ -846,15 +846,21 @@ function diceOptions(max) {
     return DICE_SIDES.filter(s => max % s === 0).map(s => (max / s) + "d" + s);
 }
 const WEAPON_TYPES = Object.keys(ITEM_DATA.weapons);
-const SLOW_ONLY_NAMES = ["Elaborate", "Articulate", "Convoluted"];
-const FEATURES_NOT_IN_STATS = ["Assisted", "Blasting", "Blinding", "Booming", "Confusing", "Exhausting", "Non-Lethal", "Penetrative", "Poisonous", "Sentient", "Ship Wrecker", "Wounding"];
+const SLOW_ONLY_IDS = ["elaborate", "articulate", "convoluted"];
+const FEATURES_NOT_IN_STATS = ["assisted", "blasting", "blinding", "booming", "confusing", "exhausting", "non-lethal", "penetrative", "poisonous", "sentient", "ship-wrecker", "wounding"];
 
 /* ---- Variants: one per (effect, damage type). typeChoice effects excluded. ---- */
+/* Effects are identified by their permanent id in the rules below; a name is
+   only ever used for display, so renaming one stays a data-only change. */
+const EFFECT_NAME = {};
+ITEM_DATA.effects.forEach(eff => { EFFECT_NAME[eff.id] = eff.name; });
+function effectName(id) { return EFFECT_NAME[id] || id; }
+
 const variants = [];
 const choiceEffects = [];
 
 ITEM_DATA.effects.forEach(eff => {
-    if (eff.name === "Penetrative") return;
+    if (eff.id === "penetrative") return;
     if (eff.typeChoice) { choiceEffects.push(eff); return; }
     const types = eff.types && eff.types.length ? eff.types : [null];
     types.forEach(type => {
@@ -863,6 +869,7 @@ ITEM_DATA.effects.forEach(eff => {
             eff: eff,
             type: type,
             label: eff.name + (type ? " (" + type + ")" : ""),
+            key: eff.id + (type ? ":" + type.toLowerCase() : ""),
             maxStacks: eff.maxStacks ? Math.min(eff.maxStacks, MAX_STACKS) : MAX_STACKS,
             slowOnly: !!eff.slowOnly
         });
@@ -889,12 +896,12 @@ function setAmmoType(v) {
 }
 choiceEffects.forEach(eff => { choiceState[eff.name] = { type: null, stacks: 0, sub: eff.subtraits ? eff.subtraits[0] : null }; });
 const savedSlowOnly = {};
-SLOW_ONLY_NAMES.forEach(name => { savedSlowOnly[name] = 0; });
+SLOW_ONLY_IDS.forEach(id => { savedSlowOnly[id] = 0; });
 let dismissedMsgs = new Set();
 let currentPinned = new Set();
 
 /* ---- Penetrative: dynamic per-damage-type rows (one stack per row) ---- */
-const penetrativeEffect = ITEM_DATA.effects.find(e => e.name === "Penetrative");
+const penetrativeEffect = ITEM_DATA.effects.find(e => e.id === "penetrative");
 const penetrativeData = { nextId: 0, entries: [], state: {} };
 
 function effRPCost(eff) {
@@ -905,12 +912,12 @@ function currentWeapon() {
     return ITEM_DATA.weapons[currentType];
 }
 
-function effIndex(name) {
-    return variants.findIndex(v => v.eff.name === name);
+function effIndex(id) {
+    return variants.findIndex(v => v.eff.id === id);
 }
-function effStackTotal(name) {
+function effStackTotal(id) {
     let total = 0;
-    variants.forEach((v, i) => { if (v.eff.name === name) total += state[i]; });
+    variants.forEach((v, i) => { if (v.eff.id === id) total += state[i]; });
     return total;
 }
 
@@ -933,9 +940,9 @@ function rpTagText(eff) {
 
 function activeTypes() {
     const types = [];
-    if (effStackTotal("Slam") > 0) types.push("Physical");
+    if (effStackTotal("slam") > 0) types.push("Physical");
     variants.forEach((v, i) => {
-        if (v.eff.name === "Harsh" && state[i] > 0) types.push(v.type);
+        if (v.eff.id === "harsh" && state[i] > 0) types.push(v.type);
     });
     return types;
 }
@@ -975,7 +982,7 @@ function buildVariantRow(v) {
     if (eff.requirement) {
         const t = document.createElement("span");
         t.className = "tag req";
-        t.textContent = "Requires: " + eff.requirement;
+        t.textContent = "Requires: " + effectName(eff.requirement);
         head.appendChild(t);
     }
     if (eff.group) {
@@ -1000,7 +1007,7 @@ function buildVariantRow(v) {
         dec.dataset.step = "-1";
         const input = document.createElement("input");
         input.type = "number";
-        input.min = (eff.name === "Range" && currentMode === "ranged") ? 1 : 0;
+        input.min = (eff.id === "range" && currentMode === "ranged") ? 1 : 0;
         input.max = v.maxStacks;
         input.dataset.stepper = String(v.index);
         input.value = 0;
@@ -1012,11 +1019,11 @@ function buildVariantRow(v) {
         row.appendChild(stepper);
         const hint = document.createElement("div");
         hint.className = "row-hint";
-        if (eff.name === "Range" && currentMode === "ranged") {
+        if (eff.id === "range" && currentMode === "ranged") {
             hint.textContent = eff.maxStacks
                 ? "Stack count (min 1, max " + eff.maxStacks + ")"
                 : "Stack count (min 1)";
-        } else if (eff.name === "Loaded" || eff.name === "Loading") {
+        } else if (eff.id === "loaded" || eff.id === "loading") {
             hint.textContent = eff.maxStacks
                 ? "Stack count (1+ while enabled, max " + eff.maxStacks + "); uncheck the pair toggle above to remove"
                 : "Stack count (1+ while enabled); uncheck the pair toggle above to remove";
@@ -1035,7 +1042,7 @@ function buildVariantRow(v) {
         label.appendChild(cb);
         label.appendChild(document.createTextNode(" Add this effect"));
         row.appendChild(label);
-        if (eff.name === "Armed") {
+        if (eff.id === "armed") {
             const ammo = document.createElement("input");
             ammo.type = "text";
             ammo.id = "ammo-type";
@@ -1315,8 +1322,8 @@ function rebuildPenetrativeList() {
 
 function featureDescription(eff, stacks, opts) {
     let d = eff.description;
-    if (eff.name === "Assisted") d = d.replace("halved", "divided by " + (2 * stacks));
-    if (eff.name === "Penetrative") d = "This weapon ignores " + (opts && opts.type ? opts.type : "the chosen type") + " defence.";
+    if (eff.id === "assisted") d = d.replace("halved", "divided by " + (2 * stacks));
+    if (eff.id === "penetrative") d = "This weapon ignores " + (opts && opts.type ? opts.type : "the chosen type") + " defence.";
     return d;
 }
 
@@ -1325,8 +1332,8 @@ function modifierSuffix(type) {
     choiceEffects.forEach(eff => {
         const cs = choiceState[eff.name];
         if (!cs || !cs.type || cs.type !== type) return;
-        if (eff.name === "Elegant") parts.push(currentMode === "melee" ? "Power" : "Dexterity");
-        if (eff.name === "Extravagant") parts.push(cs.sub || "chosen subtrait");
+        if (eff.id === "elegant") parts.push(currentMode === "melee" ? "Power" : "Dexterity");
+        if (eff.id === "extravagant") parts.push(cs.sub || "chosen subtrait");
     });
     return parts.length ? " + [" + parts.join("] + [") + "]" : "";
 }
@@ -1338,7 +1345,7 @@ function activeFeatureRows() {
         if (n <= 0) return;
         if (v.slowOnly && currentType !== "slow") return;
         if (effectHiddenInMode(v.eff)) return;
-        if (FEATURES_NOT_IN_STATS.indexOf(v.eff.name) === -1) return;
+        if (FEATURES_NOT_IN_STATS.indexOf(v.eff.id) === -1) return;
         rows.push({ label: v.label, value: featureDescription(v.eff, n, {}) });
     });
     penetrativeData.entries.forEach(id => {
@@ -1363,7 +1370,7 @@ function buildLists() {
             return;
         }
         variants.filter(v => v.eff === eff).forEach(v => {
-            if (eff.name === "Loaded") (isNeg ? neg : pos).appendChild(buildLoadedToggleRow());
+            if (eff.id === "loaded") (isNeg ? neg : pos).appendChild(buildLoadedToggleRow());
             (isNeg ? neg : pos).appendChild(buildVariantRow(v));
         });
     });
@@ -1398,8 +1405,8 @@ function refreshChoiceOptions(eff) {
 function setState(idx, value) {
     const v = variants[idx];
     value = clamp(Math.floor(value) || 0, variantMin(v), v.maxStacks);
-    if (v.eff.name === "Loaded" || v.eff.name === "Loading") {
-        const pairActive = effStackTotal("Loaded") > 0 || effStackTotal("Loading") > 0;
+    if (v.eff.id === "loaded" || v.eff.id === "loading") {
+        const pairActive = effStackTotal("loaded") > 0 || effStackTotal("loading") > 0;
         if (pairActive && value === 0) value = 1;
     }
     if (value > 0 && v.eff.group && !effectHiddenInMode(v.eff)) {
@@ -1411,20 +1418,20 @@ function setState(idx, value) {
         });
     }
     state[idx] = value;
-    if (v.eff.name === "Loaded" && value > 0) {
-        const li = effIndex("Loading");
+    if (v.eff.id === "loaded" && value > 0) {
+        const li = effIndex("loading");
         if (li !== -1 && state[li] === 0) state[li] = 1;
     }
-    if (v.eff.name === "Loading" && value > 0) {
-        const lo = effIndex("Loaded");
+    if (v.eff.id === "loading" && value > 0) {
+        const lo = effIndex("loaded");
         if (lo !== -1 && state[lo] === 0) state[lo] = 1;
     }
     refresh();
 }
 
 function setLoadedPair(enabled) {
-    const lo = effIndex("Loaded");
-    const li = effIndex("Loading");
+    const lo = effIndex("loaded");
+    const li = effIndex("loading");
     if (enabled) {
         if (lo !== -1 && state[lo] === 0) state[lo] = 1;
         if (li !== -1 && state[li] === 0) state[li] = 1;
@@ -1475,13 +1482,13 @@ function clamp(n, lo, hi) {
 }
 
 function variantMin(v) {
-    return (v.eff.name === "Range" && currentMode === "ranged") ? 1 : 0;
+    return (v.eff.id === "range" && currentMode === "ranged") ? 1 : 0;
 }
 
 function effectHiddenInMode(eff) {
-    if (eff.name === "Range" && currentMode !== "ranged") return true;
-    if (eff.name === "Reach" && currentMode !== "melee") return true;
-    if (eff.requirement === "Range" && currentMode === "melee") return true;
+    if (eff.id === "range" && currentMode !== "ranged") return true;
+    if (eff.id === "reach" && currentMode !== "melee") return true;
+    if (eff.requirement === "range" && currentMode === "melee") return true;
     return false;
 }
 
@@ -1539,7 +1546,7 @@ document.getElementById("btn-reset").addEventListener("click", () => {
 choiceEffects.forEach(eff => { choiceState[eff.name] = { type: null, stacks: 0, sub: eff.subtraits ? eff.subtraits[0] : null }; });
     penetrativeData.entries = [];
     penetrativeData.state = {};
-    SLOW_ONLY_NAMES.forEach(name => { savedSlowOnly[name] = 0; });
+    SLOW_ONLY_IDS.forEach(id => { savedSlowOnly[id] = 0; });
     dismissedMsgs.clear();
     Object.keys(diceChoices).forEach(k => { delete diceChoices[k]; });
     setAmmoType("");
@@ -1547,16 +1554,71 @@ choiceEffects.forEach(eff => { choiceState[eff.name] = { type: null, stacks: 0, 
 });
 
 /* ---- Save / Load build ---- */
+/* choiceState and savedSlowOnly are keyed by effect name while the page runs;
+   saves carry ids instead, for the same reason the stacks do. */
+const EFFECT_ID = {};
+ITEM_DATA.effects.forEach(eff => { EFFECT_ID[eff.name] = eff.id; });
+
+function keyById(byName) {
+    const out = {};
+    Object.keys(byName).forEach(name => { out[EFFECT_ID[name] || name] = byName[name]; });
+    return out;
+}
+
+/* Reads one of those maps back by id, accepting a save that still uses the
+   effect's name -- every file published so far does. */
+function lookupEffect(saved, id) {
+    if (!saved) return null;
+    if (id in saved) return saved[id];
+    const name = EFFECT_NAME[id];
+    return name && name in saved ? saved[name] : null;
+}
+
+/* Which builder a save belongs to, so a build cannot be loaded into the wrong
+   builder by accident. */
+const BUILDER_ID = "weapon";
+
+/* Reads that id back out of a save. Weapon saves written before this field
+   existed carry weaponBuilder instead; a save with neither is older still and
+   is accepted rather than guessed at. */
+function saveBuilderId(data) {
+    if (!data || typeof data !== "object") return null;
+    if (typeof data.builder === "string") return data.builder;
+    if (data.weaponBuilder) return "weapon";
+    return null;
+}
+
+/* Stacks are saved as a { "<effect id>[:<type>]": stacks } dictionary rather than
+   an array indexed by position, so a save still loads correctly if the effect
+   list is ever added to or reordered, and so the file reads on its own. The id
+   is fixed in ITEM_DATA and never follows a renamed effect. Variants left at
+   zero are omitted. */
+function saveState() {
+    const out = {};
+    state.forEach((n, i) => { if (n > 0) out[variants[i].key] = n; });
+    return out;
+}
+
+/* Accepts that dictionary as well as the positional array of version 1 and 2
+   saves. */
+function readSavedState(data) {
+    const saved = data && data.state;
+    const out = {};
+    if (Array.isArray(saved)) variants.forEach((v, i) => { out[v.key] = saved[i]; });
+    else if (saved && typeof saved === "object") Object.assign(out, saved);
+    return out;
+}
+
 function collectSaveData() {
     return {
-        version: 2,
-        weaponBuilder: true,
+        version: 3,
+        builder: BUILDER_ID,
         name: (document.getElementById("item-name").value || ""),
         description: (document.getElementById("item-desc") ? document.getElementById("item-desc").value : ""),
         currentType: currentType,
         currentMode: currentMode,
-        state: state.slice(),
-        choiceState: JSON.parse(JSON.stringify(choiceState)),
+        state: saveState(),
+        choiceState: keyById(JSON.parse(JSON.stringify(choiceState))),
         penetrativeData: JSON.parse(JSON.stringify(penetrativeData)),
         savedSlowOnly: Object.assign({}, savedSlowOnly),
         ammoType: ammoType,
@@ -1575,12 +1637,13 @@ function applySaveData(data) {
         const _dc = document.getElementById("item-desc");
         if (_dc) _dc.value = data.description;
     }
+    const savedState = readSavedState(data);
     state.forEach((_, i) => {
-        const n = data && Array.isArray(data.state) ? data.state[i] : 0;
+        const n = savedState[variants[i].key];
         state[i] = clamp(Math.floor(n) || 0, 0, variants[i].maxStacks);
     });
     choiceEffects.forEach(eff => {
-        const cs = data && data.choiceState ? data.choiceState[eff.name] : null;
+        const cs = lookupEffect(data && data.choiceState, eff.id);
         const type = cs && STAT_TYPES.indexOf(cs.type) !== -1 ? cs.type : null;
         choiceState[eff.name] = {
             type: type,
@@ -1602,11 +1665,11 @@ function applySaveData(data) {
             }
         });
     }
-    SLOW_ONLY_NAMES.forEach(name => { savedSlowOnly[name] = 0; });
+    SLOW_ONLY_IDS.forEach(id => { savedSlowOnly[id] = 0; });
     if (data && data.savedSlowOnly) {
-        SLOW_ONLY_NAMES.forEach(name => {
-            const n = data.savedSlowOnly[name];
-            if (typeof n === "number") savedSlowOnly[name] = clamp(Math.floor(n) || 0, 0, 1);
+        SLOW_ONLY_IDS.forEach(id => {
+            const n = lookupEffect(data.savedSlowOnly, id);
+            if (typeof n === "number") savedSlowOnly[id] = clamp(Math.floor(n) || 0, 0, 1);
         });
     }
     if (data && WEAPON_TYPES.indexOf(data.currentType) !== -1) currentType = data.currentType;
@@ -1652,7 +1715,13 @@ document.getElementById("file-load-build").addEventListener("change", e => {
     const reader = new FileReader();
     reader.onload = () => {
         try {
-            applySaveData(JSON.parse(reader.result));
+            const data = JSON.parse(reader.result);
+            const id = saveBuilderId(data);
+            if (id && id !== BUILDER_ID) {
+                alert("This file is not a weapon build (it was saved from the " + id + " builder).");
+                return;
+            }
+            applySaveData(data);
         } catch (err) {
             alert("Could not load build: " + err.message);
         }
@@ -1897,7 +1966,7 @@ function openSummaryModal() {
     refresh();
     buildDiceControls();
     const ammoWrap = document.getElementById("ammo-wrap");
-    ammoWrap.hidden = effStackTotal("Armed") === 0;
+    ammoWrap.hidden = effStackTotal("armed") === 0;
     document.getElementById("modal-ammo").value = ammoType;
     summaryModal.hidden = false;
     modalName.focus();
@@ -1984,12 +2053,12 @@ function switchMode(mode) {
     if (mode === currentMode) return;
     currentMode = mode;
     if (mode === "melee") {
-        const rg = effIndex("Range");
+        const rg = effIndex("range");
         if (rg !== -1) state[rg] = 0;
     } else {
-        const rc = effIndex("Reach");
+        const rc = effIndex("reach");
         if (rc !== -1) state[rc] = 0;
-        const rg = effIndex("Range");
+        const rg = effIndex("range");
         if (rg !== -1 && state[rg] === 0) state[rg] = 1;
     }
     buildLists();
@@ -2001,16 +2070,16 @@ function switchMode(mode) {
 function switchType(type) {
     if (type === currentType) return;
     if (currentType === "slow") {
-        SLOW_ONLY_NAMES.forEach(name => {
-            const i = effIndex(name);
-            if (i !== -1) { savedSlowOnly[name] = state[i]; state[i] = 0; }
+        SLOW_ONLY_IDS.forEach(id => {
+            const i = effIndex(id);
+            if (i !== -1) { savedSlowOnly[id] = state[i]; state[i] = 0; }
         });
     }
     currentType = type;
     if (type === "slow") {
-        SLOW_ONLY_NAMES.forEach(name => {
-            const i = effIndex(name);
-            if (i !== -1) state[i] = savedSlowOnly[name] || 0;
+        SLOW_ONLY_IDS.forEach(id => {
+            const i = effIndex(id);
+            if (i !== -1) state[i] = savedSlowOnly[id] || 0;
         });
     }
     buildLists();
@@ -2036,18 +2105,18 @@ function compute() {
     const warnings = [];
 
     /* Auto-pair Loaded / Loading */
-    const loadedTotal = effStackTotal("Loaded");
-    const loadingTotal = effStackTotal("Loading");
+    const loadedTotal = effStackTotal("loaded");
+    const loadingTotal = effStackTotal("loading");
     if (loadedTotal > 0 || loadingTotal > 0) {
-        const li = effIndex("Loading");
-        const lo = effIndex("Loaded");
+        const li = effIndex("loading");
+        const lo = effIndex("loaded");
         if (li !== -1 && state[li] === 0) state[li] = 1;
         if (lo !== -1 && state[lo] === 0) state[lo] = 1;
     }
 
     /* Ranged weapons require at least 1 stack of Range */
     if (currentMode === "ranged") {
-        const rg = effIndex("Range");
+        const rg = effIndex("range");
         if (rg !== -1 && state[rg] === 0) state[rg] = 1;
     }
 
@@ -2058,7 +2127,7 @@ function compute() {
         const reqActive = effStackTotal(v.eff.requirement) > 0;
         if (!reqActive) {
             state[i] = 0;
-            warnings.push(v.eff.name + " requires " + v.eff.requirement + ", so it was removed.");
+            warnings.push(v.eff.name + " requires " + effectName(v.eff.requirement) + ", so it was removed.");
         }
     });
 
@@ -2078,7 +2147,7 @@ function compute() {
         const e = penetrativeData.state[id];
         if (!e) return;
         if (e.type && active.indexOf(e.type) === -1) {
-            warnings.push("Penetrative requires the weapon to deal " + e.type + " damage, so it was removed.");
+            warnings.push(effectName("penetrative") + " requires the weapon to deal " + e.type + " damage, so it was removed.");
             removePenetrativeEntry(id);
         }
     });
@@ -2087,14 +2156,14 @@ function compute() {
         const e = penetrativeData.state[id];
         if (!e || !e.type) return;
         if (seen[e.type]) {
-            warnings.push("Penetrative: each damage type can only be chosen once (" + e.type + " was removed).");
+            warnings.push(effectName("penetrative") + ": each damage type can only be chosen once (" + e.type + " was removed).");
             removePenetrativeEntry(id);
         } else {
             seen[e.type] = true;
         }
     });
 
-    const rangeStacks = currentMode === "ranged" ? effStackTotal("Range") : 0;
+    const rangeStacks = currentMode === "ranged" ? effStackTotal("range") : 0;
     const ctx = {
         rangeClose: rangeStacks * 5,
         rangeFar: rangeStacks * 10
@@ -2126,13 +2195,13 @@ function compute() {
         activeEffects[v.eff.name] = true;
         t.rp += v.eff.rpFn ? v.eff.rpFn(n, ctx) : effRPCost(v.eff) * n;
         t.stacks += n;
-        if (v.eff.name === "Slam") attack["Physical"] += n;
-        if (v.eff.name === "Harsh") attack[v.type] += n;
-        if (v.eff.name === "Reach") reach += n;
-        if (v.eff.name === "Range") { attackType = "Ranged"; }
-        if (v.eff.name === "Unwieldy") hands += n;
-        if (v.eff.name === "Sapping") staminaRequired += n;
-        if (v.eff.name === "Thorned") selfDamage += n;
+        if (v.eff.id === "slam") attack["Physical"] += n;
+        if (v.eff.id === "harsh") attack[v.type] += n;
+        if (v.eff.id === "reach") reach += n;
+        if (v.eff.id === "range") { attackType = "Ranged"; }
+        if (v.eff.id === "unwieldy") hands += n;
+        if (v.eff.id === "sapping") staminaRequired += n;
+        if (v.eff.id === "thorned") selfDamage += n;
         if (v.eff.group === "Slots") slotVariant = v;
         if (v.eff.turnActions) turnActions = v.eff.turnActions;
     });
@@ -2179,14 +2248,14 @@ function compute() {
 
     let slots = ITEM_DATA.innateStats.slots;
     if (slotVariant) {
-        if (slotVariant.eff.name === "Inordinate") slots = 27;
-        else if (slotVariant.eff.name === "Awkward") slots = 9;
-        else if (slotVariant.eff.name === "Compact") slots = 1;
+        if (slotVariant.eff.id === "inordinate") slots = 27;
+        else if (slotVariant.eff.id === "awkward") slots = 9;
+        else if (slotVariant.eff.id === "compact") slots = 1;
     }
 
     const errors = [];
     const pinnedErrors = [];
-    const slamHarsh = effStackTotal("Slam") + effStackTotal("Harsh");
+    const slamHarsh = effStackTotal("slam") + effStackTotal("harsh");
     if (slamHarsh < 1) {
         const msg = "This weapon requires at least 1 stack of Slam or Harsh.";
         errors.push(msg);
@@ -2276,8 +2345,8 @@ function refresh() {
             cb.disabled = unmet;
             row.classList.toggle("dim", unmet && state[i] === 0);
         }
-        if (v.eff.name === "Loaded" || v.eff.name === "Loading") {
-            const pairActive = effStackTotal("Loaded") > 0 || effStackTotal("Loading") > 0;
+        if (v.eff.id === "loaded" || v.eff.id === "loading") {
+            const pairActive = effStackTotal("loaded") > 0 || effStackTotal("loading") > 0;
             const stepper = row.querySelector(".stepper");
             if (stepper) stepper.style.opacity = pairActive ? "1" : "0.35";
             const stepInput = row.querySelector("[data-stepper]");
@@ -2287,7 +2356,7 @@ function refresh() {
 
     const loadedMaster = effectsPanel.querySelector('[data-loaded-toggle="on"]');
     if (loadedMaster) {
-        loadedMaster.checked = effStackTotal("Loaded") > 0 || effStackTotal("Loading") > 0;
+        loadedMaster.checked = effStackTotal("loaded") > 0 || effStackTotal("loading") > 0;
     }
 
     choiceEffects.forEach(eff => {
@@ -2377,15 +2446,15 @@ function refresh() {
             addStatDice("Attack (" + d + ")", diceOptions(c.attack[d] * 4), modifierSuffix(d));
         }
     });
-    const armedOn = effStackTotal("Armed") > 0;
+    const armedOn = effStackTotal("armed") > 0;
     if (armedOn) addStat("Requires Ammunition", ammoType.trim() || "Yes");
     const ammoField = document.getElementById("ammo-type");
     if (ammoField) {
         ammoField.style.display = armedOn ? "block" : "none";
         if (ammoField.value !== ammoType) ammoField.value = ammoType;
     }
-    const loadedTotal = effStackTotal("Loaded");
-    const loadingTotal = effStackTotal("Loading");
+    const loadedTotal = effStackTotal("loaded");
+    const loadingTotal = effStackTotal("loading");
     if (loadedTotal > 0) addStat("Reload after", loadedTotal + " shot" + (loadedTotal === 1 ? "" : "s"));
     if (loadingTotal > 0) addStat("Reloading takes", loadingTotal + " turn action" + (loadingTotal === 1 ? "" : "s"));
 

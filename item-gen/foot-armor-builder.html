@@ -518,37 +518,37 @@ const ITEM_DATA = {
     },
     effects: [
         {
-            name: "Augmentable", rpCost: 20, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "augmentable", name: "Augmentable", rpCost: 20, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 2, powerCost: 0,
             types: [], minRarity: "Common", requirement: null, group: null,
             description: `This armor may be augmented into a creature's chest slot.`
         },
         {
-            name: "Defensive", rpCost: 10, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "defensive", name: "Defensive", rpCost: 10, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 1, refinementCost: 0, powerCost: 0,
             types: ["Physical", "Energy", "Heat", "Chill"], minRarity: null, requirement: null, group: null,
             description: `While equipped, grants +1 defense of any type other than Psyche, chosen upon crafting.`
         },
         {
-            name: "Guarded", rpCost: 30, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "guarded", name: "Guarded", rpCost: 30, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 1, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null,
             description: `While equipped, grants +1d4 Block Rating.`
         },
         {
-            name: "Spry", rpCost: 20, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "spry", name: "Spry", rpCost: 20, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null,
             description: `While equipped, grants +1d12 Dodge Rating.`
         },
         {
-            name: "Compact", rpCost: 10, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "compact", name: "Compact", rpCost: 10, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: "Slots",
             description: `This armor takes up 1 slot.`
         },
         {
-            name: "Intensify", rpCost: 20, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "intensify", name: "Intensify", rpCost: 20, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 1,
             types: [], minRarity: null, requirement: null, group: null,
             subtraits: ["Speed", "Dexterity", "Power", "Fortitude", "Engineering", "Memory",
@@ -556,87 +556,87 @@ const ITEM_DATA = {
             description: `Equipped creatures gain an additional +1 to a single specific subtrait chosen upon crafting, given it wouldn't increase past its maximum.`
         },
         {
-            name: "Magus", rpCost: 20, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "magus", name: "Magus", rpCost: 20, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 1,
             types: [], minRarity: null, requirement: null, group: null,
             description: `Spells equipped creature casts cost 1 less stamina, minimum cost of 1.`
         },
         {
-            name: "Harsh", rpCost: 10, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "harsh", name: "Harsh", rpCost: 10, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 1,
             types: ["Physical", "Energy", "Heat", "Chill", "Psyche"], minRarity: null, requirement: null, group: null,
             description: `Weaponless attacks deal an additional 1d4 damage of any type. Damage dice may be redistributed in any fashion as long as the maximum damage per damage type is the same.`
         },
         {
-            name: "Swift", rpCost: 20, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "swift", name: "Swift", rpCost: 20, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null,
             description: `Equipped creature may make weaponless attacks with 1 less turn action, minimum cost of 1.`
         },
         {
-            name: "Arachnid", rpCost: 40, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "arachnid", name: "Arachnid", rpCost: 40, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 1,
             types: [], minRarity: null, requirement: null, group: null,
             description: `Equipped creature may travel up vertical surfaces and upside down when using Land travel.`
         },
         {
-            name: "Boosted", rpCost: 7, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "boosted", name: "Boosted", rpCost: 7, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null,
             description: `Equipped creatures are granted an additional 1 meter of Land travel. This feature has no effect if the creature has a Land travel of 0 meters.`
         },
         {
-            name: "Marine", rpCost: 5, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "marine", name: "Marine", rpCost: 5, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null,
             description: `Equipped creatures are granted an additional 1 meter of Water travel. This feature has no effect if the creature has a Water travel of 0 meters.`
         },
         {
-            name: "Aerial", rpCost: 12, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "aerial", name: "Aerial", rpCost: 12, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null,
             description: `Equipped creatures are granted an additional 1 meter of Air travel. This feature has no effect if the creature has an Air travel of 0 meters.`
         },
         {
-            name: "Sentient", rpCost: 25, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "sentient", name: "Sentient", rpCost: 25, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 1,
             types: [], minRarity: null, requirement: null, group: null,
             description: `This equipment has a conscious mind and can sense objects within 10 meters of it. It can communicate simple emotions and ideas directly with only its user and has a personality of its own. Emotions and decisions are under GM discretion.`
         },
         {
-            name: "Shrouded", rpCost: 20, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "shrouded", name: "Shrouded", rpCost: 20, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 1, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null,
             description: `Creatures and objects cannot gain information on equipped creatures through divination. Attempts to do so will come back "null".`
         },
         {
-            name: "Awkward", rpCost: -15, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "awkward", name: "Awkward", rpCost: -15, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: "Slots",
             description: `This armor takes up 9 slots.`
         },
         {
-            name: "Inordinate", rpCost: -40, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "inordinate", name: "Inordinate", rpCost: -40, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: "Slots",
             description: `This armor takes up 27 slots.`
         },
         {
-            name: "Tethered", rpCost: -10, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "tethered", name: "Tethered", rpCost: -10, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null,
             description: `Once this armor is equipped or augmented, it cannot be removed, only destroyed. Its user may spend 6 turn actions to destroy this item. If this item is augmented when destroyed, the user still suffers all effects as if it was being de-augmented.`
         },
         {
-            name: "Constricting", rpCost: -15, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "constricting", name: "Constricting", rpCost: -15, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null,
             description: `While equipped, creature has 1 additional point of Fatigue.`
         },
         {
-            name: "Corroded", rpCost: -40, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "corroded", name: "Corroded", rpCost: -40, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
-            types: [], minRarity: null, requirement: "Defensive", group: null,
+            types: [], minRarity: null, requirement: "defensive", group: null,
             description: `If the user takes an amount of damage that is both a type of damage that this armor grants 1 or more defense for and the amount of damage is equal to or higher than double the respective defense granted, this armor becomes destroyed. If this item is augmented when destroyed, the user still suffers all effects as if it was being de-augmented.`
         }
     ]
@@ -654,20 +654,26 @@ const RARITIES = [
 const STAT_TYPES = ["Physical", "Energy", "Heat", "Chill", "Psyche"];
 const MAX_STACKS = 60;
 const DICE_SIDES = [4, 6, 8, 10, 12, 20, 100];
-const FEATURES_NOT_IN_STATS = ["Arachnid", "Augmentable", "Constricting", "Corroded", "Sentient", "Shrouded", "Swift", "Tethered"];
+const FEATURES_NOT_IN_STATS = ["arachnid", "augmentable", "constricting", "corroded", "sentient", "shrouded", "swift", "tethered"];
 
 function diceOptions(max) {
     return DICE_SIDES.filter(s => max % s === 0).map(s => (max / s) + "d" + s);
 }
 
 /* ---- Standard variants (everything except Intensify) ---- */
+/* Effects are identified by their permanent id in the rules below; a name is
+   only ever used for display, so renaming one stays a data-only change. */
+const EFFECT_NAME = {};
+ITEM_DATA.effects.forEach(eff => { EFFECT_NAME[eff.id] = eff.name; });
+function effectName(id) { return EFFECT_NAME[id] || id; }
+
 const variants = [];
 const state = [];
 
 const diceChoices = {};
 
 ITEM_DATA.effects.forEach(eff => {
-    if (eff.name === "Intensify") return;
+    if (eff.id === "intensify") return;
     const types = eff.types && eff.types.length ? eff.types : [null];
     types.forEach(type => {
         variants.push({
@@ -675,6 +681,7 @@ ITEM_DATA.effects.forEach(eff => {
             eff: eff,
             type: type,
             label: eff.name + (type ? " (" + type + ")" : ""),
+            key: eff.id + (type ? ":" + type.toLowerCase() : ""),
             maxStacks: eff.maxStacks ? Math.min(eff.maxStacks, MAX_STACKS) : MAX_STACKS
         });
         state.push(0);
@@ -693,7 +700,7 @@ function compText(eff) {
 /* ---- Build standard effect rows ---- */
 function featureDescription(eff, stacks) {
     let d = eff.description;
-    if (eff.name === "Assisted") d = d.replace("halved", "divided by " + (2 * stacks));
+    if (eff.id === "assisted") d = d.replace("halved", "divided by " + (2 * stacks));
     return d;
 }
 
@@ -702,7 +709,7 @@ function activeFeatureRows() {
     variants.forEach((v, i) => {
         const n = state[i];
         if (n <= 0) return;
-        if (FEATURES_NOT_IN_STATS.indexOf(v.eff.name) === -1) return;
+        if (FEATURES_NOT_IN_STATS.indexOf(v.eff.id) === -1) return;
         rows.push({ label: v.label, value: featureDescription(v.eff, n) });
     });
     return rows;
@@ -747,7 +754,7 @@ function buildLists() {
         if (eff.requirement) {
             const t = document.createElement("span");
             t.className = "tag req";
-            t.textContent = "Requires: " + eff.requirement;
+            t.textContent = "Requires: " + effectName(eff.requirement);
             head.appendChild(t);
         }
         if (eff.group) {
@@ -804,7 +811,7 @@ function buildLists() {
 }
 
 /* ---- Intensify: dynamic subtrait rows ---- */
-const intensifyEffect = ITEM_DATA.effects.find(e => e.name === "Intensify");
+const intensifyEffect = ITEM_DATA.effects.find(e => e.id === "intensify");
 const intensifyList = document.getElementById("intensify-list");
 const intensifyEntries = [];
 const intensifyState = {};
@@ -1017,11 +1024,46 @@ document.getElementById("btn-reset").addEventListener("click", () => {
 });
 
 /* ---- Export / Import ---- */
+/* Which builder a save belongs to, so a build cannot be loaded into the wrong
+   builder by accident. */
+const BUILDER_ID = "foot-armor";
+
+/* Reads that id back out of a save. Weapon saves written before this field
+   existed carry weaponBuilder instead; a save with neither is older still and
+   is accepted rather than guessed at. */
+function saveBuilderId(data) {
+    if (!data || typeof data !== "object") return null;
+    if (typeof data.builder === "string") return data.builder;
+    if (data.weaponBuilder) return "weapon";
+    return null;
+}
+
+/* Stacks are saved as a { "<effect id>[:<type>]": stacks } dictionary rather than
+   an array indexed by position, so a save still loads correctly if the effect
+   list is ever added to or reordered, and so the file reads on its own. The id
+   is fixed in ITEM_DATA and never follows a renamed effect. Variants left at
+   zero are omitted. */
+function saveState() {
+    const out = {};
+    state.forEach((n, i) => { if (n > 0) out[variants[i].key] = n; });
+    return out;
+}
+
+/* Accepts that dictionary as well as the positional array of version 1 and 2
+   saves. */
+function readSavedState(data) {
+    const saved = data && data.state;
+    const out = {};
+    if (Array.isArray(saved)) variants.forEach((v, i) => { out[v.key] = saved[i]; });
+    else if (saved && typeof saved === "object") Object.assign(out, saved);
+    return out;
+}
+
 function collectSaveData() {
     return {
-        version: 2,
-        builder: "foot-armor",
-        state: state.slice(),
+        version: 3,
+        builder: BUILDER_ID,
+        state: saveState(),
         intensify: intensifyEntries
             .filter(iid => intensifyState[iid].stacks > 0)
             .map(iid => ({ subtrait: intensifyState[iid].subtrait, stacks: intensifyState[iid].stacks })),
@@ -1042,8 +1084,9 @@ function applySaveData(data) {
         const _dc = document.getElementById("item-desc");
         if (_dc) _dc.value = data.description;
     }
+    const savedState = readSavedState(data);
     state.forEach((_, i) => {
-        const n = data && Array.isArray(data.state) ? data.state[i] : 0;
+        const n = savedState[variants[i].key];
         state[i] = clamp(Math.floor(n) || 0, 0, variants[i].maxStacks || MAX_STACKS);
     });
     intensifyList.innerHTML = "";
@@ -1098,8 +1141,9 @@ document.getElementById("file-load-build").addEventListener("change", e => {
     reader.onload = () => {
         try {
             const data = JSON.parse(reader.result);
-            if (data.builder && data.builder !== "foot-armor") {
-                alert("This file is not a foot armor build.");
+            const id = saveBuilderId(data);
+            if (id && id !== BUILDER_ID) {
+                alert("This file is not a foot armor build (it was saved from the " + id + " builder).");
                 return;
             }
             applySaveData(data);
@@ -1386,10 +1430,10 @@ function compute() {
     const warnings = [];
     variants.forEach((v, i) => {
         if (!v.eff.requirement || state[i] <= 0) return;
-        const reqActive = state.some((n, j) => n > 0 && variants[j].eff.name === v.eff.requirement);
+        const reqActive = state.some((n, j) => n > 0 && variants[j].eff.id === v.eff.requirement);
         if (!reqActive) {
             state[i] = 0;
-            warnings.push(v.eff.name + " requires " + v.eff.requirement + ", so it was removed.");
+            warnings.push(v.eff.name + " requires " + effectName(v.eff.requirement) + ", so it was removed.");
         }
     });
 
@@ -1412,19 +1456,19 @@ function compute() {
     variants.forEach((v, i) => {
         const n = state[i];
         if (n <= 0) return;
-        active[v.eff.name] = true;
+        active[v.eff.id] = true;
         t.rp += v.eff.rpCost * n;
         t.stacks += n;
         if (v.type) {
-            if (v.eff.name === "Defensive" || v.eff.name === "Screen") defense[v.type] = (defense[v.type] || 0) + n;
-            if (v.eff.name === "Harsh") attackBonus[v.type] = (attackBonus[v.type] || 0) + n;
+            if (v.eff.id === "defensive" || v.eff.id === "screen") defense[v.type] = (defense[v.type] || 0) + n;
+            if (v.eff.id === "harsh") attackBonus[v.type] = (attackBonus[v.type] || 0) + n;
         }
-        if (v.eff.name === "Guarded") block += n;
-        if (v.eff.name === "Spry") dodge += n;
-        if (v.eff.name === "Magus") spellDiscount += n;
-        if (v.eff.name === "Boosted") landTravelIncrease += n;
-        if (v.eff.name === "Marine") waterTravelIncrease += n;
-        if (v.eff.name === "Aerial") airTravelIncrease += n;
+        if (v.eff.id === "guarded") block += n;
+        if (v.eff.id === "spry") dodge += n;
+        if (v.eff.id === "magus") spellDiscount += n;
+        if (v.eff.id === "boosted") landTravelIncrease += n;
+        if (v.eff.id === "marine") waterTravelIncrease += n;
+        if (v.eff.id === "aerial") airTravelIncrease += n;
         if (v.eff.group === "Slots") slotVariant = v;
     });
 
@@ -1443,7 +1487,7 @@ function compute() {
     intensifyEntries.forEach(iid => {
         const e = intensifyState[iid];
         if (e.stacks > 0) {
-            active["Intensify"] = true;
+            active["intensify"] = true;
             t.rp += intensifyEffect.rpCost * e.stacks;
             intensifyPower = true;
             subtraitBonuses[e.subtrait] = (subtraitBonuses[e.subtrait] || 0) + e.stacks;
@@ -1455,9 +1499,9 @@ function compute() {
 
     let slots = ITEM_DATA.innateStats.slots;
     if (slotVariant) {
-        if (slotVariant.eff.name === "Inordinate") slots = 27;
-        else if (slotVariant.eff.name === "Awkward") slots = 9;
-        else if (slotVariant.eff.name === "Compact") slots = 1;
+        if (slotVariant.eff.id === "inordinate") slots = 27;
+        else if (slotVariant.eff.id === "awkward") slots = 9;
+        else if (slotVariant.eff.id === "compact") slots = 1;
     }
 
     const errors = [];
@@ -1480,7 +1524,7 @@ function compute() {
     if (rpIdx === -1) effIdx = RARITIES.length - 1;
     else effIdx = Math.max(rpIdx, stackIdx === -1 ? 0 : stackIdx);
 
-    if (active["Augmentable"]) {
+    if (active["augmentable"]) {
         const commonIdx = RARITIES.findIndex(r => r.name === "Common");
         if (effIdx < commonIdx) effIdx = commonIdx;
     }

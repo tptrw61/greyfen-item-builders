@@ -448,55 +448,55 @@ const ITEM_DATA = {
     },
     effects: [
         {
-            name: "Defensive", rpCost: 10, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "defensive", name: "Defensive", rpCost: 10, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 1, refinementCost: 0, powerCost: 0,
             types: ["Physical", "Energy", "Heat", "Chill"], minRarity: null, requirement: null, group: null,
             description: `While equipped, grants +1 defense of any type other than Psyche, chosen upon crafting.`
         },
         {
-            name: "Guarded", rpCost: 15, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "guarded", name: "Guarded", rpCost: 15, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 1, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null,
             description: `While equipped, grants +1d4 Block Rating.`
         },
         {
-            name: "Spry", rpCost: 15, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "spry", name: "Spry", rpCost: 15, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null,
             description: `While equipped, grants +1d12 Dodge Rating.`
         },
         {
-            name: "Compact", rpCost: 10, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "compact", name: "Compact", rpCost: 10, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: "Slots",
             description: `This armor takes up 1 slot.`
         },
         {
-            name: "Magus", rpCost: 20, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "magus", name: "Magus", rpCost: 20, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 1,
             types: [], minRarity: null, requirement: null, group: null,
             description: `Spells equipped creature casts cost 1 less stamina, minimum cost of 1.`
         },
         {
-            name: "Sentient", rpCost: 25, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "sentient", name: "Sentient", rpCost: 25, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 1,
             types: [], minRarity: null, requirement: null, group: null,
             description: `This equipment has a conscious mind and can sense objects within 10 meters of it. It can communicate simple emotions and ideas directly with only its user and has a personality of its own. Emotions and decisions are under GM discretion.`
         },
         {
-            name: "Awkward", rpCost: -10, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "awkward", name: "Awkward", rpCost: -10, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: "Slots",
             description: `This armor takes up 9 slots.`
         },
         {
-            name: "Inordinate", rpCost: -30, stackable: false, isScalingRP: false, isScalingComponent: false,
+            id: "inordinate", name: "Inordinate", rpCost: -30, stackable: false, isScalingRP: false, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: "Slots",
             description: `This armor takes up 27 slots.`
         },
         {
-            name: "Unwieldy", rpCost: -10, stackable: true, isScalingRP: true, isScalingComponent: false,
+            id: "unwieldy", name: "Unwieldy", rpCost: -10, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
             types: [], minRarity: null, requirement: null, group: null, maxStacks: 5,
             description: `This armor requires an additional hand to equip.`
@@ -515,7 +515,13 @@ const RARITIES = [
 
 const DEFENSE_TYPES = ["Physical", "Energy", "Heat", "Chill", "Psyche"];
 const MAX_STACKS = 60;
-const FEATURES_NOT_IN_STATS = ["Sentient"];
+const FEATURES_NOT_IN_STATS = ["sentient"];
+
+/* Effects are identified by their permanent id in the rules below; a name is
+   only ever used for display, so renaming one stays a data-only change. */
+const EFFECT_NAME = {};
+ITEM_DATA.effects.forEach(eff => { EFFECT_NAME[eff.id] = eff.name; });
+function effectName(id) { return EFFECT_NAME[id] || id; }
 
 const variants = [];
 const state = [];
@@ -528,6 +534,7 @@ ITEM_DATA.effects.forEach(eff => {
             eff: eff,
             type: type,
             label: eff.name + (type ? " (" + type + ")" : ""),
+            key: eff.id + (type ? ":" + type.toLowerCase() : ""),
             maxStacks: eff.maxStacks ? Math.min(eff.maxStacks, MAX_STACKS) : MAX_STACKS
         });
         state.push(0);
@@ -545,7 +552,7 @@ function compText(eff) {
 
 function featureDescription(eff, stacks) {
     let d = eff.description;
-    if (eff.name === "Assisted") d = d.replace("halved", "divided by " + (2 * stacks));
+    if (eff.id === "assisted") d = d.replace("halved", "divided by " + (2 * stacks));
     return d;
 }
 
@@ -554,7 +561,7 @@ function activeFeatureRows() {
     variants.forEach((v, i) => {
         const n = state[i];
         if (n <= 0) return;
-        if (FEATURES_NOT_IN_STATS.indexOf(v.eff.name) === -1) return;
+        if (FEATURES_NOT_IN_STATS.indexOf(v.eff.id) === -1) return;
         rows.push({ label: v.label, value: featureDescription(v.eff, n) });
     });
     return rows;
@@ -599,7 +606,7 @@ function buildLists() {
         if (eff.requirement) {
             const t = document.createElement("span");
             t.className = "tag req";
-            t.textContent = "Requires: " + eff.requirement;
+            t.textContent = "Requires: " + effectName(eff.requirement);
             head.appendChild(t);
         }
         if (eff.group) {
@@ -706,11 +713,46 @@ document.getElementById("btn-reset").addEventListener("click", () => {
 });
 
 /* ---- Export / Import ---- */
+/* Which builder a save belongs to, so a build cannot be loaded into the wrong
+   builder by accident. */
+const BUILDER_ID = "shield";
+
+/* Reads that id back out of a save. Weapon saves written before this field
+   existed carry weaponBuilder instead; a save with neither is older still and
+   is accepted rather than guessed at. */
+function saveBuilderId(data) {
+    if (!data || typeof data !== "object") return null;
+    if (typeof data.builder === "string") return data.builder;
+    if (data.weaponBuilder) return "weapon";
+    return null;
+}
+
+/* Stacks are saved as a { "<effect id>[:<type>]": stacks } dictionary rather than
+   an array indexed by position, so a save still loads correctly if the effect
+   list is ever added to or reordered, and so the file reads on its own. The id
+   is fixed in ITEM_DATA and never follows a renamed effect. Variants left at
+   zero are omitted. */
+function saveState() {
+    const out = {};
+    state.forEach((n, i) => { if (n > 0) out[variants[i].key] = n; });
+    return out;
+}
+
+/* Accepts that dictionary as well as the positional array of version 1 and 2
+   saves. */
+function readSavedState(data) {
+    const saved = data && data.state;
+    const out = {};
+    if (Array.isArray(saved)) variants.forEach((v, i) => { out[v.key] = saved[i]; });
+    else if (saved && typeof saved === "object") Object.assign(out, saved);
+    return out;
+}
+
 function collectSaveData() {
     return {
-        version: 1,
-        builder: "shield",
-        state: state.slice(),
+        version: 3,
+        builder: BUILDER_ID,
+        state: saveState(),
         name: (document.getElementById("item-name").value || ""),
         description: (document.getElementById("item-desc") ? document.getElementById("item-desc").value : "")
     };
@@ -727,8 +769,9 @@ function applySaveData(data) {
         const _dc = document.getElementById("item-desc");
         if (_dc) _dc.value = data.description;
     }
+    const savedState = readSavedState(data);
     state.forEach((_, i) => {
-        const n = data && Array.isArray(data.state) ? data.state[i] : 0;
+        const n = savedState[variants[i].key];
         state[i] = clamp(Math.floor(n) || 0, 0, variants[i].maxStacks || MAX_STACKS);
     });
     refresh();
@@ -760,8 +803,9 @@ document.getElementById("file-load-build").addEventListener("change", e => {
     reader.onload = () => {
         try {
             const data = JSON.parse(reader.result);
-            if (data.builder && data.builder !== "shield") {
-                alert("This file is not a shield build.");
+            const id = saveBuilderId(data);
+            if (id && id !== BUILDER_ID) {
+                alert("This file is not a shield build (it was saved from the " + id + " builder).");
                 return;
             }
             applySaveData(data);
@@ -1031,10 +1075,10 @@ function compute() {
     const warnings = [];
     variants.forEach((v, i) => {
         if (!v.eff.requirement || state[i] <= 0) return;
-        const reqActive = state.some((n, j) => n > 0 && variants[j].eff.name === v.eff.requirement);
+        const reqActive = state.some((n, j) => n > 0 && variants[j].eff.id === v.eff.requirement);
         if (!reqActive) {
             state[i] = 0;
-            warnings.push(v.eff.name + " requires " + v.eff.requirement + ", so it was removed.");
+            warnings.push(v.eff.name + " requires " + effectName(v.eff.requirement) + ", so it was removed.");
         }
     });
 
@@ -1054,14 +1098,14 @@ function compute() {
     variants.forEach((v, i) => {
         const n = state[i];
         if (n <= 0) return;
-        active[v.eff.name] = true;
+        active[v.eff.id] = true;
         t.rp += v.eff.rpCost * n;
         t.stacks += n;
         if (v.type) defense[v.type] = (defense[v.type] || 0) + n;
-        if (v.eff.name === "Guarded") block += n;
-        if (v.eff.name === "Spry") dodge += n;
-        if (v.eff.name === "Magus") spellDiscount += n;
-        if (v.eff.name === "Unwieldy") hands += n;
+        if (v.eff.id === "guarded") block += n;
+        if (v.eff.id === "spry") dodge += n;
+        if (v.eff.id === "magus") spellDiscount += n;
+        if (v.eff.id === "unwieldy") hands += n;
         if (v.eff.group === "Slots") slotVariant = v;
     });
 
@@ -1076,9 +1120,9 @@ function compute() {
 
     let slots = ITEM_DATA.innateStats.slots;
     if (slotVariant) {
-        if (slotVariant.eff.name === "Inordinate") slots = 27;
-        else if (slotVariant.eff.name === "Awkward") slots = 9;
-        else if (slotVariant.eff.name === "Compact") slots = 1;
+        if (slotVariant.eff.id === "inordinate") slots = 27;
+        else if (slotVariant.eff.id === "awkward") slots = 9;
+        else if (slotVariant.eff.id === "compact") slots = 1;
     }
 
     const errors = [];
@@ -1101,7 +1145,7 @@ function compute() {
     if (rpIdx === -1) effIdx = RARITIES.length - 1;
     else effIdx = Math.max(rpIdx, stackIdx === -1 ? 0 : stackIdx);
 
-    if (active["Augmentable"]) {
+    if (active["augmentable"]) {
         const commonIdx = RARITIES.findIndex(r => r.name === "Common");
         if (effIdx < commonIdx) effIdx = commonIdx;
     }
