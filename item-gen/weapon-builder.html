@@ -669,13 +669,13 @@ const ITEM_DATA = {
         {
             id: "reach", name: "Reach", rpCost: 2, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 1, refinementCost: 0, powerCost: 0,
-            types: [], minRarity: null, requirement: null, group: "Range", maxStacks: 3,
+            xCost: true, types: [], minRarity: null, requirement: null, group: "Range", maxStacks: 3,
             description: `The weapon gains X meters of range, maximum of 3. It's still melee.`
         },
         {
             id: "range", name: "Range", rpCosts: { fast: 5, moderate: 4, slow: 3 }, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 1, powerCost: 0,
-            types: [], minRarity: null, requirement: null, group: "Range", maxStacks: null,
+            xCost: true, types: [], minRarity: null, requirement: null, group: "Range", maxStacks: null,
             description: `The weapon gains an additional 5 times X meters of close range and 10 times X meters of far range.`
         },
         {
@@ -787,7 +787,7 @@ const ITEM_DATA = {
         {
             id: "loaded", name: "Loaded", rpCost: 0, stackable: true, isScalingRP: true, isScalingComponent: false,
             materialCost: 0, refinementCost: 0, powerCost: 0,
-            types: [], minRarity: null, requirement: "loading", group: null, maxStacks: 6,
+            xCost: true, types: [], minRarity: null, requirement: "loading", group: null, maxStacks: 6,
             negative: true,
             rpText: "-10 / X RP (rounded down)",
             rpFn: function (n) { return -Math.floor(10 / n); },
@@ -2194,7 +2194,9 @@ function compute() {
         if (effectHiddenInMode(v.eff)) return;
         activeEffects[v.eff.name] = true;
         t.rp += v.eff.rpFn ? v.eff.rpFn(n, ctx) : effRPCost(v.eff) * n;
-        t.stacks += n;
+        /* A cost written with an X scales through that X, so the feature counts
+           as a single stack no matter how high it is taken. */
+        t.stacks += v.eff.xCost ? 1 : n;
         if (v.eff.id === "slam") attack["Physical"] += n;
         if (v.eff.id === "harsh") attack[v.type] += n;
         if (v.eff.id === "reach") reach += n;
