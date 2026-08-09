@@ -325,7 +325,7 @@
     .name-box input::placeholder { color: var(--muted); opacity: 0.7; }
     .summary-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
         gap: 8px;
         margin-bottom: 14px;
     }
@@ -543,13 +543,13 @@
                 <div class="sum-cell"><div class="label">RP</div><div class="val mono" id="sum-rp">0</div></div>
                 <div class="sum-cell"><div class="label">Value (SP)</div><div class="val mono" id="sum-value">0</div></div>
                 <div class="sum-cell"><div class="label">Stacks</div><div class="val mono" id="sum-stacks">0</div></div>
+                <div class="sum-cell"><div class="label">Slots</div><div class="val mono" id="sum-slots">3</div></div>
             </div>
             <h3>Components</h3>
             <ul class="stat-list" id="comp-list">
                 <li><span>Material</span><span id="comp-material">1 (Min 1)</span></li>
                 <li><span>Refinement</span><span id="comp-refinement">2 (Min 2)</span></li>
                 <li><span>Power</span><span id="comp-power">0 (Min 0)</span></li>
-                <li><span>Slots</span><span id="comp-slots">3</span></li>
             </ul>
             <h3>Resulting Stats</h3>
             <ul class="stat-list" id="stats-list"></ul>
@@ -1712,7 +1712,7 @@ const SUMMARY_CSS = `
     }
     .summary-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
         gap: 8px;
         margin-bottom: 14px;
     }
@@ -1762,7 +1762,8 @@ function buildSummaryHTML(name, c, compRows, statRows, featuresRows, desc) {
     const cells = [
         { label: "RP", val: c.totals.rp + "/" + c.tier.max },
         { label: "Value (SP)", val: overCap ? "\u2014" : c.value },
-        { label: "Stacks", val: c.totals.stacks + "/" + c.tier.maxStacks }
+        { label: "Stacks", val: c.totals.stacks + "/" + c.tier.maxStacks },
+        { label: "Slots", val: c.slots }
     ].map(x => '<div class="sum-cell"><div class="label">' + escHtml(x.label) + '</div><div class="val">' + escHtml(x.val) + '</div></div>').join("");
     function rowsHtml(rows) {
         return rows.map(r => '<li><span>' + escHtml(r.label) + '</span><span>' + escHtml(r.value) + '</span></li>').join("");
@@ -2300,7 +2301,7 @@ function refresh() {
     document.getElementById("comp-material").textContent = c.totals.material + " (Min " + min.material + ")";
     document.getElementById("comp-refinement").textContent = c.totals.refinement + " (Min " + min.refinement + ")";
     document.getElementById("comp-power").textContent = c.totals.power + " (Min " + min.power + ")";
-    document.getElementById("comp-slots").textContent = c.slots;
+    document.getElementById("sum-slots").textContent = c.slots;
 
     const stats = document.getElementById("stats-list");
     stats.innerHTML = "";
