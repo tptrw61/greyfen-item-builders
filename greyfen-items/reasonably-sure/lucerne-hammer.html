@@ -1,15 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lucerne hammer</title>
 <style>
+    :root {
+        --bg: #1a1a1a;
+        --panel: #2d2d2d;
+        --panel-2: #242424;
+        --border: #444;
+        --border-dashed: #3a3a3a;
+        --text: #e0e0e0;
+        --muted: #9a9a9a;
+        --gold: #ffd700;
+        --heading: #a8dadc;
+        --blue-hi: #bde0fe;
+        --desc-text: #d6d6d6;
+    }
+    html[data-theme="light"] {
+        --bg: #f4f4f4;
+        --panel: #ffffff;
+        --panel-2: #ececec;
+        --border: #c9c9c9;
+        --border-dashed: #d8d8d8;
+        --text: #1b1b1b;
+        --muted: #5c5c5c;
+        --gold: #b8860b;
+        --heading: #457b9d;
+        --blue-hi: #1f4e8c;
+        --desc-text: #3a3a3a;
+    }
     * { box-sizing: border-box; }
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #1a1a1a;
-        color: #e0e0e0;
+        background-color: var(--bg);
+        color: var(--text);
         margin: 0;
         padding: 20px;
         line-height: 1.5;
@@ -17,33 +43,33 @@
     .card {
         max-width: 640px;
         margin: 0 auto;
-        background-color: #2d2d2d;
-        border: 2px solid #444;
+        background-color: var(--panel);
+        border: 2px solid var(--border);
         border-radius: 8px;
         padding: 20px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
     .item-name {
-        color: #ffd700;
+        color: var(--gold);
         font-size: 1.5em;
         text-transform: uppercase;
         letter-spacing: 1px;
         text-align: center;
         margin: 0 0 14px;
-        border-bottom: 2px solid #444;
+        border-bottom: 2px solid var(--border);
         padding-bottom: 10px;
     }
     .rarity-box {
         text-align: center;
-        border: 2px solid #444;
+        border: 2px solid var(--border);
         border-radius: 8px;
         padding: 14px;
         margin-bottom: 14px;
-        background-color: #242424;
+        background-color: var(--panel-2);
     }
     .rarity-box .label {
         font-size: 0.75em;
-        color: #9a9a9a;
+        color: var(--muted);
         text-transform: uppercase;
         letter-spacing: 1px;
     }
@@ -60,24 +86,24 @@
         margin-bottom: 14px;
     }
     .sum-cell {
-        background-color: #242424;
-        border: 1px solid #444;
+        background-color: var(--panel-2);
+        border: 1px solid var(--border);
         border-radius: 6px;
         padding: 8px 10px;
     }
     .sum-cell .label {
         font-size: 0.72em;
-        color: #9a9a9a;
+        color: var(--muted);
         text-transform: uppercase;
     }
     .sum-cell .val {
         font-size: 1.15em;
         font-weight: bold;
-        color: #ffd700;
+        color: var(--gold);
         font-family: Consolas, monospace;
     }
     h3 {
-        color: #a8dadc;
+        color: var(--heading);
         font-size: 0.95em;
         margin: 14px 0 6px;
         text-transform: uppercase;
@@ -88,18 +114,18 @@
         display: flex;
         flex-direction: column;
         padding: 3px 0;
-        border-bottom: 1px dashed #3a3a3a;
+        border-bottom: 1px dashed var(--border-dashed);
         font-size: 0.9em;
     }
-    .stat-list li span:first-child { color: #bde0fe; }
+    .stat-list li span:first-child { color: var(--blue-hi); }
     .stat-list li span:last-child { font-weight: bold; margin-left: auto; text-align: right; }
-    .item-desc-text { white-space: pre-wrap; color: #d6d6d6; font-size: 0.92em; line-height: 1.5; margin: 0; }
+    .item-desc-text { white-space: pre-wrap; color: var(--desc-text); font-size: 0.92em; line-height: 1.5; margin: 0; }
 </style>
 </head>
 <body>
 <div class="card">
 <h1 class="item-name">Lucerne hammer</h1>
-<div style="text-align:center;color:#a8dadc;text-transform:uppercase;letter-spacing:2px;font-size:0.78em;margin:2px 0 14px;">Slow Weapon</div>
+<div style="text-align:center;color:var(--heading);text-transform:uppercase;letter-spacing:2px;font-size:0.78em;margin:2px 0 14px;">Slow Weapon</div>
 <div class="rarity-box"><div class="label">Rarity</div><div class="value" style="color:#81c784">Common</div></div>
 <div class="summary-grid"><div class="sum-cell"><div class="label">RP</div><div class="val">11/40</div></div><div class="sum-cell"><div class="label">Value (SP)</div><div class="val">44</div></div><div class="sum-cell"><div class="label">Stacks</div><div class="val">20/20</div></div><div class="sum-cell"><div class="label">Slots</div><div class="val">9</div></div></div>
 <h3>Components</h3>
