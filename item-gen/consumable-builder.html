@@ -528,18 +528,18 @@
 <div class="foot" id="foot-note"></div>
 
 <div class="modal-backdrop" id="summary-modal" hidden>
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="summary-modal-title">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="summary-modal-title">
         <div class="modal-head">
             <h2 id="summary-modal-title">Summary &amp; Save</h2>
             <button class="modal-x" id="btn-modal-close" type="button" aria-label="Close">&times;</button>
         </div>
         <div class="modal-body">
-            <label class="modal-label" for="modal-name">Item Name</label>
+            <label class="label" for="modal-name">Item Name</label>
             <input type="text" id="modal-name" placeholder="Name this item" autocomplete="off">
-            <label class="modal-label" for="item-desc">Description</label>
+            <label class="label" for="item-desc">Description</label>
             <textarea id="item-desc" rows="5" autocomplete="off" placeholder="Optional. Saved with the build and shown at the end of the summary."></textarea>
             <div id="dice-wrap" hidden>
-                <label class="modal-label">Dice</label>
+                <label class="label">Dice</label>
                 <div id="dice-list"></div>
             </div>
             <div class="modal-actions">
@@ -549,7 +549,7 @@
                 <button class="btn-reset" id="btn-modal-import" type="button">Import JSON</button>
             </div>
             <div id="preview-wrap" hidden>
-                <label class="modal-label">Example</label>
+                <h3 class="preview-h">Preview</h3>
                 <iframe id="summary-preview" title="Summary preview"></iframe>
             </div>
         </div>
