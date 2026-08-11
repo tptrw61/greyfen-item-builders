@@ -45,12 +45,12 @@ code{background:#333;padding:1px 5px;border-radius:3px;font-size:.9em}
 footer{text-align:center;color:#777;margin:40px auto 0;font-size:.82em}
 </style></head><body><div class="wrap">
 <h1>Detailed Gap Report</h1>
-<p class="sub">Exactly why each item could not be matched · generated 2026-08-09</p>
+<p class="sub">Exactly why each item could not be matched · generated 2026-08-10</p>
 <div class="toplink">&larr; <a href="report.html">Back to the main reconciliation report</a></div>
 <div class="intro">
 This companion report covers the <b>66 &ldquo;Reasonably sure&rdquo;</b> and
-<b>14 &ldquo;Can't fully match&rdquo;</b> items &mdash; every item whose build carries at least one gap.
-The 52 exact matches and the 12 incompatible entries are not repeated here; see the main report for those.
+<b>6 &ldquo;Can't fully match&rdquo;</b> items &mdash; every item whose build carries at least one gap.
+The 49 exact matches and the 12 incompatible entries are not repeated here; see the main report for those.
 <br><br>
 <b>Part 1</b> is a taxonomy: each distinct reason, what it means, why the builders cannot express it, and what would close the gap.
 <b>Part 2</b> is per-item: the catalogue entry beside what the builder actually produced, the exact effects used to build it, and the specific catalogue sentence behind each gap.
@@ -61,28 +61,10 @@ The 52 exact matches and the 12 incompatible entries are not repeated here; see 
 
 <h2>Part 1 &mdash; Why matches fail, by category</h2>
 <div class="tax blk">
-<div class="hd"><h3>&#9632; Barding — Horse: animal barding has no builder location (built as chest with matching defenses)</h3><span class="cnt">5 items</span></div>
-<div>The six builders cover humanoid equipment: Head, Chest, Hands and Feet armor, plus shields and weapons. Barding is <em>mount</em> armor with its own slot concept (and, for a chamfron, its own sub-location on the animal). There is no barding builder, so this was built with the <strong>chest</strong> builder purely to carry the correct defense numbers &mdash; the resulting item would occupy a creature's chest slot, which is wrong for barding.</div>
-<div class="fix"><b>What would close the gap:</b> A barding builder with mount locations.</div>
-<div class="who"><b>Affects:</b> Chamfron only, Leather barding, Mail / scale / lamellar barding, Padded caparison, Plate barding</div>
-</div>
-<div class="tax blk">
 <div class="hd"><h3>&#9632; single item occupies Head+Chest+Hands+Feet; builders make one slot each (built as chest)</h3><span class="cnt">4 items</span></div>
 <div>This is one purchase that covers <em>four</em> armor slots at once (Head, Chest, Hands, Feet) with a single pooled Armour Defense total, and it explicitly cannot stack with separate pieces. Each builder produces an item for exactly one slot. It was built with the <strong>chest</strong> builder so the full total is preserved in one place; to use it in play you would either treat it as a chest-slot item carrying the whole total, or split it into four builds whose defenses sum to it.</div>
 <div class="fix"><b>What would close the gap:</b> A multi-slot harness mode, or a linked set of builds sharing one total.</div>
 <div class="who"><b>Affects:</b> Full plate harness, Garniture, noble plate, Half-plate harness, Three-quarter plate</div>
-</div>
-<div class="tax blk">
-<div class="hd"><h3>&#9632; Barding — Dog: animal barding has no builder location (built as chest with matching defenses)</h3><span class="cnt">2 items</span></div>
-<div>The six builders cover humanoid equipment: Head, Chest, Hands and Feet armor, plus shields and weapons. Barding is <em>mount</em> armor with its own slot concept (and, for a chamfron, its own sub-location on the animal). There is no barding builder, so this was built with the <strong>chest</strong> builder purely to carry the correct defense numbers &mdash; the resulting item would occupy a creature's chest slot, which is wrong for barding.</div>
-<div class="fix"><b>What would close the gap:</b> A barding builder with mount locations.</div>
-<div class="who"><b>Affects:</b> War-dog coat, mail, War-dog coat, padded</div>
-</div>
-<div class="tax blk">
-<div class="hd"><h3>&#9632; 0 slots: an innate/default profile, not a craftable item (builder minimum is 1 slot)</h3><span class="cnt">1 item</span></div>
-<div>Unarmed strike is the Core Guide's <em>default</em> attack profile rather than a crafted item &mdash; the catalogue lists it at 0 slots and no price. Builders always produce a physical item occupying at least 1 slot (<strong>Compact</strong>), 3 by default, so a 0-slot entry cannot be represented.</div>
-<div class="fix"><b>What would close the gap:</b> A 0-slot / innate profile mode.</div>
-<div class="who"><b>Affects:</b> Unarmed strike</div>
 </div>
 <div class="tax blk">
 <div class="hd"><h3>&#9632; damage 7d10 (max 70) is not a multiple of 4; built closest 18d4 (max 72)</h3><span class="cnt">1 item</span></div>
@@ -97,10 +79,10 @@ The 52 exact matches and the 12 incompatible entries are not repeated here; see 
 <div class="who"><b>Affects:</b> War bow, exceptional draw</div>
 </div>
 <div class="tax">
-<div class="hd"><h3>&#9650; wear penalty/stacking rule described in notes is not a builder stat</h3><span class="cnt">22 items</span></div>
+<div class="hd"><h3>&#9650; wear penalty/stacking rule described in notes is not a builder stat</h3><span class="cnt">18 items</span></div>
 <div>The catalogue note describes an <em>out-of-combat or wear</em> consequence &mdash; reduced land travel, disfavor on Stealth / swimming / climbing / delicate manual work, or extra Fatigue in heat &mdash; or a layering restriction (“cannot be layered with another Hands-slot item”, “cannot stack with separate armor pieces”). The builders emit only the numeric stat block: defenses, Block, Dodge, slots and component costs. There is no field for movement modifiers, skill-test favor/disfavor, Fatigue, or slot-exclusivity between separate items.</div>
 <div class="fix"><b>What would close the gap:</b> A travel-modifier field, a test-modifier field, and a layering/exclusion rule between items.</div>
-<div class="who"><b>Affects:</b> Armet, Full plate harness, Garniture, noble plate, Half-plate harness, Hide armour, Mail / scale / lamellar barding, Mail chausses, Mail mittens, Mail shirt / haubergeon / hauberk, Mail-and-gambeson harness, Padded boots / chausses, Padded caparison, Padded mittens, Plate barding, Plate gauntlets, Plate leg harness, Scale / lamellar cuirass, Secret / skull cap, Three-quarter plate, Tournament frog-mouth helm, Visored bascinet / closed sallet, War-dog coat, mail</div>
+<div class="who"><b>Affects:</b> Armet, Full plate harness, Garniture, noble plate, Half-plate harness, Hide armour, Mail chausses, Mail mittens, Mail shirt / haubergeon / hauberk, Mail-and-gambeson harness, Padded boots / chausses, Padded mittens, Plate gauntlets, Plate leg harness, Scale / lamellar cuirass, Secret / skull cap, Three-quarter plate, Tournament frog-mouth helm, Visored bascinet / closed sallet</div>
 </div>
 <div class="tax">
 <div class="hd"><h3>&#9650; situational favor/disfavor not modelled</h3><span class="cnt">17 items</span></div>
@@ -231,18 +213,6 @@ The 52 exact matches and the 12 incompatible entries are not repeated here; see 
 <h2>Part 2 &mdash; Item by item</h2>
 <div class="item">
 <div class="top">
-  <div><h3><a href="https://greyfen-equipment-catalogue.josephe-townsend.chatgpt.site/items/chamfron-only" target="_blank" rel="noopener">Chamfron only</a></h3>
-  <div class="meta">Animal barding &middot; built with the <b>chest</b> builder
-  &middot; catalogue rarity Rare &rarr; builder Crude</div></div>
-  <span class="badge partial">Can't fully match</span>
-</div>
-<table><thead><tr><th>Stat</th><th>Catalogue</th><th>Built</th><th></th></tr></thead><tbody><tr><td class="k">Slot</td><td>Barding — Horse</td><td>Chest</td><td class="no">&#8800;</td></tr><tr><td class="k">Armour Defense</td><td>5</td><td>5</td><td class="ok">&#10003;</td></tr><tr><td class="k">Other Defense</td><td>+2 Psyche Defense</td><td>+2 Psyche</td><td class="ok">&#10003;</td></tr><tr><td class="k">Slots</td><td>9</td><td>9</td><td class="ok">&#10003;</td></tr></tbody></table>
-<div><b style="color:#bde0fe;font-size:.82em;text-transform:uppercase;letter-spacing:.5px">Built from</b><div class="chips"><span class="chip">Awkward</span><span class="chip">Defensive (Physical) ×5</span><span class="chip">Screen (Psyche) ×2</span></div></div>
-<div class="gap blk"><div class="t">&#9632; Barding — Horse: animal barding has no builder location (built as chest with matching defenses)</div><div>The six builders cover humanoid equipment: Head, Chest, Hands and Feet armor, plus shields and weapons. Barding is <em>mount</em> armor with its own slot concept (and, for a chamfron, its own sub-location on the animal). There is no barding builder, so this was built with the <strong>chest</strong> builder purely to carry the correct defense numbers &mdash; the resulting item would occupy a creature's chest slot, which is wrong for barding.</div></div>
-<div class="notes"><b>Full catalogue note:</b> Armoured faceplate; adds its listed Armour Defense only when the barding does not already include a chamfron.</div>
-</div>
-<div class="item">
-<div class="top">
   <div><h3><a href="https://greyfen-equipment-catalogue.josephe-townsend.chatgpt.site/items/full-plate-harness" target="_blank" rel="noopener">Full plate harness</a></h3>
   <div class="meta">Tier V: Articulated plate &middot; built with the <b>chest</b> builder
   &middot; catalogue rarity Rare &rarr; builder Extraordinary</div></div>
@@ -279,54 +249,6 @@ The 52 exact matches and the 12 incompatible entries are not repeated here; see 
 </div>
 <div class="item">
 <div class="top">
-  <div><h3><a href="https://greyfen-equipment-catalogue.josephe-townsend.chatgpt.site/items/leather-barding" target="_blank" rel="noopener">Leather barding</a></h3>
-  <div class="meta">Animal barding &middot; built with the <b>chest</b> builder
-  &middot; catalogue rarity Common &rarr; builder Common</div></div>
-  <span class="badge partial">Can't fully match</span>
-</div>
-<table><thead><tr><th>Stat</th><th>Catalogue</th><th>Built</th><th></th></tr></thead><tbody><tr><td class="k">Slot</td><td>Barding — Horse</td><td>Chest</td><td class="no">&#8800;</td></tr><tr><td class="k">Armour Defense</td><td>7</td><td>7</td><td class="ok">&#10003;</td></tr><tr><td class="k">Other Defense</td><td>+1 Energy, Heat, and Chill Defense</td><td>+1 Energy, +1 Heat, +1 Chill</td><td class="ok">&#10003;</td></tr><tr><td class="k">Slots</td><td>27</td><td>27</td><td class="ok">&#10003;</td></tr></tbody></table>
-<div><b style="color:#bde0fe;font-size:.82em;text-transform:uppercase;letter-spacing:.5px">Built from</b><div class="chips"><span class="chip">Defensive (Chill)</span><span class="chip">Defensive (Energy)</span><span class="chip">Defensive (Heat)</span><span class="chip">Defensive (Physical) ×7</span><span class="chip">Inordinate</span></div></div>
-<div class="gap blk"><div class="t">&#9632; Barding — Horse: animal barding has no builder location (built as chest with matching defenses)</div><div>The six builders cover humanoid equipment: Head, Chest, Hands and Feet armor, plus shields and weapons. Barding is <em>mount</em> armor with its own slot concept (and, for a chamfron, its own sub-location on the animal). There is no barding builder, so this was built with the <strong>chest</strong> builder purely to carry the correct defense numbers &mdash; the resulting item would occupy a creature's chest slot, which is wrong for barding.</div></div>
-<div class="notes"><b>Full catalogue note:</b> Hardened leather sections.</div>
-</div>
-<div class="item">
-<div class="top">
-  <div><h3><a href="https://greyfen-equipment-catalogue.josephe-townsend.chatgpt.site/items/mail-scale-lamellar-barding" target="_blank" rel="noopener">Mail / scale / lamellar barding</a></h3>
-  <div class="meta">Animal barding &middot; built with the <b>chest</b> builder
-  &middot; catalogue rarity Common &rarr; builder Common</div></div>
-  <span class="badge partial">Can't fully match</span>
-</div>
-<table><thead><tr><th>Stat</th><th>Catalogue</th><th>Built</th><th></th></tr></thead><tbody><tr><td class="k">Slot</td><td>Barding — Horse</td><td>Chest</td><td class="no">&#8800;</td></tr><tr><td class="k">Armour Defense</td><td>10</td><td>10</td><td class="ok">&#10003;</td></tr><tr><td class="k">Other Defense</td><td>+2 Energy, Heat, and Chill Defense</td><td>+2 Energy, +2 Heat, +2 Chill</td><td class="ok">&#10003;</td></tr><tr><td class="k">Slots</td><td>27</td><td>27</td><td class="ok">&#10003;</td></tr></tbody></table>
-<div><b style="color:#bde0fe;font-size:.82em;text-transform:uppercase;letter-spacing:.5px">Built from</b><div class="chips"><span class="chip">Defensive (Chill) ×2</span><span class="chip">Defensive (Energy) ×2</span><span class="chip">Defensive (Heat) ×2</span><span class="chip">Defensive (Physical) ×10</span><span class="chip">Inordinate</span></div></div>
-<div class="gap blk"><div class="t">&#9632; Barding — Horse: animal barding has no builder location (built as chest with matching defenses)</div><div>The six builders cover humanoid equipment: Head, Chest, Hands and Feet armor, plus shields and weapons. Barding is <em>mount</em> armor with its own slot concept (and, for a chamfron, its own sub-location on the animal). There is no barding builder, so this was built with the <strong>chest</strong> builder purely to carry the correct defense numbers &mdash; the resulting item would occupy a creature's chest slot, which is wrong for barding.</div></div><div class="gap"><div class="t">&#9650; wear penalty/stacking rule described in notes is not a builder stat</div><blockquote>&ldquo;land travel reduced by 1 m.&rdquo;</blockquote><div>The catalogue note describes an <em>out-of-combat or wear</em> consequence &mdash; reduced land travel, disfavor on Stealth / swimming / climbing / delicate manual work, or extra Fatigue in heat &mdash; or a layering restriction (“cannot be layered with another Hands-slot item”, “cannot stack with separate armor pieces”). The builders emit only the numeric stat block: defenses, Block, Dodge, slots and component costs. There is no field for movement modifiers, skill-test favor/disfavor, Fatigue, or slot-exclusivity between separate items.</div></div>
-<div class="notes"><b>Full catalogue note:</b> Mail, scale, or lamellar heavy cavalry protection; land travel reduced by 1 m. Regional forms may be harder to obtain outside their homeland without changing mechanical rarity.</div>
-</div>
-<div class="item">
-<div class="top">
-  <div><h3><a href="https://greyfen-equipment-catalogue.josephe-townsend.chatgpt.site/items/padded-caparison" target="_blank" rel="noopener">Padded caparison</a></h3>
-  <div class="meta">Animal barding &middot; built with the <b>chest</b> builder
-  &middot; catalogue rarity Crude &rarr; builder Crude</div></div>
-  <span class="badge partial">Can't fully match</span>
-</div>
-<table><thead><tr><th>Stat</th><th>Catalogue</th><th>Built</th><th></th></tr></thead><tbody><tr><td class="k">Slot</td><td>Barding — Horse</td><td>Chest</td><td class="no">&#8800;</td></tr><tr><td class="k">Armour Defense</td><td>4</td><td>4</td><td class="ok">&#10003;</td></tr><tr><td class="k">Slots</td><td>27</td><td>27</td><td class="ok">&#10003;</td></tr></tbody></table>
-<div><b style="color:#bde0fe;font-size:.82em;text-transform:uppercase;letter-spacing:.5px">Built from</b><div class="chips"><span class="chip">Defensive (Physical) ×4</span><span class="chip">Inordinate</span></div></div>
-<div class="gap blk"><div class="t">&#9632; Barding — Horse: animal barding has no builder location (built as chest with matching defenses)</div><div>The six builders cover humanoid equipment: Head, Chest, Hands and Feet armor, plus shields and weapons. Barding is <em>mount</em> armor with its own slot concept (and, for a chamfron, its own sub-location on the animal). There is no barding builder, so this was built with the <strong>chest</strong> builder purely to carry the correct defense numbers &mdash; the resulting item would occupy a creature's chest slot, which is wrong for barding.</div></div><div class="gap"><div class="t">&#9650; wear penalty/stacking rule described in notes is not a builder stat</div><blockquote>&ldquo;1 additional Fatigue during prolonged exertion in hot weather at GM discretion.&rdquo;</blockquote><div>The catalogue note describes an <em>out-of-combat or wear</em> consequence &mdash; reduced land travel, disfavor on Stealth / swimming / climbing / delicate manual work, or extra Fatigue in heat &mdash; or a layering restriction (“cannot be layered with another Hands-slot item”, “cannot stack with separate armor pieces”). The builders emit only the numeric stat block: defenses, Block, Dodge, slots and component costs. There is no field for movement modifiers, skill-test favor/disfavor, Fatigue, or slot-exclusivity between separate items.</div></div>
-<div class="notes"><b>Full catalogue note:</b> Quilted body covering; 1 additional Fatigue during prolonged exertion in hot weather at GM discretion.</div>
-</div>
-<div class="item">
-<div class="top">
-  <div><h3><a href="https://greyfen-equipment-catalogue.josephe-townsend.chatgpt.site/items/plate-barding" target="_blank" rel="noopener">Plate barding</a></h3>
-  <div class="meta">Animal barding &middot; built with the <b>chest</b> builder
-  &middot; catalogue rarity Rare &rarr; builder Extraordinary</div></div>
-  <span class="badge partial">Can't fully match</span>
-</div>
-<table><thead><tr><th>Stat</th><th>Catalogue</th><th>Built</th><th></th></tr></thead><tbody><tr><td class="k">Slot</td><td>Barding — Horse</td><td>Chest</td><td class="no">&#8800;</td></tr><tr><td class="k">Armour Defense</td><td>14</td><td>14</td><td class="ok">&#10003;</td></tr><tr><td class="k">Other Defense</td><td>+2 Energy, Heat, and Chill Defense</td><td>+2 Energy, +2 Heat, +2 Chill</td><td class="ok">&#10003;</td></tr><tr><td class="k">Slots</td><td>27</td><td>27</td><td class="ok">&#10003;</td></tr></tbody></table>
-<div><b style="color:#bde0fe;font-size:.82em;text-transform:uppercase;letter-spacing:.5px">Built from</b><div class="chips"><span class="chip">Defensive (Chill) ×2</span><span class="chip">Defensive (Energy) ×2</span><span class="chip">Defensive (Heat) ×2</span><span class="chip">Defensive (Physical) ×14</span><span class="chip">Inordinate</span></div></div>
-<div class="gap blk"><div class="t">&#9632; Barding — Horse: animal barding has no builder location (built as chest with matching defenses)</div><div>The six builders cover humanoid equipment: Head, Chest, Hands and Feet armor, plus shields and weapons. Barding is <em>mount</em> armor with its own slot concept (and, for a chamfron, its own sub-location on the animal). There is no barding builder, so this was built with the <strong>chest</strong> builder purely to carry the correct defense numbers &mdash; the resulting item would occupy a creature's chest slot, which is wrong for barding.</div></div><div class="gap"><div class="t">&#9650; wear penalty/stacking rule described in notes is not a builder stat</div><blockquote>&ldquo;land travel reduced by 2 m;&rdquo;</blockquote><div>The catalogue note describes an <em>out-of-combat or wear</em> consequence &mdash; reduced land travel, disfavor on Stealth / swimming / climbing / delicate manual work, or extra Fatigue in heat &mdash; or a layering restriction (“cannot be layered with another Hands-slot item”, “cannot stack with separate armor pieces”). The builders emit only the numeric stat block: defenses, Block, Dodge, slots and component costs. There is no field for movement modifiers, skill-test favor/disfavor, Fatigue, or slot-exclusivity between separate items.</div></div>
-<div class="notes"><b>Full catalogue note:</b> Chamfron, crinet, peytral, flanchards, crupper; land travel reduced by 2 m; requires a warhorse or similarly trained mount.</div>
-</div>
-<div class="item">
-<div class="top">
   <div><h3><a href="https://greyfen-equipment-catalogue.josephe-townsend.chatgpt.site/items/three-quarter-plate" target="_blank" rel="noopener">Three-quarter plate</a></h3>
   <div class="meta">Tier V: Articulated plate &middot; built with the <b>chest</b> builder
   &middot; catalogue rarity Rare &rarr; builder Extraordinary</div></div>
@@ -339,30 +261,6 @@ The 52 exact matches and the 12 incompatible entries are not repeated here; see 
 </div>
 <div class="item">
 <div class="top">
-  <div><h3><a href="https://greyfen-equipment-catalogue.josephe-townsend.chatgpt.site/items/war-dog-coat-mail" target="_blank" rel="noopener">War-dog coat, mail</a></h3>
-  <div class="meta">Animal barding &middot; built with the <b>chest</b> builder
-  &middot; catalogue rarity Common &rarr; builder Extraordinary</div></div>
-  <span class="badge partial">Can't fully match</span>
-</div>
-<table><thead><tr><th>Stat</th><th>Catalogue</th><th>Built</th><th></th></tr></thead><tbody><tr><td class="k">Slot</td><td>Barding — Dog</td><td>Chest</td><td class="no">&#8800;</td></tr><tr><td class="k">Armour Defense</td><td>10</td><td>10</td><td class="ok">&#10003;</td></tr><tr><td class="k">Other Defense</td><td>+1 Energy, Heat, and Chill Defense</td><td>+1 Energy, +1 Heat, +1 Chill</td><td class="ok">&#10003;</td></tr><tr><td class="k">Slots</td><td>9</td><td>9</td><td class="ok">&#10003;</td></tr></tbody></table>
-<div><b style="color:#bde0fe;font-size:.82em;text-transform:uppercase;letter-spacing:.5px">Built from</b><div class="chips"><span class="chip">Awkward</span><span class="chip">Defensive (Chill)</span><span class="chip">Defensive (Energy)</span><span class="chip">Defensive (Heat)</span><span class="chip">Defensive (Physical) ×10</span></div></div>
-<div class="gap blk"><div class="t">&#9632; Barding — Dog: animal barding has no builder location (built as chest with matching defenses)</div><div>The six builders cover humanoid equipment: Head, Chest, Hands and Feet armor, plus shields and weapons. Barding is <em>mount</em> armor with its own slot concept (and, for a chamfron, its own sub-location on the animal). There is no barding builder, so this was built with the <strong>chest</strong> builder purely to carry the correct defense numbers &mdash; the resulting item would occupy a creature's chest slot, which is wrong for barding.</div></div><div class="gap"><div class="t">&#9650; wear penalty/stacking rule described in notes is not a builder stat</div><blockquote>&ldquo;land travel reduced by 1 m.&rdquo;</blockquote><div>The catalogue note describes an <em>out-of-combat or wear</em> consequence &mdash; reduced land travel, disfavor on Stealth / swimming / climbing / delicate manual work, or extra Fatigue in heat &mdash; or a layering restriction (“cannot be layered with another Hands-slot item”, “cannot stack with separate armor pieces”). The builders emit only the numeric stat block: defenses, Block, Dodge, slots and component costs. There is no field for movement modifiers, skill-test favor/disfavor, Fatigue, or slot-exclusivity between separate items.</div></div>
-<div class="notes"><b>Full catalogue note:</b> Specialist fitted mail; land travel reduced by 1 m.</div>
-</div>
-<div class="item">
-<div class="top">
-  <div><h3><a href="https://greyfen-equipment-catalogue.josephe-townsend.chatgpt.site/items/war-dog-coat-padded" target="_blank" rel="noopener">War-dog coat, padded</a></h3>
-  <div class="meta">Animal barding &middot; built with the <b>chest</b> builder
-  &middot; catalogue rarity Crude &rarr; builder Crude</div></div>
-  <span class="badge partial">Can't fully match</span>
-</div>
-<table><thead><tr><th>Stat</th><th>Catalogue</th><th>Built</th><th></th></tr></thead><tbody><tr><td class="k">Slot</td><td>Barding — Dog</td><td>Chest</td><td class="no">&#8800;</td></tr><tr><td class="k">Armour Defense</td><td>4</td><td>4</td><td class="ok">&#10003;</td></tr><tr><td class="k">Slots</td><td>3</td><td>3</td><td class="ok">&#10003;</td></tr></tbody></table>
-<div><b style="color:#bde0fe;font-size:.82em;text-transform:uppercase;letter-spacing:.5px">Built from</b><div class="chips"><span class="chip">Defensive (Physical) ×4</span></div></div>
-<div class="gap blk"><div class="t">&#9632; Barding — Dog: animal barding has no builder location (built as chest with matching defenses)</div><div>The six builders cover humanoid equipment: Head, Chest, Hands and Feet armor, plus shields and weapons. Barding is <em>mount</em> armor with its own slot concept (and, for a chamfron, its own sub-location on the animal). There is no barding builder, so this was built with the <strong>chest</strong> builder purely to carry the correct defense numbers &mdash; the resulting item would occupy a creature's chest slot, which is wrong for barding.</div></div>
-<div class="notes"><b>Full catalogue note:</b> Protects torso and neck.</div>
-</div>
-<div class="item">
-<div class="top">
   <div><h3><a href="https://greyfen-equipment-catalogue.josephe-townsend.chatgpt.site/items/poleaxe" target="_blank" rel="noopener">Poleaxe</a></h3>
   <div class="meta">Polearms, staves, and flexible weapons &middot; built with the <b>weapon</b> builder
   &middot; catalogue rarity Extraordinary &rarr; builder Extraordinary</div></div>
@@ -372,18 +270,6 @@ The 52 exact matches and the 12 incompatible entries are not repeated here; see 
 <div><b style="color:#bde0fe;font-size:.82em;text-transform:uppercase;letter-spacing:.5px">Built from</b><div class="chips"><span class="chip">Slow weapon</span><span class="chip">Melee</span><span class="chip">Awkward</span><span class="chip">Elaborate</span><span class="chip">Reach ×2</span><span class="chip">Slam ×18</span><span class="chip">Unwieldy</span></div></div>
 <div class="gap blk"><div class="t">&#9632; damage 7d10 (max 70) is not a multiple of 4; built closest 18d4 (max 72)</div><div>Builder damage is assembled from 1d4 units: each stack of <strong>Slam</strong> (Physical) or <strong>Harsh</strong> (other types) adds 1d4, so a build's <em>maximum</em> damage is always a multiple of 4, and the displayed dice must divide that maximum evenly. These two entries have maxima that are not multiples of 4, so the exact dice cannot be produced &mdash; the closest achievable total was built instead. This is the only place in the whole catalogue where the mismatch is purely numeric.</div><div class="fix" style="color:#bde0fe"><b>The arithmetic:</b> <code>7d10</code> has a maximum of 70, and 70 &divide; 4 = 17.5 &mdash; not a whole number of 1d4 units. The nearest achievable maximum is <b>72</b> (18 stacks), which the builder can display as <code>18d4</code>, <code>12d6</code>, <code>9d8</code>, <code>6d12</code>. None of those is <code>7d10</code>.</div></div><div class="gap"><div class="t">&#9650; armor-bypass rider not modelled</div><blockquote>&ldquo;choose before attacking: halve Armour Defense with the spike/hammer or use the billhook effect.&rdquo;</blockquote><div>These weapons ignore or halve a <em>specific amount</em> of Armour Defense, often gated behind an extra action or a target condition (Grappled, Prone, unaware). The builder's nearest tool is <strong>Penetrative</strong>, which ignores a chosen damage type's defense <em>entirely</em> (+60 RP, minimum rarity Extraordinary). It is all-or-nothing: it cannot ignore “3 points”, cannot halve, and cannot be gated behind spending an extra action or a target's condition. Applying Penetrative would have made these weapons far stronger than the catalogue intends.</div></div>
 <div class="notes"><b>Full catalogue note:</b> Knightly foot-combat weapon; choose before attacking: halve Armour Defense with the spike/hammer or use the billhook effect.</div>
-</div>
-<div class="item">
-<div class="top">
-  <div><h3><a href="https://greyfen-equipment-catalogue.josephe-townsend.chatgpt.site/items/unarmed-strike" target="_blank" rel="noopener">Unarmed strike</a></h3>
-  <div class="meta">Unarmed, improvised, and control weapons &middot; built with the <b>weapon</b> builder
-  &middot; catalogue rarity — &rarr; builder Common</div></div>
-  <span class="badge partial">Can't fully match</span>
-</div>
-<table><thead><tr><th>Stat</th><th>Catalogue</th><th>Built</th><th></th></tr></thead><tbody><tr><td class="k">Attack actions</td><td>2 actions</td><td>2</td><td class="ok">&#10003;</td></tr><tr><td class="k">Damage</td><td>1d8 + Power modifier</td><td>1d8 + [Power]</td><td class="ok">&#10003;</td></tr><tr><td class="k">Range</td><td>0 m melee</td><td>0 m</td><td class="ok">&#10003;</td></tr><tr><td class="k">Hands</td><td>1</td><td>1</td><td class="ok">&#10003;</td></tr><tr><td class="k">Slots</td><td>0</td><td>3</td><td class="no">&#8800;</td></tr></tbody></table>
-<div><b style="color:#bde0fe;font-size:.82em;text-transform:uppercase;letter-spacing:.5px">Built from</b><div class="chips"><span class="chip">Moderate weapon</span><span class="chip">Melee</span><span class="chip">Slam ×2</span><span class="chip">Elegant (Physical)</span></div></div>
-<div class="gap blk"><div class="t">&#9632; 0 slots: an innate/default profile, not a craftable item (builder minimum is 1 slot)</div><div>Unarmed strike is the Core Guide's <em>default</em> attack profile rather than a crafted item &mdash; the catalogue lists it at 0 slots and no price. Builders always produce a physical item occupying at least 1 slot (<strong>Compact</strong>), 3 by default, so a 0-slot entry cannot be represented.</div></div>
-<div class="notes"><b>Full catalogue note:</b> Fist, kick, elbow, head-butt; Core Guide default; may use any limb.</div>
 </div>
 <div class="item">
 <div class="top">

@@ -1,9 +1,0 @@
-{
-  "version": 3,
-  "builder": "chest-armor",
-  "state": {
-    "defensive:physical": 4
-  },
-  "name": "War-dog coat, padded",
-  "description": "Protects torso and neck."
-}
