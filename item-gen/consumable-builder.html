@@ -752,6 +752,15 @@ function diceOptions(max) {
    summary prints. */
 const FEATURES_NOT_IN_STATS = ["sentient", "resistance", "necrotic"];
 
+/* Features whose numbers reach the stat list but whose rules do not. The stat
+   line can print "Damage (Psyche) 2d4" but not the fact that the target may
+   shrug it off, so these get a Features row on the exported card carrying a
+   short form of that rule instead of the effect's full text. */
+const FEATURE_RULE_NOTES = {
+    psychosis: "An affected creature may spend 1 turn action or 1 interrupt to make a Will test " +
+               "against the Psyche damage dealt. On a success it ignores all of that damage."
+};
+
 /* Effects are identified by their permanent id in the rules below; a name is
    only ever used for display, so renaming one stays a data-only change. */
 const EFFECT_NAME = {};
@@ -1079,11 +1088,12 @@ function activeFeatureRows() {
     const rows = [];
     variants.forEach((v, i) => {
         if (state[i] <= 0) return;
-        if (FEATURES_NOT_IN_STATS.indexOf(v.eff.id) === -1) return;
+        const note = FEATURE_RULE_NOTES[v.eff.id];
+        if (!note && FEATURES_NOT_IN_STATS.indexOf(v.eff.id) === -1) return;
         const type = v.type || (v.eff.typeChoice ? typeChoices[v.eff.id] : null);
         rows.push({
             label: v.label + (v.type ? "" : type ? " (" + type + ")" : ""),
-            value: featureDescription(v.eff, state[i], { type: type })
+            value: note || featureDescription(v.eff, state[i], { type: type })
         });
     });
     spelltechData.entries.forEach(id => {
